@@ -97,39 +97,19 @@ export default function App() {
 		)
 	}
 
-	function LoginStackScreen(props) {
-		return (
-			<Stack.Navigator>
-				<Stack.Screen name="Login" component={LoginScreen}/>
-				<Stack.Screen name="FillInfo" component={FillInfoScreen}/>
-				<Stack.Screen name="Registration" component={RegistrationScreen} />
-				<Stack.Screen name="Success" options={{title: ""}}>
-					{props => <Test {...props} user={user} />}
-				</Stack.Screen>
-				<Stack.Screen name="Topic" options={{title: "選擇興趣"}}>
-					{props => <TopicSelectScreen {...props} user={user} />}
-				</Stack.Screen>
-			</Stack.Navigator>
-		)
-	}
-
 	function Tabs(props) {
 		return (
-			user ? (
-				<Tab.Navigator>
-					<Tab.Screen name="HomeStack" options={{tabBarLabel:"主頁"}}>
-						{props => <HomeStackScreen {...props} user={user} />}
-					</Tab.Screen>
-					<Tab.Screen name="ChatStack" options={{tabBarLabel:"聊天室"}}>
-						{props => <ChatStackScreen {...props} user={user} />}
-					</Tab.Screen>
-					<Tab.Screen name="SettingStack" options={{tabBarLabel:"帳戶"}}>
-						{props => <SettingStackScreen {...props} user={user} />}
-					</Tab.Screen>
-				</Tab.Navigator>
-			) : (
-				<LoginStackScreen {...props} />
-			)
+			<Tab.Navigator>
+				<Tab.Screen name="HomeStack" options={{tabBarLabel:"主頁"}}>
+					{props => <HomeStackScreen {...props} user={user} />}
+				</Tab.Screen>
+				<Tab.Screen name="ChatStack" options={{tabBarLabel:"聊天室"}}>
+					{props => <ChatStackScreen {...props} user={user} />}
+				</Tab.Screen>
+				<Tab.Screen name="SettingStack" options={{tabBarLabel:"帳戶"}}>
+					{props => <SettingStackScreen {...props} user={user} />}
+				</Tab.Screen>
+			</Tab.Navigator>
 		)
 	}
 
@@ -152,7 +132,17 @@ export default function App() {
 				</Stack.Navigator>
 			) :  
 			(
-				<LoginStackScreen {...props} />
+				<Stack.Navigator>
+					<Stack.Screen name="Login" component={LoginScreen}/>
+					<Stack.Screen name="FillInfo" component={FillInfoScreen}/>
+					<Stack.Screen name="Registration" component={RegistrationScreen} />
+					<Stack.Screen name="Success" options={{title: ""}}>
+						{props => <Test {...props} user={user} />}
+					</Stack.Screen>
+					<Stack.Screen name="Topic" options={{title: "選擇興趣"}}>
+						{props => <TopicSelectScreen {...props} user={user} />}
+					</Stack.Screen>
+				</Stack.Navigator>
 			)} 
 		</NavigationContainer>
 	)
