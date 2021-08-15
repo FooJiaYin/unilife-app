@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { ImageBackground, Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Dimension, ImageBackground, Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { setHeaderOptions } from '../components/header'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Asset from '../components/assets'
@@ -7,6 +7,7 @@ import { Button } from '../components/forms'
 import { styles } from './LoginScreen/styles'
 import { stylesheet } from '../styles'
 import { firebase } from '../firebase/config'
+import { CurvedBg } from '../components/decorative'
 
 export default function LoginScreen({navigation}) {
     const usersRef = firebase.firestore().collection('users')
@@ -53,44 +54,42 @@ export default function LoginScreen({navigation}) {
         })
       }, [navigation])
     return (
+        //    <KeyboardAwareScrollView
+        //         style={{ flex: 1, width: '100%'}}
+        //         keyboardShouldPersistTaps="always">
+        <View style={{ flex: 1, width: '100%', justifyContent: 'center' }}>
             <ImageBackground source={Asset('bg-login.jpg')} resizeMode="cover" style={styles.bg}>
-        <View  style={styles.container}>
-            <KeyboardAwareScrollView
-                style={{ flex: 1, width: '100%'}}
-                keyboardShouldPersistTaps="always">
-                    {/* <View style={{ flex: 1, width: '100%', justifyContent: 'space-around' }}> */}
-                <Image
-                    style={styles.logo}
-                    source={Asset('logo_with_text.png')}
-                />
-                <View style={styles.card}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder='E-mail'
-                        placeholderTextColor="#aaaaaa"
-                        onChangeText={(text) => setEmail(text)}
-                        value={email}
-                        underlineColorAndroid="transparent"
-                        autoCapitalize="none"
-                    />
-                    <TextInput
-                        style={styles.input}
-                        placeholderTextColor="#aaaaaa"
-                        secureTextEntry
-                        placeholder='Password'
-                        onChangeText={(text) => setPassword(text)}
-                        value={password}
-                        underlineColorAndroid="transparent"
-                        autoCapitalize="none"
-                    />
-                    <Button onPress={() => onLoginPress()} style={stylesheet.bgGreen} title="登入" />
-                </View>
-                <View style={styles.footerView}>
-                    <Text style={styles.footerText}>Don't have an account? <Text onPress={onFooterLinkPress} style={styles.footerLink}>Sign up</Text></Text>
-                </View>
-                {/* </View> */}
-            </KeyboardAwareScrollView>
-        </View>
             </ImageBackground>
+            <Image
+                style={styles.logo}
+                source={Asset('logo_with_text.png')}
+            />
+            <View style={styles.card}>
+                <TextInput
+                    style={styles.input}
+                    placeholder='E-mail'
+                    placeholderTextColor="#aaaaaa"
+                    onChangeText={(text) => setEmail(text)}
+                    value={email}
+                    underlineColorAndroid="transparent"
+                    autoCapitalize="none"
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholderTextColor="#aaaaaa"
+                    secureTextEntry
+                    placeholder='Password'
+                    onChangeText={(text) => setPassword(text)}
+                    value={password}
+                    underlineColorAndroid="transparent"
+                    autoCapitalize="none"
+                />
+                <Button onPress={() => onLoginPress()} style={stylesheet.bgGreen} title="登入" />
+            </View>
+            <View style={styles.footerView}>
+                <Text style={styles.footerText}>Don't have an account? <Text onPress={onFooterLinkPress} style={styles.footerLink}>Sign up</Text></Text>
+            </View>
+            {/* </KeyboardAwareScrollView> */}
+        </View>
     )
 }

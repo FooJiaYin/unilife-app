@@ -128,7 +128,6 @@ export default function HomeScreen(props) {
         },
         icon:{
             marginHorizontal:16,
-            // boxSizing: 'paddingBox',
             marginVertical: 8,
             height: 32,
             width: 32,
