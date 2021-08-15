@@ -23,7 +23,7 @@ export default function SettingScreen(props) {
                 width: '100%',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                boxSizing: 'borderBox',
+                // boxSizing: 'borderBox',
                 backgroundColor: Color.green,
                 paddingTop:24,
                 paddingBottom:36,
@@ -46,7 +46,7 @@ export default function SettingScreen(props) {
             },
             name:{
                 fontSize: 24,
-                fontWeight: 700,
+                fontWeight: '700',
                 color: 'white',
                 marginLeft:16,
             },

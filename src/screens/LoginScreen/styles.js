@@ -10,10 +10,10 @@ export const styles = StyleSheet.create({
     },
     logo: {
         flex: 1,
-        height: 150,
+        height: 300,
         width: 200,
         alignSelf: "center",
-        margin: 30,
+        marginTop: 30,
         resizeMode:'contain',
         marginVertical: 48
     },
@@ -62,6 +62,7 @@ export const styles = StyleSheet.create({
         margin: 0
     },
     card: {
+        flex: 1,
         backgroundColor: '#fff',
         borderRadius: 20,
         shadowColor:'#0F355C',

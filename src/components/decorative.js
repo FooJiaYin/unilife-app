@@ -37,7 +37,7 @@ export function ProfilePicture({user, icon, borderStyle, diameter}){
             borderWidth: 4,
             borderColor: '#fff',
             borderRadius: '100%',
-            boxSizing: 'padding-box'
+            // boxSizing: 'padding-box'
         },
         image:{
             height: '100%',
@@ -70,7 +70,7 @@ export function CurvedBg({pureColor = Color.green, image = Asset('topics/cover_1
         },
         childrenContainer:{
             height: height,
-            boxSizing: 'padding-box',
+            // boxSizing: 'padding-box',
             alignItems: 'center',
             justifyContent: 'flex-end',
             paddingVertical: 40

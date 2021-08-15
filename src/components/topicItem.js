@@ -25,7 +25,7 @@ export function TopicItem ({item, index, onPress=()=>null, initSelected=false}){
         text:{
             margin: 4,
             color: '#fff',
-            fontWeight: 700
+            fontWeight: '700'
         }
     })
     console.log(topicItemStyle)

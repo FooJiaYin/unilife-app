@@ -152,11 +152,11 @@ export const styles = {
         width: '100%',
         alignItems:'flex-start',
         justifyContent:'flex-start',
-        boxSizing: 'paddingBox',
+        // boxSizing: 'paddingBox',
     },
     headerText:{
         color: Color.grey0,
-        fontWeight: 700,
+        fontWeight: '700',
         fontSize: 20,
         lineHeight: 30,
         textAlign: 'center',

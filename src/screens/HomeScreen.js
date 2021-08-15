@@ -48,7 +48,9 @@ export default function HomeScreen(props) {
                     // console.log("article", article)
                     // console.log(storageRef.child('articles/' + article.id + '/images/' + article.coverImage))
                     /* Get Images */
-                    article.isSaved = savedArticles.includes(article.id)
+                    if(savedArticles!= undefined){
+                        article.isSaved = savedArticles.includes(article.id)
+                    }
                     if(article.isSaved) console.log(article.id, "is saved")
                     promises.push(
                         // storageRef.child('articles/' + article.id + '/images/' + article.meta.coverImage).getDownloadURL()
@@ -126,7 +128,7 @@ export default function HomeScreen(props) {
         },
         icon:{
             marginHorizontal:16,
-            boxSizing: 'paddingBox',
+            // boxSizing: 'paddingBox',
             marginVertical: 8,
             height: 32,
             width: 32,
