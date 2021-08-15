@@ -129,6 +129,7 @@ export default function App() {
 					<Stack.Screen name="Comment">
 						{props => <CommentScreen {...props} user={user} />}
 					</Stack.Screen>
+					<Stack.Screen name="Login" component={LoginScreen}/>
 				</Stack.Navigator>
 			) :  
 			(

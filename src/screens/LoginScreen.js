@@ -21,7 +21,7 @@ export default function LoginScreen({navigation}) {
     }
     
     const onLoginPress = () => {
-        navigation.navigate('Profile')
+        navigation.navigate('Tabs')
 
         firebase
             .auth()
