@@ -26,7 +26,7 @@ export default function SavedScreen(props) {
         
         let snapshot = await props.user.ref.get()
         user = await snapshot.data()
-        const savedArticles = user.bookmarks.reverse()
+        const savedArticles = user.bookmarks.reverse() || []
         let promises = []
      // console.log("bookmarks", savedArticles)
         for (var id of savedArticles) {
