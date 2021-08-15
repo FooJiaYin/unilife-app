@@ -5,23 +5,15 @@ import { Color, stylesheet } from '../styles'
 export default function Asset(name) {
     if (!name) return null
     if (name == 'bg-login.jpg') return require('../../assets/bg-login.jpg')
-    // bg-profile
     if (name == 'bg-profile.jpg') return require('../../assets/bg-profile.jpg')
-    // default-propic.png
     if (name == 'default-propic.png') return require('../../assets/default-propic.png')
-    // icon.png
+    if (name == 'home.jpg') return require('../../assets/home.jpg')
     if (name == 'icon.png') return require('../../assets/icon.png')
-    // lock.png
     if (name == 'lock.png') return require('../../assets/lock.png')
-    // logo_with_text.png
     if (name == 'logo_with_text.png') return require('../../assets/logo_with_text.png')
-    // profile-image-0.png
     if (name == 'profile-image-0.png') return require('../../assets/profile-image-0.png')
-    // profile-image-1.png
     if (name == 'profile-image-1.png') return require('../../assets/profile-image-1.png')
-    // profile-image-2.png
     if (name == 'profile-image-2.png') return require('../../assets/profile-image-2.png')
-    // tick-large.png
     if (name == 'tick-large.png') return require('../../assets/tick-large.png')
 
     /* Icons */
@@ -52,10 +44,10 @@ export default function Asset(name) {
     if (name == 'search') return require('../../assets/icons/search.png')
     if (name == 'send') return require('../../assets/icons/send.png')
     if (name == 'share') return require('../../assets/icons/share.png')
-    if (name == 'shortcut-announcement') return require('../../assets/icons/shortcut-announcement.png')
-    if (name == 'shortcut-bus') return require('../../assets/icons/shortcut-bus.png')
-    if (name == 'shortcut-library') return require('../../assets/icons/shortcut-library.png')
-    if (name == 'shortcut-lims') return require('../../assets/icons/shortcut-lims.png')
+    if (name == 'ic-announce') return require('../../assets/icons/ic-announce.png')
+    if (name == 'ic-bus') return require('../../assets/icons/ic-bus.png')
+    if (name == 'ic-book') return require('../../assets/icons/ic-book.png')
+    if (name == 'ic-class') return require('../../assets/icons/ic-class.png')
     if (name == 'star') return require('../../assets/icons/star.png')
     if (name == 'tick') return require('../../assets/icons/tick.png')
 }

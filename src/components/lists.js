@@ -99,7 +99,7 @@ export function ListItem({ item, onPress, style, onButtonPress }) {
                             <Image source={Asset(isSaved? `bookmark-active` : `bookmark`)} style={[iconStyle]} />
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => setShowOption(true)} style={listItemStyle.bottomIcon}>
-                            <Image source={Asset('icons/option.png')} style={[iconStyle]} />
+                            <Image source={Asset('option')} style={[iconStyle]} />
                         </TouchableOpacity>
                     </View>
                 </View>

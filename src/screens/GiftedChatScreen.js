@@ -109,7 +109,7 @@ export default function MessageScreen(props) {
 
     return (
         <View style={stylesheet.container}>
-            {/* <GiftedChat
+            <GiftedChat
                 messages={messages}
                 renderBubble={renderBubble}
                 renderAvatar={renderAvatar}
@@ -119,7 +119,7 @@ export default function MessageScreen(props) {
                 user={{
                     _id: user.id,
                 }}
-            /> */}
+            />
         </View>
     )
 }

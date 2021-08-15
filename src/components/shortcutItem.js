@@ -43,7 +43,7 @@ export function HomeShortcutItem ({item}){
     return(
         <TouchableOpacity style={homeStyle.item} onPress={()=>openLink()}>
             <View style={homeStyle.round}>
-                {item.icon&&<Image style={[homeStyle.icon]} source={Asset(`icons/${item.icon}.png`)}/>}
+                {item.icon&&<Image style={[homeStyle.icon]} source={Asset(item.icon)}/>}
             </View>
             <Text style={[homeStyle.title]}>{item.title}</Text>
         </TouchableOpacity>

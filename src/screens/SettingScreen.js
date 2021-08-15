@@ -5,32 +5,17 @@ import { StickedBg, ExpandCard, ProfilePicture } from '../components/decorative'
 import { SettingItem, SettingSection } from '../components/settingItem'
 import { Button } from '../components/forms'
 
-export default function SettingScreen({navigation}) {
+export default function SettingScreen(props) {
     const [name, setName] = useState('小攸')
     const [phone, setPhone] = useState('09123456789')
     
-    setHeaderOptions(navigation)
-
+    // setHeaderOptions(navigation)
     React.useLayoutEffect(() => {
-        navigation.setOptions({
-            headerStyle: {
-                backgroundColor: '#00aebb',
-                borderBottomWidth: 0,
-            },
-            headerTintColor: '#fff',
-            headerTitleStyle: {
-                fontWeight: 'bold',
-            },
-            headerTitleStyle: { alignSelf: 'center' },
-            headerRight: () => (
-                <TouchableOpacity
-                    style={styles.headerButton}
-                    onPress={() => navigation.navigate('Profile')}>
-                    <Text style={stylesheet.textWhite}>完成</Text>
-                </TouchableOpacity>
-            ),
+        props.navigation.setOptions({
+            headerShown: false
         })
-      }, [navigation])
+      }, [props.navigation])
+    
     const screenStyle = StyleSheet.create(
         {
             top:{
@@ -88,10 +73,10 @@ export default function SettingScreen({navigation}) {
                         <Text style={screenStyle.name}>{name}</Text>
                         <Text style={screenStyle.phone}>{phone}</Text>
                     </View>
-                    <Button title="編輯"  style={screenStyle.edit}></Button>
+                    <Button title="編輯"  style={screenStyle.edit} onPress={() => props.navigation.navigate('Profile')}></Button>
                 </ImageBackground>
                 <View style={screenStyle.card}>
-                    <SettingSection title="賬戶設定">
+                    <SettingSection title="帳戶設定">
                         <SettingItem name="校園社群設定" type="open" hint="清華大學" onChange={null}/>
                         <SettingItem name="關鍵字訂閱" type="open" hint="管理" onChange={null}/>
                         <SettingItem name="快捷方式" type="open" hint="管理" onChange={null}/>

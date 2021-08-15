@@ -12,7 +12,7 @@ export default function ProfileScreen(props) {
     const [info, setInfo] = useState({})
 
     const options = {
-        title: '編輯賬戶',
+        title: '編輯帳戶',
         style: {
             headerStyle: {
                 backgroundColor: '#00aebb',

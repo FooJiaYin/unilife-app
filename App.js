@@ -13,7 +13,6 @@ import {decode, encode} from 'base-64'
 import TopicSelectScreen from './src/screens/TopicSelectScreen'
 import SuccessScreen from './src/screens/SuccessScreen'
 import Test from './src/screens/text'
-import SettingScreen from './src/screens/SettingScreen'
 if (!global.btoa) {  global.btoa = encode }
 if (!global.atob) { global.atob = decode }
 
@@ -72,11 +71,6 @@ export default function App() {
 				</Stack.Screen>
 				<Stack.Screen name="Saved">
 					{props => <SavedScreen {...props} user={user} />}
-				<Stack.Screen name="Success" options={{title: ""}}>
-					{props => <Test {...props} user={user} />}
-				</Stack.Screen>
-				<Stack.Screen name="Topic" options={{title: "選擇興趣"}}>
-					{props => <TopicSelectScreen/>}
 				</Stack.Screen>
 				<Stack.Screen name="Article">
 					{props => <ArticleScreen {...props} user={user} />}
@@ -90,15 +84,15 @@ export default function App() {
 		const Stack = createStackNavigator()
 		return (
 			<Stack.Navigator>
-				<Stack.Screen name="Settings">
-					{props => <SettingScreen {...props} user={user} />}
-				</Stack.Screen>
 				<Stack.Screen name="Profile">
 					{props => <ProfileScreen {...props} user={user} />}
 				</Stack.Screen>
-				<Stack.Screen name="Topic" options={{title: "選擇興趣"}}>
-					{props => <TopicSelectScreen/>}
+				<Stack.Screen name="Settings">
+					{props => <SettingScreen {...props} user={user} />}
 				</Stack.Screen>
+				{/* <Stack.Screen name="Topic" options={{title: "選擇興趣"}}>
+					{props => <TopicSelectScreen/>}
+				</Stack.Screen> */}
 			</Stack.Navigator>
 		)
 	}
@@ -112,7 +106,7 @@ export default function App() {
 				<Tab.Screen name="ChatStack" options={{tabBarLabel:"聊天室"}}>
 					{props => <ChatStackScreen {...props} user={user} />}
 				</Tab.Screen>
-				<Tab.Screen name="SettingStack" options={{tabBarLabel:"賬戶"}}>
+				<Tab.Screen name="SettingStack" options={{tabBarLabel:"帳戶"}}>
 					{props => <SettingStackScreen {...props} user={user} />}
 				</Tab.Screen>
 			</Tab.Navigator>
@@ -142,6 +136,12 @@ export default function App() {
 					<Stack.Screen name="Login" component={LoginScreen}/>
 					<Stack.Screen name="FillInfo" component={FillInfoScreen}/>
 					<Stack.Screen name="Registration" component={RegistrationScreen} />
+					<Stack.Screen name="Success" options={{title: ""}}>
+						{props => <Test {...props} user={user} />}
+					</Stack.Screen>
+					<Stack.Screen name="Topic" options={{title: "選擇興趣"}}>
+						{props => <TopicSelectScreen {...props} user={user} />}
+					</Stack.Screen>
 				</Stack.Navigator>
 			)} 
 		</NavigationContainer>

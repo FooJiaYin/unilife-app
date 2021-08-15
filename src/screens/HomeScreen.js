@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { FlatList, Text, TouchableOpacity, TouchableHighlight, View, StyleSheet,Image } from 'react-native'
 import { setHeaderOptions } from '../components/header'
+import Asset from '../components/assets'
 import { stylesheet } from '../styles'
 import { ListItem } from '../components/lists'
 import { firebase } from '../firebase/config'
@@ -18,13 +19,15 @@ export default function HomeScreen(props) {
     const [articles, setArticles] = useState([])
     // console.log("Ref", firebase.firestore().doc('articles/9qAFUBpb7n0U1bzylreO'))
 
-    const options = {
-        title: 'Uni資訊',
-        headerRight: {
-            icon: 'bookmark',
-            onPress: () => props.navigation.navigate('Saved')
-        }
-    }
+    // const options = {
+    //     title: 'Uni資訊',
+    //     headerRight: {
+    //         icon: 'bookmark',
+    //         onPress: () => props.navigation.navigate('Saved')
+    //     }
+    // }
+
+    // setHeaderOptions(props.navigation, options)
 
     async function loadArticles() {
         // console.log("community", user.community)
@@ -85,7 +88,6 @@ export default function HomeScreen(props) {
         article.isSaved = !article.isSaved
     }
 
-    setHeaderOptions(props.navigation, options)
 
     useFocusEffect(
         React.useCallback(() => {
@@ -131,6 +133,7 @@ export default function HomeScreen(props) {
             resizeMode:'contain',
         },
     })
+
     const [myShortcuts, setMyShortcuts] = useState([
         {icon: 'ic-class', title: 'ILMS', url: 'https://google.com'},
         {icon: 'ic-book', title: '圖書館系統', url: ''},
@@ -144,7 +147,7 @@ export default function HomeScreen(props) {
       }, [props.navigation])
     return (
         <View style={stylesheet.container}>
-            <StickedBg image={require('../../assets/home.jpg')}>
+            <StickedBg image={Asset('home.jpg')}>
             </StickedBg>
             <View style={homeCardStyle.container}>
                 <View style={stylesheet.row}>
@@ -155,8 +158,8 @@ export default function HomeScreen(props) {
                     {/* <TouchableOpacity>
                         <Image source={require('../../assets/icons/bookmark.png')} style={homeCardStyle.icon} tintColor='#fff'/>
                     </TouchableOpacity> */}
-                    <TouchableOpacity>
-                        <Image style={homeCardStyle.icon}  source={require('../../assets/icons/bookmark.png')} tintColor='#fff'/>
+                    <TouchableOpacity onPress={() => props.navigation.navigate('Saved')}>
+                        <Image style={homeCardStyle.icon}  source={Asset('bookmark')} tintColor='#fff'/>
                     </TouchableOpacity>
                 </View>
                 <View style={stylesheet.row}>
