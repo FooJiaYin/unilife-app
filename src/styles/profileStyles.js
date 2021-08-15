@@ -1,13 +1,9 @@
 import { StyleSheet } from 'react-native'
+import { styles } from './styles'
 
 export default StyleSheet.create({
-    headerButton:{
-        backgroundColor: 'transparent',
-        marginRight:16,
-        fontSize: 20
-    },
     container: {
-        alignItems: 'center',
+        // alignItems: 'center',
         width: '100%',
         padding: 16,
     },
@@ -17,6 +13,9 @@ export default StyleSheet.create({
     green:{
         backgroundColor: '#00aebb',
         width:'100%'
+    },
+    headerRight: {
+        ...styles.textWhite
     },
     propic: {
         height: 100,
@@ -29,20 +28,12 @@ export default StyleSheet.create({
         marginTop:16,
     },
     editButton:{
-        
-        color: 'white',
-        fontSize: 16,
-        fontWeight: "bold",
         height: 40,
-        borderRadius: 20,
         paddingHorizontal:32,
-        borderColor: 'white',
         borderWidth: 2,
         width: 200,
-        alignSelf: 'center',
-        justifyContent: 'center',
-        alignItems: 'center',
-        margin: 16
+        margin: 16,
+        alignSelf: "center",
     },
     input: {
         height: 40,

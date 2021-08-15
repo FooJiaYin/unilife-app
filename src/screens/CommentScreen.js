@@ -5,23 +5,29 @@ import { setHeaderOptions } from '../components/header'
 import { stylesheet } from '../styles/styles'
 import { firebase } from '../firebase/config'
 import RenderHtml from 'react-native-render-html'
-import { MessageBubble, ProfileImage, SendButton } from '../components/messages'
+import { CommentBubble, ProfileImage, SendButton } from '../components/messages'
 import Asset from '../components/assets'
 
 export default function MessageScreen(props) {
-    const chatroom = props.route.params.chatroom
+    const article = props.route.params.article
     // console.log('chatroom', chatroom)
     const user = props.user.data()
     const storageRef = firebase.storage().ref()
-    const messagesRef = props.route.params.messagesRef
+    const commentsRef = props.route.params.commentsRef
 
     const [messages, setMessages] = useState([])
     const [inputText, setInputText] = useState([])
     let isLoading = false
     let messageLoaded = []
 
+    const options = {
+        title: '留言',
+        headerLeft: 'back'
+    }
+    setHeaderOptions(props.navigation, options)
+    
     function loadMessages() {
-        messagesRef.orderBy('timestamp', 'desc')//.limit(20)
+        commentsRef.orderBy('timestamp', 'desc')//.limit(20)
             .onSnapshot(querySnapshot => {
                 const messageList = []
                 let promises = []
@@ -34,13 +40,13 @@ export default function MessageScreen(props) {
                         message.user.get()
                             .then(snapshot => {
                                 messageList[id].user = snapshot.data().info.nickname
-                                messageList[id].position = (snapshot.data().id == user.id) ? 'right' : 'left'
-                                messageList[id].replies = messagesRef.doc(doc.id).collection('replies')
+                                messageList[id].position = 'left'
+                                messageList[id].replies = commentsRef.doc(doc.id).collection('replies')
                                 if (messageList[id].timestamp == null) {
                                     messageList[id].timestamp = firebase.firestore.Timestamp.now()
                                 }
-                                messageList[id].position = (snapshot.data().id == user.id) ? 'right' : 'left'
-                                // messageList[id].replies = messagesRef.doc(doc.id).collection('replies')
+                                messageList[id].position = 'left'
+                                // messageList[id].replies = commentsRef.doc(doc.id).collection('replies')
                                 messageList[id].timestamp = messageList[id].timestamp.toDate()
                                 messageList[id]._id = id
                                 messageList[id].createdAt = messageList[id].timestamp
@@ -55,7 +61,7 @@ export default function MessageScreen(props) {
                     )
                     // const snapshot = await message.user.get()
                     // messageList[id].user = snapshot.data().info.nickname
-                    // messageList[id].replies = messagesRef.doc(doc.id).collection('replies')
+                    // messageList[id].replies = commentsRef.doc(doc.id).collection('replies')
                     // if (messageList[id].timestamp == null) {
                     //     messageList[id].timestamp = firebase.firestore.Timestamp.now();
                     // }
@@ -71,7 +77,7 @@ export default function MessageScreen(props) {
                 content: inputText,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             }
-            messagesRef.add(data)
+            commentsRef.add(data)
                 .then(_doc => {
                     Keyboard.dismiss()
                 })
@@ -80,12 +86,6 @@ export default function MessageScreen(props) {
                 })
         }
     }
-
-    const options = {
-        title: '聊天室',
-        headerLeft: 'back'
-    }
-    setHeaderOptions(props.navigation, options)
 
     useEffect(() => {
         loadMessages()
@@ -99,7 +99,7 @@ export default function MessageScreen(props) {
             position: currentMessage.position
         }
         return (
-            <MessageBubble {...message} />
+            <CommentBubble {...message} />
         )
     }
 
@@ -114,11 +114,12 @@ export default function MessageScreen(props) {
                 renderBubble={renderBubble}
                 renderAvatar={renderAvatar}
                 renderSend={renderSend} 
+                renderDay={() => <></>}
                 // onSend={messages => Send(messages[0].text)}
+                showAvatarForEveryMessage={true}
                 renderAvatarOnTop = {true}
-                user={{
-                    _id: user.id,
-                }}
+                alignTop={true}
+                user={{_id: ''}}
             />
         </View>
     )

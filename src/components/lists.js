@@ -2,9 +2,12 @@ import React, { useState } from 'react'
 import { StyleSheet, View, TouchableOpacity, Text, Image } from 'react-native'
 import { styles, Color } from '../styles'
 import Asset, { Icon } from './assets'
-import moment from 'moment'
+import time from '../utils/time'
 
-export function ListItem({ item, onPress, style}) {
+export function ListItem({ item, onPress, style, onButtonPress }) {
+    const [ isSaved, setIsSaved ] = useState(item.isSaved)
+    console.log(item.id, isSaved)
+
     const listItemStyle = StyleSheet.create({
         container: {
             flex: 1,
@@ -29,9 +32,9 @@ export function ListItem({ item, onPress, style}) {
             flexWrap: 'wrap',
         },
         description: {
-            ...styles.textSmall,
+            ...styles.textS,
             ...styles.textGrey,
-            height: 30,
+            height: 32,
             flexWrap: 'wrap',
             overflow: 'hidden',
         },
@@ -41,7 +44,7 @@ export function ListItem({ item, onPress, style}) {
             justifyContent: 'space-between',
         },
         bottomText: {
-            ...styles.textSmall,
+            ...styles.textS,
             ...styles.textGrey2,
             alignSelf: 'flex-end',
         },
@@ -52,13 +55,16 @@ export function ListItem({ item, onPress, style}) {
     })
     
     const iconStyle = {
-        width: 14,
+        ...styles.icon,
         height: 14,
-        resizeMode: 'contain',
-        tintColor: Color.grey0,
+        width: 14,
+        margin: 0,
     }
-    moment.locale('zh-tw')
-    const [ isSaved, setIsSaved ] = useState(false)
+    
+    const handleButtonPress = () => {
+        onButtonPress();
+        setIsSaved(!isSaved)
+    }
 
     return (
         <TouchableOpacity onPress={onPress} >
@@ -73,10 +79,10 @@ export function ListItem({ item, onPress, style}) {
                     </Text>
                     <View style={style? [listItemStyle.bottom, style.bottom] : listItemStyle.bottom}>
                         <Text style={style? [listItemStyle.bottomText, style.bottomText] : listItemStyle.bottomText}>
-                            {moment(item.publishedAt.toDate()).fromNow()}
+                            {time(item.publishedAt).fromNow()}
                         </Text>
                         {/* <Icon size={14} name="bookmark" style={style? style.bottomIcon : {}}/> */}
-                        <TouchableOpacity onPress={() => setIsSaved(!isSaved)} style={listItemStyle.bottomIcon}>
+                        <TouchableOpacity onPress={() => handleButtonPress()} style={listItemStyle.bottomIcon}>
                             <Image source={Asset(isSaved? `icons/bookmark-active.png` : `icons/bookmark.png`)} style={[iconStyle]} />
                         </TouchableOpacity>
                     </View>

@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { ImageBackground, Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { setHeaderOptions } from '../components/header'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Asset from '../components/assets'
 import { Button } from '../components/forms'
-import { stylesheet } from './LoginScreen/styles'
+import { styles } from './LoginScreen/styles'
+import { stylesheet } from '../styles'
 import { firebase } from '../firebase/config'
 
 export default function LoginScreen({navigation}) {
@@ -11,6 +13,8 @@ export default function LoginScreen({navigation}) {
     
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+
+    setHeaderOptions(navigation)
 
     const onFooterLinkPress = () => {
         navigation.navigate('Registration')
@@ -49,18 +53,18 @@ export default function LoginScreen({navigation}) {
         })
       }, [navigation])
     return (
-            <ImageBackground source={Asset('bg-login.jpg')} resizeMode="cover" style={stylesheet.bg}>
-        <View  style={stylesheet.container}>
+            <ImageBackground source={Asset('bg-login.jpg')} resizeMode="cover" style={styles.bg}>
+        <View  style={styles.container}>
             <KeyboardAwareScrollView
                 style={{ flex: 1, width: '100%' }}
                 keyboardShouldPersistTaps="always">
                 <Image
-                    style={stylesheet.logo}
+                    style={styles.logo}
                     source={Asset('logo_with_text.png')}
                 />
-                <View style={stylesheet.card}>
+                <View style={styles.card}>
                     <TextInput
-                        style={stylesheet.input}
+                        style={styles.input}
                         placeholder='E-mail'
                         placeholderTextColor="#aaaaaa"
                         onChangeText={(text) => setEmail(text)}
@@ -69,7 +73,7 @@ export default function LoginScreen({navigation}) {
                         autoCapitalize="none"
                     />
                     <TextInput
-                        style={stylesheet.input}
+                        style={styles.input}
                         placeholderTextColor="#aaaaaa"
                         secureTextEntry
                         placeholder='Password'
@@ -78,10 +82,10 @@ export default function LoginScreen({navigation}) {
                         underlineColorAndroid="transparent"
                         autoCapitalize="none"
                     />
-                    <Button onPress={() => onLoginPress()} title="登入" />
+                    <Button onPress={() => onLoginPress()} style={stylesheet.bgGreen} title="登入" />
                 </View>
-                <View style={stylesheet.footerView}>
-                    <Text style={stylesheet.footerText}>Don't have an account? <Text onPress={onFooterLinkPress} style={stylesheet.footerLink}>Sign up</Text></Text>
+                <View style={styles.footerView}>
+                    <Text style={styles.footerText}>Don't have an account? <Text onPress={onFooterLinkPress} style={styles.footerLink}>Sign up</Text></Text>
                 </View>
             </KeyboardAwareScrollView>
         </View>

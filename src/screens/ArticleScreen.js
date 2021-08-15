@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { FlatList, Keyboard, Text, SafeAreaView, ScrollView, View, TextInput, TouchableOpacity, useWindowDimensions } from 'react-native'
+import { setHeaderOptions } from '../components/header'
 import { stylesheet } from '../styles/styles'
 import { firebase } from '../firebase/config'
 import RenderHtml from 'react-native-render-html'
 // import HTMLView from 'react-native-htmlview';
-import moment from 'moment'
+import time from '../utils/time'
 
 export default function ArticleScreen(props) {
 
@@ -16,6 +17,21 @@ export default function ArticleScreen(props) {
     const [content, setContent] = useState(article.content)
     const [comments, setComments] = useState([])
     const [inputText, setInputText] = useState([])
+
+    const options = {
+        title: article.meta.source,
+        headerLeft: 'back',
+        headerRight: {
+            icon: 'chat',
+            style: {
+                width: 18,
+                height: 18,
+            },
+            onPress: () => {props.navigation.navigate('Comment', {article: article, commentsRef: commentsRef})}
+        }
+    }
+    console.log('title', article.meta.source)
+    setHeaderOptions(props.navigation, options)
 
     /* Get Images */
     let newContent = content;
@@ -132,9 +148,9 @@ export default function ArticleScreen(props) {
                 <Text style={stylesheet.articleTitle}>
                     {article.title}
                 </Text>
-                <Text style={stylesheet.textSmall}>
+                <Text style={stylesheet.textS}>
                     {article.meta.source + ' '}
-                    {moment(article.publishedAt.toDate()).format('YYYY/M/D h:mm a')}
+                    {time(article.publishedAt).format('YYYY/M/D h:mm a')}
                 </Text>
                 <RenderHtml
                     source={{html: content}}

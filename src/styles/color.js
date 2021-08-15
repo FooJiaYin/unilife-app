@@ -43,14 +43,19 @@ export const color = {
     bgLight: {
         backgroundColor: Color.grey1
     },
+    outlineWhite: {
+        color: Color.green,
+        borderColor: Color.white,
+        borderWidth: 1,
+    },
     outlineGreen: {
         color: Color.green,
-        borderColor: '#0F355C',
+        borderColor: Color.green,
         borderWidth: 1,
     },
     outlineBlue: {
         color: Color.blue,
-        borderColor: '#0F355C',
+        borderColor: Color.blue,
         borderWidth: 1,
     }
 }

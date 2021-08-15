@@ -3,7 +3,7 @@ import { FlatList, Keyboard, Text, SafeAreaView, ScrollView, View, TextInput, To
 import { stylesheet } from '../styles'
 import { firebase } from '../firebase/config'
 import RenderHtml from 'react-native-render-html'
-import { Message } from '../components/messages'
+import { Message, InputBar } from '../components/messages'
 // import HTMLView from 'react-native-htmlview'
 
 export default function MessageScreen(props) {

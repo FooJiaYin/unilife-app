@@ -2,9 +2,13 @@ import 'react-native-gesture-handler'
 import React, { useEffect, useState } from 'react'
 import { firebase } from './src/firebase/config'
 import { NavigationContainer } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack'
+import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs' 
-import { LoginScreen, HomeScreen, ArticleScreen, RegistrationScreen, FillInfoScreen, ProfileScreen, ChatroomScreen, MessageScreen } from './src/screens'
+import { LoginScreen, RegistrationScreen, FillInfoScreen } from './src/screens'
+import { HomeScreen, SavedScreen, ArticleScreen, CommentScreen } from './src/screens'
+import { ChatroomScreen, MessageScreen } from './src/screens'
+import { SettingScreen, ProfileScreen } from './src/screens'
+import { headerOptions } from './src/components/header'
 import {decode, encode} from 'base-64'
 if (!global.btoa) {  global.btoa = encode }
 if (!global.atob) { global.atob = decode }
@@ -59,8 +63,11 @@ export default function App() {
 	function HomeStackScreen(props) {
 		return (
 			<Stack.Navigator >		  
-				<Stack.Screen name="Home" options={{title: "Uni資訊"}}>
+				<Stack.Screen name="Home">
 					{props => <HomeScreen {...props} user={user} />}
+				</Stack.Screen>
+				<Stack.Screen name="Saved">
+					{props => <SavedScreen {...props} user={user} />}
 				</Stack.Screen>
 				<Stack.Screen name="Article">
 					{props => <ArticleScreen {...props} user={user} />}
@@ -69,13 +76,16 @@ export default function App() {
 		)
 	}
 	
-	/* Profile Stack */
-	function ProfileStackScreen(props) {
+	/* Setting Stack */
+	function SettingStackScreen(props) {
 		const Stack = createStackNavigator()
 		return (
 			<Stack.Navigator>
+				<Stack.Screen name="Settings">
+					{props => <SettingScreen {...props} user={user} />}
+				</Stack.Screen>
 				<Stack.Screen name="Profile">
-				{props => <ProfileScreen {...props} user={user} />}
+					{props => <ProfileScreen {...props} user={user} />}
 				</Stack.Screen>
 			</Stack.Navigator>
 		)
@@ -90,8 +100,8 @@ export default function App() {
 				<Tab.Screen name="ChatStack" options={{tabBarLabel:"聊天室"}}>
 					{props => <ChatStackScreen {...props} user={user} />}
 				</Tab.Screen>
-				<Tab.Screen name="ProfileStack" options={{tabBarLabel:"個人資料"}}>
-					{props => <ProfileStackScreen {...props} user={user} />}
+				<Tab.Screen name="SettingStack" options={{tabBarLabel:"賬戶"}}>
+					{props => <SettingStackScreen {...props} user={user} />}
 				</Tab.Screen>
 			</Tab.Navigator>
 		)
@@ -109,6 +119,9 @@ export default function App() {
 					</Stack.Screen>
 					<Stack.Screen name="Message">
 						{props => <MessageScreen {...props} user={user} />}
+					</Stack.Screen>
+					<Stack.Screen name="Comment">
+						{props => <CommentScreen {...props} user={user} />}
 					</Stack.Screen>
 				</Stack.Navigator>
 			) :  

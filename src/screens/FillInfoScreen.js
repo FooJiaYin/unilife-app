@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Image, Text, TextInput, TouchableOpacity, View , Button} from 'react-native'
+import { setHeaderOptions } from '../components/header'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { stylesheet } from '../styles/styles'
 import { firebase } from '../firebase/config'
@@ -15,13 +16,7 @@ export default function RegistrationScreen({navigation}) {
     const [birthday, setBirthday] = useState('')
     const [agree, setAgree] = useState(false)
 
-    // const myStyle = StyleSheet.create({
-    //     input: {
-            
-    //     }
-    // })
-
-    // const [checkbox, setCheckbox] = useState('')
+    setHeaderOptions(navigation)
 
     const onFooterLinkPress = () => {
         navigation.navigate('Login')

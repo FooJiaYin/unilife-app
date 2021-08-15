@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { color } from './color'
+import { color, Color } from './color'
 
 export const styles = {
     ...color,
@@ -8,10 +8,14 @@ export const styles = {
         fontSize: 16,
         textAlign: 'justify'
     },
-    textSmall: {
+    textCenter: {
+        textAlign: 'center',
+        alignSelf: 'center'
+    },
+    textS: {
         fontSize: 12,
     },      
-    textXSmall: {
+    textXS: {
         fontSize: 10,
     },      
     textBubble: {
@@ -31,9 +35,18 @@ export const styles = {
         alignItems: "center",
         justifyContent: 'center'
     },
+    icon: {
+        aspectRatio: 1,
+        width: 16, 
+        height: 16,
+        margin: 16,
+        resizeMode: 'contain',
+        alignSelf: 'center',
+        tintColor: Color.grey0
+    },
     container: {
         flex: 1,
-        alignItems: 'center',
+        // alignItems: 'center',
         backgroundColor: 'white',
     },
     articleContainer: {

@@ -7,12 +7,14 @@ export const Checkbox = RNUI_Checkbox
 
 const formStyles = StyleSheet.create({
     button: {
-        ...styles.bgGreen,
         marginTop: 8,
         height: 40,
-        borderRadius: 20,
-        alignItems: "center",
-        justifyContent: 'center'
+        borderRadius: 24,
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        // alignSelf: 'center',
+        paddingVertical: 12,
     },
     buttonTitle: {
         ...styles.textWhite,
