@@ -61,6 +61,12 @@ export default function ProfileScreen(props) {
         // updateUserData()
     }
 
+    function signOut() {
+        firebase.auth().signOut().then(() => {
+            props.navigation.goBack()
+        })
+    }
+
     useEffect(() => {
         loadUserData()
     }, [])
@@ -121,6 +127,12 @@ export default function ProfileScreen(props) {
                         style={stylesheet.bgGreen}
                         onPress={() => updateUserData()} 
                         title='儲存'
+                    />
+                    <Button
+                        style={stylesheet.outlineBlue} 
+                        titleStyle={stylesheet.textBlue}
+                        onPress={() => signOut()} 
+                        title='登出'
                     />
                 </View>
                  

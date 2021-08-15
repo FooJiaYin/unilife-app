@@ -37,7 +37,7 @@ export default function LoginScreen({navigation}) {
                             return
                         }
                         const user = doc.data()
-                        navigation.navigate('ProfileInfo', {user: user})
+                        navigation.navigate('FillInfo', {user: user})
                     })
                     .catch(error => {
                         alert(error)

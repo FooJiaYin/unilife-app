@@ -35,7 +35,7 @@ export default function HomeScreen(props) {
         let snapshot = await props.user.ref.get()
         user = await snapshot.data()
         const newArticles = []
-        const savedArticles = user.bookmarks
+        const savedArticles = user.bookmarks || []
         // console.log("bookmarks", savedArticles)
         articlesRef
             .where("community", "in", ["all", user.identity.community])
