@@ -3,7 +3,8 @@ export const Color = {
     green: '#00aebb',
     white: '#ffffff',
     grey0: '#4A4D57',
-    grey2: '#f2f3f3'
+    grey2: '#f2f3f3',
+    lightgrey: '#e2e3e4',
 }
 
 export const color = {
@@ -39,6 +40,9 @@ export const color = {
     bgGrey: {
         backgroundColor: Color.grey0,
         opacity: 0.5
+    },
+    bgLightGrey: {
+        backgroundColor: Color.lightgrey,
     },
     bgLight: {
         backgroundColor: Color.grey1

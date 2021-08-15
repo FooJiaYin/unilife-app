@@ -3,6 +3,7 @@ import { StyleSheet, View, TouchableOpacity, Text, Image } from 'react-native'
 import { styles, Color } from '../styles'
 import Asset, { Icon } from './assets'
 import time from '../utils/time'
+import { OptionOverlay, OptionItem } from './overlay'
 
 export function ListItem({ item, onPress, style, onButtonPress }) {
     const [ isSaved, setIsSaved ] = useState(item.isSaved)
@@ -47,6 +48,7 @@ export function ListItem({ item, onPress, style, onButtonPress }) {
             ...styles.textS,
             ...styles.textGrey2,
             alignSelf: 'flex-end',
+            flex:1,
         },
         bottomIcon: {
             alignSelf: 'flex-end',
@@ -65,9 +67,20 @@ export function ListItem({ item, onPress, style, onButtonPress }) {
         onButtonPress();
         setIsSaved(!isSaved)
     }
+    const [ showOption, setShowOption ] = useState(false)
+
+    const optionItems = [
+        {iconSrc: 'share.png', text: '分享'},
+        {iconSrc: 'report.png', text: '舉報'},
+    ]
 
     return (
         <TouchableOpacity onPress={onPress} >
+            {/* <OptionOverlay
+                visible={showOption}
+                options={optionItems}
+                onBackCB={()=>{setShowOption(false)}}
+            /> */}
             <View style={style? [listItemStyle.container, style.container] : listItemStyle.container}>
                 <Image style={style? [listItemStyle.image, style.image] : listItemStyle.image} source={{uri: item.imageUrl}}/>
                 <View style={style? [listItemStyle.textContainer, style.textContainer] : listItemStyle.textContainer}>
@@ -84,6 +97,9 @@ export function ListItem({ item, onPress, style, onButtonPress }) {
                         {/* <Icon size={14} name="bookmark" style={style? style.bottomIcon : {}}/> */}
                         <TouchableOpacity onPress={() => handleButtonPress()} style={listItemStyle.bottomIcon}>
                             <Image source={Asset(isSaved? `bookmark-active` : `bookmark`)} style={[iconStyle]} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => setShowOption(true)} style={listItemStyle.bottomIcon}>
+                            <Image source={Asset('icons/option.png')} style={[iconStyle]} />
                         </TouchableOpacity>
                     </View>
                 </View>
