@@ -8,131 +8,6 @@ import { firebase } from '../firebase/config'
 import Asset from '../components/assets'
 import { stylesheet, Color } from '../styles'
 
-// export default function ProfileScreen(props) {
-//     const [info, setInfo] = useState({})
-//     const [name, setName] = useState({})
-
-//     const options = {
-//         title: '編輯賬戶',
-//         style: {
-//             headerStyle: {
-//                 backgroundColor: '#00aebb',
-//                 borderBottomWidth: 0,
-//             },
-//             headerTintColor: '#fff',
-//             headerTitleStyle: {
-//                 fontWeight: 'bold',
-//                 alignSelf: 'center',
-//                 color: Color.white,
-//             }
-//         },
-//         headerLeft: {
-//             icon: 'left',
-//             style: {
-//                 tintColor: Color.white
-//             },
-//             onPress: () => props.navigation.goBack()
-//         },
-//         headerRight: {
-//             title: '完成',
-//             style: styles.headerRight,
-//             onPress: () => console.log(name)
-//         }
-//     }
-//     setHeaderOptions(props.navigation, options)
-
-//     async function loadUserData() {
-//         // console.log("community", user.community)
-//         // console.log("identity", user.identity.community)
-//         let snapshot = await props.user.ref.get()
-//         let user = await snapshot.data()
-//         console.log(user)
-//         setInfo(user.info)
-//     }
-
-//     async function updateUserData() {
-//         await props.user.ref.update({
-//             info: info
-//         })
-//     }
-
-//     useEffect(() => {
-//         loadUserData()
-//     }, [])
-
-//     return (
-//         <KeyboardAwareScrollView
-//             style={{ flex: 1, width: '100%' ,backgroundColor: 'white'}}
-//             keyboardShouldPersistTaps="always">
-//             <View style={styles.green}>
-//                 <Image
-//                     style={styles.propic}
-//                     source={Asset('default-propic.png')}/>
-//             </View>
-//             <View>
-//                 <ImageBackground source={Asset('bg-profile.jpg')} resizeMode="cover" style={styles.bg}>
-//                     <Button style={[stylesheet.outlineWhite, styles.editButton]} title="切換頭像" onPress={() => onLoginPress()}/>
-                    
-//                 </ImageBackground>
-//             </View>
-//             <View style={styles.container}>
-//                 <TextInput
-//                     style={styles.input}
-//                     defaultValue={info.name}
-//                     placeholder='姓名'
-//                     placeholderTextColor="#aaaaaa"
-//                     underlineColorAndroid="transparent"
-//                     autoCapitalize="none"
-//                     onChangeText={(text) => setName(text)}
-//                 />
-//                 <TextInput
-//                     style={styles.input}
-//                     defaultValue={info.nickname}
-//                     placeholder='暱稱'
-//                     placeholderTextColor="#aaaaaa"
-//                     underlineColorAndroid="transparent"
-//                     autoCapitalize="none"
-//                     onChangeText={(input) => setInfo({ ...info, nickname: input })}
-//                 />
-//                 <TextInput
-//                     style={styles.input}
-//                     defaultValue={info.birthday}
-//                     placeholder='生日'
-//                     placeholderTextColor="#aaaaaa"
-//                     underlineColorAndroid="transparent"
-//                     autoCapitalize="none"
-//                     onChangeText={(input) => setInfo({ ...info, birthday: input })}
-//                 />
-//                 <TextInput
-//                     style={styles.input}
-//                     defaultValue={info.email}
-//                     placeholder='Email'
-//                     placeholderTextColor="#aaaaaa"
-//                     underlineColorAndroid="transparent"
-//                     autoCapitalize="none"
-//                     onChangeText={(input) => setInfo({ ...info, email: input })}
-//                 />
-//                 {/* <TextInput
-//                     style={styles.input}
-//                     placeholderTextColor="#aaaaaa"
-//                     secureTextEntry
-//                     placeholder='密碼'
-//                     underlineColorAndroid="transparent"
-//                     autoCapitalize="none"
-//                 />
-//                 <TextInput
-//                     style={styles.input}
-//                     placeholderTextColor="#aaaaaa"
-//                     secureTextEntry
-//                     placeholder='再次輸入密碼'
-//                     underlineColorAndroid="transparent"
-//                     autoCapitalize="none"
-//                 /> */}
-//             </View>
-//         </KeyboardAwareScrollView>
-//     )
-// }
-
 export default function ProfileScreen(props) {
     const [info, setInfo] = useState({})
 
@@ -165,16 +40,26 @@ export default function ProfileScreen(props) {
         // console.log("identity", user.identity.community)
         let snapshot = await props.user.ref.get()
         let user = await snapshot.data()
-        console.log(user)
+     // console.log(user)
         setInfo(user.info)
     }
 
     const updateUserData = useCallback( async () => {
-        console.log(info)
+     // console.log(info)
         await props.user.ref.update({
             info: info
         })
     }, [info])
+
+    function changeProfileImage() {
+     // console.log(info.profileImage)
+        let currentId = (info.profileImage == "profile-image-0.png")? 0 : 
+                        (info.profileImage == "profile-image-1.png")? 1 : 2
+        currentId = (currentId + 1) % 3
+        let image = "profile-image-" + currentId + ".png"
+        setInfo({ ...info, profileImage: image })
+        // updateUserData()
+    }
 
     useEffect(() => {
         loadUserData()
@@ -188,12 +73,11 @@ export default function ProfileScreen(props) {
                 <View style={styles.green}>
                     <Image
                         style={styles.propic}
-                        source={Asset('default-propic.png')}/>
+                        source={info.profileImage? Asset(info.profileImage) : null}/>
                 </View>
                 <View>
                     <ImageBackground source={Asset('bg-profile.jpg')} resizeMode="cover" style={styles.bg}>
-                        <Button style={[stylesheet.outlineWhite, styles.editButton]} title="切換頭像" onPress={() => onLoginPress()}/>
-                        
+                        <Button style={[stylesheet.outlineWhite, styles.editButton]} title="切換頭像" onPress={() => changeProfileImage()}/>
                     </ImageBackground>
                 </View>
                 <View style={styles.container}>
@@ -224,7 +108,7 @@ export default function ProfileScreen(props) {
                         autoCapitalize="none"
                         onChangeText={(input) => setInfo({ ...info, birthday: input })}
                     />
-                    <TextInput
+                    {/* <TextInput
                         style={styles.input}
                         defaultValue={info.email}
                         placeholder='Email'
@@ -232,7 +116,7 @@ export default function ProfileScreen(props) {
                         underlineColorAndroid="transparent"
                         autoCapitalize="none"
                         onChangeText={(input) => setInfo({ ...info, email: input })}
-                    />
+                    /> */}
                     <Button
                         style={stylesheet.bgGreen}
                         onPress={() => updateUserData()} 

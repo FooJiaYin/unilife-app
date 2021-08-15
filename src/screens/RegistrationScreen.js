@@ -18,7 +18,7 @@ export default function RegistrationScreen({ navigation }) {
 	const [birthday, setBirthday] = useState("")
 	const [agree, setAgree] = useState(false)
 
-    setHeaderOptions(props.navigation)
+    setHeaderOptions(navigation)
 
 	const onFooterLinkPress = () => {
 		navigation.navigate("Login")
@@ -47,6 +47,7 @@ export default function RegistrationScreen({ navigation }) {
 						name,
 						nickname,
 						birthday,
+						profileImage: "profile-image-0.png"
 					},
 					identity: {
 						community: firebase.firestore().doc("/communities/nthu/"),

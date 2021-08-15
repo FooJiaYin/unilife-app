@@ -28,39 +28,45 @@ export default function ChatroomScreen(props) {
             .then(querySnapshot => {
                 const newChatrooms = []
                 let promises = []
+                let get_user_promises = []
                 querySnapshot.forEach(async doc => {
                     const id = newChatrooms.push(doc.data()) -1
                     // const chatEntry = doc.data()
-                    console.log('chatEntry', newChatrooms[id].startedAt)
+                    // console.log('chatEntry', newChatrooms[id].startedAt)
                     newChatrooms[id].messagesRef = newChatrooms[id].chatroom.collection('messages')
-                    console.log('MessagesRef', newChatrooms[id].messagesRef)
+                    // console.log('MessagesRef', newChatrooms[id].messagesRef)
                     promises.push(
-                        newChatrooms[id].chatroom.get().then( snapshot => {
+                        newChatrooms[id].chatroom.get().then(snapshot => {
                             // console.log('chatroom', snapshot.data())
                             newChatrooms[id].chatroom = snapshot.data()
                             newChatrooms[id].active = snapshot.data().active
                             newChatrooms[id].userNames = []
                             snapshot.data().users.forEach(user => {
-                                // promises.push(
+                                get_user_promises.push(
                                     user.get()
                                     .then(userSnapshot => newChatrooms[id].userNames.push(userSnapshot.data().info.nickname))
-                                    // .finally(() => console.log('userNames', newChatrooms[id].userNames))
-                                // )
+                                    .finally(() => {
+                                        // console.log('userNames', newChatrooms[id].userNames)
+                                        // setChatrooms(newChatrooms)
+                                    })
+                                )
                             })
                         })
                     )
                 })
                 Promise.all(promises).finally(() => {
-                    console.log('users', newChatrooms[0].userNames)
-                    newChatrooms.push({
-                        active: true,
-                        userNames: [],
-                        id: '0',
-                        style: stylesheet.bgGrey,
-                        startedAt: firebase.firestore.Timestamp.now()
-                    }) 
-                    setChatrooms(newChatrooms)
-                    // console.log('chatrooms', newChatrooms)
+                        Promise.all(get_user_promises).finally(() => {
+                        // console.log('users', newChatrooms[0].userNames)
+                        newChatrooms.push({
+                            active: true,
+                            userNames: [],
+                            id: '0',
+                            style: stylesheet.bgGrey,
+                            startedAt: firebase.firestore.Timestamp.now()
+                        }) 
+                        setChatrooms(newChatrooms)
+                        // console.log('chatrooms', newChatrooms)
+                    })
                 })
             })
     }, [])

@@ -54,7 +54,7 @@ export function HeaderButton({title, icon, style, onPress, custom}) {
                     <Text style={[headerStyle.headerRight, style]}>{title}</Text>
                 ): null}
                 {(icon)? (
-                    <Image source={Asset('icons/' + icon + '.png')} style={[stylesheet.icon, style]} />
+                    <Image source={Asset(icon)} style={[stylesheet.icon, style]} />
                 ): null}
             </TouchableOpacity>
         )

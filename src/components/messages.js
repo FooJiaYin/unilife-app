@@ -23,7 +23,7 @@ const messageStyle = StyleSheet.create({
         marginRight: 0
     },
     messageRight: {
-        flex: 'column',
+        flexDirection: 'column',
         flexShrink: 1,
         marginLeft: 8,
     },    
@@ -48,7 +48,7 @@ const messageStyle = StyleSheet.create({
         ...styles.textBubble,
         // overflow: 'wrap',
         backgroundColor: '#f2f3f3',
-        fontSize: 14,
+        fontSize: 15,
     },
     right: {
         flexDirection: 'row-reverse',
@@ -59,7 +59,7 @@ const messageStyle = StyleSheet.create({
 
 export function MessageBubble(message) {
     // moment.locale('zh-tw')
-    console.log(message.position)
+    // console.log(message.position)
     return (
         <View style={[messageStyle.messageRight]}>
             <Text style={[stylesheet.textXS, stylesheet.textGrey, (message.position=='right') ?messageStyle.right:{}]}>
@@ -80,7 +80,7 @@ export function MessageBubble(message) {
 
 export function CommentBubble(message) {
     // moment.locale('zh-tw')
-    console.log(message.position)
+    // console.log(message.position)
     return (
         <View style={[messageStyle.messageRight]}>
             <Text style={[stylesheet.textXS, stylesheet.textGrey, (message.position=='right') ?messageStyle.right:{}]}>
@@ -95,14 +95,14 @@ export function CommentBubble(message) {
     )
 }
 
-export function ProfileImage({id}) {
+export function ProfileImage({url}) {
     return (
-        <Image source={Asset('profile-image-'+id+'.png')} style={messageStyle.profileImage} />
+        <Image source={Asset(url)} style={messageStyle.profileImage} />
     )
 }
     
 export function Message(message) {
-    console.log('Message', message)
+    // console.log('Message', message)
     return (
         <View style={[messageStyle.message, {justifyContent: message.position}]}>
             <ProfileImage id={0} />
@@ -135,7 +135,7 @@ export function InputBar({onSend}, ...props) {
                     multiline={true}
                     placeholder="Type a message"
                     onChangeText={(text) => {
-                        console.log(text)
+                     // console.log(text)
                     }}
                 />
             </View> */}
@@ -146,13 +146,13 @@ export function InputBar({onSend}, ...props) {
 export function SendButton ({input, onSend}) {
     return(
         <TouchableOpacity onPress={() => onSend(input)}>
-            <Image source={Asset('icons/send.png')} style={[stylesheet.icon, {width: 20, height: 20}]} />
+            <Image source={Asset('send')} style={[stylesheet.icon, {width: 20, height: 20}]} />
         </TouchableOpacity>
     )
 }
    
 export function Chatroom({item, size, navigation}, ...props) {
-    console.log('props', props)
+    // console.log('props', props)
     // const window = useWindowDimensions()
     const cardStyle = StyleSheet.create({
         fullHeight: {
@@ -191,8 +191,8 @@ export function Chatroom({item, size, navigation}, ...props) {
             marginBottom: 8,
         }
     }) 
-    console.log('item', item)
-    console.log('time', item.startedAt.toDate())
+    // console.log('item', item)
+    // console.log('time', item.startedAt.toDate())
     return (
         <View style={cardStyle.fullHeight}>
             {item.id == 0? 

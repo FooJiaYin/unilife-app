@@ -10,7 +10,7 @@ export default function HomeScreen(props) {
     // console.log(props)
     
     let user
-    console.log(props.user)
+    // console.log(props.user)
     const storageRef = firebase.storage().ref()
     const articlesRef = firebase.firestore().collection('articles')
     const [articles, setArticles] = useState([])
@@ -31,7 +31,7 @@ export default function HomeScreen(props) {
         user = await snapshot.data()
         const newArticles = []
         const savedArticles = user.bookmarks
-        console.log("bookmarks", savedArticles)
+        // console.log("bookmarks", savedArticles)
         articlesRef
             .where("community", "in", ["all", user.identity.community])
             .orderBy('publishedAt', 'desc')
@@ -60,7 +60,7 @@ export default function HomeScreen(props) {
                     )
                 })
                 Promise.all(promises).finally(() => {
-                    console.log("End promises", newArticles)
+                 // console.log("End promises", newArticles)
                     setArticles(newArticles)
                 })
             }).finally(() => {
@@ -70,7 +70,7 @@ export default function HomeScreen(props) {
     }
 
     function toggleSaveArticle(article) {
-        console.log(article)
+     // console.log(article)
         if (article.isSaved) {
             props.user.ref.update({
                 bookmarks: firebase.firestore.FieldValue.arrayRemove(article.id)
@@ -87,7 +87,7 @@ export default function HomeScreen(props) {
 
     useFocusEffect(
         React.useCallback(() => {
-            console.log("Hello")
+         // console.log("Hello")
             loadArticles()
         }, [])
     );

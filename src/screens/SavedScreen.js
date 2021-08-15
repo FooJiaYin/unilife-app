@@ -28,7 +28,7 @@ export default function SavedScreen(props) {
         user = await snapshot.data()
         const savedArticles = user.bookmarks.reverse()
         let promises = []
-        console.log("bookmarks", savedArticles)
+     // console.log("bookmarks", savedArticles)
         for (var id of savedArticles) {
             const snapshot = await articlesRef.doc(id).get()
             const article = snapshot.data()
@@ -56,7 +56,7 @@ export default function SavedScreen(props) {
     }
 
     function toggleSaveArticle(article) {
-        console.log(article)
+     // console.log(article)
         if (article.isSaved) {
             props.user.ref.update({
                 bookmarks: firebase.firestore.FieldValue.arrayRemove(article.id)

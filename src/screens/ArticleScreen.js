@@ -23,14 +23,11 @@ export default function ArticleScreen(props) {
         headerLeft: 'back',
         headerRight: {
             icon: 'chat',
-            style: {
-                width: 18,
-                height: 18,
-            },
+            size: 18,
             onPress: () => {props.navigation.navigate('Comment', {article: article, commentsRef: commentsRef})}
         }
     }
-    console.log('title', article.meta.source)
+ // console.log('title', article.meta.source)
     setHeaderOptions(props.navigation, options)
 
     /* Get Images */
@@ -114,22 +111,23 @@ export default function ArticleScreen(props) {
             fontWeight: 'bold'
         },
         h2: {
-            fontSize: 18,
+            fontSize: 20,
             fontWeight: 'bold',
             marginTop: 18,
             marginBottom: 4,
         },
         p: {
-            fontSize: 15,
-            lineHeight: 24,
+            fontSize: 16,
+            lineHeight: 28,
             marginBottom: 8,
+            textAlign: 'justify',
         },
         ul: {
             marginBottom: 8
         },
         li: {
-            fontSize: 15,
-            lineHeight: 24,
+            fontSize: 16,
+            lineHeight: 28,
             marginLeft: 8
         },
         img: {

@@ -53,7 +53,7 @@ export default function MessageScreen(props) {
                 let promises = []
                 querySnapshot.forEach(async doc => {
                     const id = messageList.push(doc.data()) -1
-                    console.log(messageList)
+                 // console.log(messageList)
                     const message = doc.data()
                     messageList[id].id = doc.id
                     promises.push(

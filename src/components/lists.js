@@ -6,7 +6,7 @@ import time from '../utils/time'
 
 export function ListItem({ item, onPress, style, onButtonPress }) {
     const [ isSaved, setIsSaved ] = useState(item.isSaved)
-    console.log(item.id, isSaved)
+ // console.log(item.id, isSaved)
 
     const listItemStyle = StyleSheet.create({
         container: {
@@ -23,7 +23,7 @@ export function ListItem({ item, onPress, style, onButtonPress }) {
             borderRadius: 6,
         },
         textContainer: {
-            flex: 'column',
+            flexDirection: 'column',
             flexShrink: 1,
             paddingLeft: 16,
         },
@@ -83,7 +83,7 @@ export function ListItem({ item, onPress, style, onButtonPress }) {
                         </Text>
                         {/* <Icon size={14} name="bookmark" style={style? style.bottomIcon : {}}/> */}
                         <TouchableOpacity onPress={() => handleButtonPress()} style={listItemStyle.bottomIcon}>
-                            <Image source={Asset(isSaved? `icons/bookmark-active.png` : `icons/bookmark.png`)} style={[iconStyle]} />
+                            <Image source={Asset(isSaved? `bookmark-active` : `bookmark`)} style={[iconStyle]} />
                         </TouchableOpacity>
                     </View>
                 </View>

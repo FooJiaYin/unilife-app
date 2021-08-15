@@ -11,7 +11,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/logo_with_text.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },

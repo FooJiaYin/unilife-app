@@ -33,7 +33,7 @@ export default function MessageScreen(props) {
                 let promises = []
                 querySnapshot.forEach(async doc => {
                     const id = messageList.push(doc.data()) -1
-                    console.log(messageList)
+                    // console.log(messageList)
                     const message = doc.data()
                     messageList[id].id = doc.id
                     promises.push(
@@ -54,9 +54,9 @@ export default function MessageScreen(props) {
                                 messageList[id].user = {
                                     _id: snapshot.data().id,
                                     name: snapshot.data().info.nickname,
-                                    avatar: Asset('profile-image-0.png')
+                                    avatar: snapshot.data().info.profileImage
                                 }
-                                console.log(messageList[id].user._id, user.id)
+                                // console.log(messageList[id].user._id, user.id)
                             })
                     )
                     // const snapshot = await message.user.get()
@@ -103,7 +103,10 @@ export default function MessageScreen(props) {
         )
     }
 
-  const renderAvatar = (e) => <ProfileImage id={0} />
+  const renderAvatar = ({currentMessage}) => {
+    //   console.log(currentMessage)
+        return <ProfileImage url={currentMessage.user.avatar} />
+  }
 
   const renderSend = ({text}) => <SendButton input={text} onSend={sendMessage}/>
 

@@ -24,8 +24,8 @@ export const styles = {
         paddingHorizontal: 16
     },
     articleTitle: {
-        fontSize: 20,
-        fontWeight: 900,
+        fontSize: 24,
+        fontWeight: "900",
         marginVertical: 8,
     },
     button: {
@@ -68,7 +68,7 @@ export const styles = {
         borderRadius: 6,
     },
     listItemText: {
-        flex: 'column',
+        flexDirection: 'column',
         flexShrink: 1,
     },
     listItemTitle: {
@@ -130,7 +130,7 @@ export const styles = {
     },
     footerView: {
         flex: 1,
-        justifyContent:'bottom',
+        justifyContent:'flex-end',
         alignItems: "center",
         marginBottom: 20,
         marginTop: "auto"
