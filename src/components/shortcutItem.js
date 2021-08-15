@@ -15,7 +15,7 @@ export function HomeShortcutItem ({item}){
             backgroundColor: '#ffffffee',
             height: 56,
             width: 56,
-            borderRadius: '100%',
+            borderRadius: 1000,
             marginBottom:8,
             alignItems: 'center',
             justifyContent: 'center',

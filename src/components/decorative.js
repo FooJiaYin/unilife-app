@@ -24,7 +24,7 @@ export function ProfilePicture({user, icon, borderStyle, diameter}){
         border:{
             borderWidth: 1,
             borderColor: '#fff',
-            borderRadius: '100%',
+            borderRadius: 1000,
             position: 'relative',
             padding: 10,
             margin: 8,
@@ -36,14 +36,14 @@ export function ProfilePicture({user, icon, borderStyle, diameter}){
             height: '100%',
             borderWidth: 4,
             borderColor: '#fff',
-            borderRadius: '100%',
+            borderRadius: 1000,
             // boxSizing: 'padding-box'
         },
         image:{
             height: '100%',
             width: '100%',
             resizeMode:'contain',
-            borderRadius:'100%'
+            borderRadius:1000
         },
     })
     return(
@@ -65,7 +65,7 @@ export function CurvedBg({pureColor = Color.green, image = Asset('topics/cover_1
             width: '200%',
             top:height-diameter,
             marginBottom:height-diameter,
-            borderRadius: '100%',
+            borderRadius: 1000,
             backgroundColor: pureColor,
         },
         childrenContainer:{
@@ -82,7 +82,7 @@ export function CurvedBg({pureColor = Color.green, image = Asset('topics/cover_1
             height: 300,
             width: '40%',
             resizeMode:'cover',
-            borderRadius:'100% 0 0 0',
+            borderRadius:1000,
             resizeBy: '0 100'
         },
     }

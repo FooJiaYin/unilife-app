@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
     },
     logo: {
         flex: 1,
-        height: 300,
+        minHeight: 300,
         width: 200,
         alignSelf: "center",
         marginTop: 30,
@@ -57,12 +57,15 @@ export const styles = StyleSheet.create({
     },
     bg: {
         flex: 1,
+        height: 800,
+        top: 0,
+        width: '100%',
         justifyContent: "center",
         resizeMode:'cover',
-        margin: 0
+        margin: 0,
+        position: 'absolute',
     },
     card: {
-        flex: 1,
         backgroundColor: '#fff',
         borderRadius: 20,
         shadowColor:'#0F355C',
