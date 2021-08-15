@@ -120,7 +120,7 @@ export default function App() {
 					{/* <Stack.Screen name="Chatroom">
 						{props => <ChatroomScreen {...props} user={user} />}
 					</Stack.Screen> */}
-					<Stack.Screen name="Tabs" options={{header: ()=><></>}}>
+					<Stack.Screen name="Tabs" options={{headerShown: false}}>
 						{props => <Tabs {...props} user={user} />}
 					</Stack.Screen>
 					<Stack.Screen name="Message">
