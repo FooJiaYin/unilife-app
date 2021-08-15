@@ -7,9 +7,9 @@ const style = {
     item:{
         margin: 8,
         flexDirection: 'row',
-        justifyContents: 'space-between',
+        justifyContent: 'space-between',
         alignItems: 'center',
-        boxSizing: 'borderBox',
+        // boxSizing: 'borderBox',
     },
     hint:{
         color: Color.blue,
@@ -30,10 +30,10 @@ const style = {
         color: Color.blue,
         lineHeight: 30,
         fontSize: 20,
-        fontWeight: 700,
+        fontWeight: '700',
     },
     section:{
-        boxSizing: 'borderBox',
+        // boxSizing: 'borderBox',
         width: '100%',
         marginVertical: 16,
     },

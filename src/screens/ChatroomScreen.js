@@ -4,7 +4,7 @@ import { setHeaderOptions } from '../components/header'
 import { stylesheet, Color, styles } from '../styles'
 import { Chatroom } from '../components/messages'
 import { firebase } from '../firebase/config'
-import Carousel from 'react-native-snap-carousel'
+//import Carousel from 'react-native-snap-carousel'
 // import Carousel from 'react-native-ui-lib/carousel';
 import time from '../utils/time'
 // import moment from 'moment'
@@ -75,7 +75,7 @@ export default function ChatroomScreen(props) {
         <View style={stylesheet.container}>
             { chatrooms && (
                 <View style={{ flex: 1 }}>
-                    <Carousel
+                    {/* <Carousel
                         layout={'default'}
                         style={{ flex: 1 }}
                         data={chatrooms}
@@ -92,7 +92,7 @@ export default function ChatroomScreen(props) {
                         enableSnap={true}
                         firstItem={chatrooms.length - 2}
                         // inverted={true}
-                    />
+                    /> */}
                     {/* <FlatList
                         style={{ flex: 1 }}
                         data={chatrooms}

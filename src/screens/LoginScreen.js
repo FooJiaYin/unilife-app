@@ -56,8 +56,9 @@ export default function LoginScreen({navigation}) {
             <ImageBackground source={Asset('bg-login.jpg')} resizeMode="cover" style={styles.bg}>
         <View  style={styles.container}>
             <KeyboardAwareScrollView
-                style={{ flex: 1, width: '100%' }}
+                style={{ flex: 1, width: '100%'}}
                 keyboardShouldPersistTaps="always">
+                    {/* <View style={{ flex: 1, width: '100%', justifyContent: 'space-around' }}> */}
                 <Image
                     style={styles.logo}
                     source={Asset('logo_with_text.png')}
@@ -87,6 +88,7 @@ export default function LoginScreen({navigation}) {
                 <View style={styles.footerView}>
                     <Text style={styles.footerText}>Don't have an account? <Text onPress={onFooterLinkPress} style={styles.footerLink}>Sign up</Text></Text>
                 </View>
+                {/* </View> */}
             </KeyboardAwareScrollView>
         </View>
             </ImageBackground>
