@@ -8,6 +8,7 @@ import { firebase } from '../firebase/config'
 import { useFocusEffect } from "@react-navigation/native";
 import { StickedBg, ExpandCard } from '../components/decorative'
 import { HomeShortcutItem } from '../components/shortcutItem'
+import * as WebBrowser from 'expo-web-browser';
 
 export default function HomeScreen(props) {
     // console.log(props)
@@ -101,6 +102,9 @@ export default function HomeScreen(props) {
         article.isSaved = !article.isSaved
     }
 
+    async function openWeb(url) {
+        let result = await WebBrowser.openBrowserAsync(url);
+    };
 
     useFocusEffect(
         React.useCallback(() => {

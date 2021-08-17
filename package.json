@@ -15,6 +15,7 @@
     "@react-navigation/stack": "^5.3.7",
     "base-64": "^0.1.0",
     "expo": "^42.0.3",
+    "expo-web-browser": "~9.2.0",
     "firebase": "8.2.3",
     "moment": "^2.29.1",
     "react": "16.13.1",

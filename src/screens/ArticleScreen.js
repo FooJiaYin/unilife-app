@@ -4,6 +4,7 @@ import { setHeaderOptions } from '../components/navigation'
 import { stylesheet } from '../styles/styles'
 import { firebase } from '../firebase/config'
 import RenderHtml from 'react-native-render-html'
+import { WebView } from 'react-native-webview';
 // import HTMLView from 'react-native-htmlview';
 import time from '../utils/time'
 
@@ -81,21 +82,24 @@ export default function ArticleScreen(props) {
     
     return (
         <SafeAreaView style={stylesheet.container}>
-            <ScrollView style={stylesheet.scrollView}>
-                <View style={stylesheet.articleContainer}>
-                <Text style={stylesheet.articleTitle}>
-                    {article.title}
-                </Text>
-                <Text style={stylesheet.textS}>
-                    {article.meta.source + ' '}
-                    {time(article.publishedAt).format('YYYY/M/D h:mm a')}
-                </Text>
-                <RenderHtml
-                    source={{html: content}}
-                    tagsStyles={tagsStyles}
-                    contentWidth={useWindowDimensions().width - 40}
-                />
-                </View>
+            {(article.meta.url && article.meta.url != '') ? 
+                <WebView source={{ uri: article.meta.url }} />
+            :
+                <ScrollView style={stylesheet.scrollView}>
+                    <View style={stylesheet.articleContainer}>
+                    <Text style={stylesheet.articleTitle}>
+                        {article.title}
+                    </Text>
+                    <Text style={stylesheet.textS}>
+                        {article.meta.source + ' '}
+                        {time(article.publishedAt).format('YYYY/M/D h:mm a')}
+                    </Text>
+                    <RenderHtml
+                        source={{html: content}}
+                        tagsStyles={tagsStyles}
+                        contentWidth={useWindowDimensions().width - 40}
+                    />
+                    </View>
 
                 {/* <FlatList
                     data={comments}
@@ -117,7 +121,8 @@ export default function ArticleScreen(props) {
                         <Text style={stylesheet.buttonText}>送出</Text>
                     </TouchableOpacity>
                 </View> */}
-            </ScrollView>
+                </ScrollView>
+            }
         </SafeAreaView>
     )
 }

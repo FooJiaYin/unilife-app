@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { StyleSheet, View, TouchableOpacity, Text, Image, Linking } from 'react-native'
 import { styles, Color } from '../styles'
 import Asset from './assets'
+import * as WebBrowser from 'expo-web-browser';
 import { firebase } from '../firebase/config'
 
 export function HomeShortcutItem ({item}){
@@ -45,7 +46,10 @@ export function HomeShortcutItem ({item}){
     
     function openLink(){
         // open url in browser
-        Linking.openURL(item.url)
+        if (item.url && item.url != '') {
+            WebBrowser.openBrowserAsync(item.url);
+            Linking.openURL(item.url)
+        }
     }
 
     return(
