@@ -7,13 +7,13 @@
       "android",
       "web"
     ],
-    "version": "1.0.0",
+    "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/logo_with_text.png",
+      "image": "./assets/splash.jpg",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#0f355c"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -22,10 +22,16 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false,
+      "bundleIdentifier": "cc.UniLife.UniLife",
+      "buildNumber": "0.1.0"
+    },
+    "android": {
+      "package": "cc.unilife.unilife",
+      "versionCode": 1
     },
     "userInterfaceStyle": "automatic",
-    "githubUrl": "https://github.com/foojiayin/unilife-app",
+    "githubUrl": "https://github.com/Unilife-App/unilife-app",
     "description": ""
   }
 }
