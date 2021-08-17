@@ -8,6 +8,7 @@ import { styles } from './LoginScreen/styles'
 import { stylesheet } from '../styles'
 import { firebase } from '../firebase/config'
 import { CurvedBg } from '../components/decorative'
+import * as WebBrowser from 'expo-web-browser';
 
 export default function LoginScreen({navigation}) {
     const usersRef = firebase.firestore().collection('users')
@@ -18,9 +19,11 @@ export default function LoginScreen({navigation}) {
     setHeaderOptions(navigation)
 
     const onFooterLinkPress = () => {
-        navigation.navigate('Registration')
+        // navigation.navigate('Registration')
+        WebBrowser.openBrowserAsync('https://supr.link/kmbjI');
+        // Linking.openURL('https://supr.link/kmbjI')
     }
-    
+
     const onLoginPress = () => {
         firebase
             .auth()
@@ -69,7 +72,7 @@ export default function LoginScreen({navigation}) {
             <View style={styles.card}>
                 <TextInput
                     style={styles.input}
-                    placeholder='E-mail'
+                    placeholder='Email'
                     placeholderTextColor="#aaaaaa"
                     // defaultValue={'student@test.com'}
                     onChangeText={(text) => setEmail(text)}
@@ -81,7 +84,7 @@ export default function LoginScreen({navigation}) {
                     style={styles.input}
                     placeholderTextColor="#aaaaaa"
                     secureTextEntry
-                    placeholder='Password'
+                    placeholder='邀請碼'
                     // defaultValue={'password'}
                     onChangeText={(text) => setPassword(text)}
                     value={password}
@@ -91,7 +94,7 @@ export default function LoginScreen({navigation}) {
                 <Button onPress={() => onLoginPress()} style={stylesheet.bgGreen} title="登入" />
             </View>
             <View style={styles.footerView}>
-                <Text style={styles.footerText}>Don't have an account? <Text onPress={onFooterLinkPress} style={styles.footerLink}>Sign up</Text></Text>
+                <Text style={styles.footerText}>沒有邀請碼？<Text onPress={onFooterLinkPress} style={styles.footerLink}>預約試用</Text></Text>
             </View>
             </KeyboardAwareScrollView>
         </View>

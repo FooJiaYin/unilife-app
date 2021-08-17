@@ -1,6 +1,6 @@
 import moment from 'moment'
 import { firebase } from '../firebase/config'
-
+import "moment/min/locales"
 moment.locale('zh-tw')
 
 class Time {
@@ -11,7 +11,6 @@ class Time {
         this.now = moment(t)
         // console.log(this.now)
     }
-    moment = moment.locale('zh-tw')
     fromFirestore = (firestoreTime) => new Time(firestoreTime.toDate())
     toFirestore = () => {
         return firebase.firestore.Timestamp.fromDate(this.now.toDate())

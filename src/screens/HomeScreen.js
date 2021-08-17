@@ -4,6 +4,7 @@ import { setHeaderOptions } from '../components/navigation'
 import Asset from '../components/assets'
 import { stylesheet } from '../styles'
 import { ListItem } from '../components/lists'
+import time from '../utils/time'
 import { firebase } from '../firebase/config'
 import { useFocusEffect } from "@react-navigation/native";
 import { StickedBg, ExpandCard } from '../components/decorative'
@@ -165,7 +166,7 @@ export default function HomeScreen(props) {
                 <View style={stylesheet.row}>
                     <View style={{flex:1}}>
                         <Text style={homeCardStyle.greeting}>小攸，午安！</Text>
-                        <Text style={homeCardStyle.time}>6月24日星期六 下午3點30分</Text>
+                        <Text style={homeCardStyle.time}>{time().format('LLLL')}</Text>
                     </View>
                     {/* <TouchableOpacity>
                         <Image source={require('../../assets/icons/bookmark.png')} style={homeCardStyle.icon} tintColor='#fff'/>

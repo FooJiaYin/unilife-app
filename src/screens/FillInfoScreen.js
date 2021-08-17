@@ -30,9 +30,9 @@ export default function FillInfoScreen(props) {
         // console.log("identity", user.identity.community)
         let snapshot = await user.ref.get()
         let userData = await snapshot.data()
-     // console.log(user)
+        // console.log(userData)
         if(userData.info) setInfo(userData.info)
-        if(userData.identity) setInfo(userData.identity)
+        if(userData.identity) setIdentity(userData.identity)
     }
 
     async function updateUserData() {
