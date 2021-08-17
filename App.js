@@ -4,14 +4,12 @@ import { firebase } from './src/firebase/config'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs' 
-import { LoginScreen, RegistrationScreen, FillInfoScreen } from './src/screens'
+import { LoginScreen, RegistrationScreen, FillInfoScreen, TopicSelectScreen, SuccessScreen } from './src/screens'
 import { HomeScreen, SavedScreen, ArticleScreen, CommentScreen } from './src/screens'
 import { ChatroomScreen, MessageScreen } from './src/screens'
 import { SettingScreen, ProfileScreen } from './src/screens'
-import { headerOptions } from './src/components/header'
+import { tabBarObject, tabBarOptions } from './src/components/navigation'
 import {decode, encode} from 'base-64'
-import TopicSelectScreen from './src/screens/TopicSelectScreen'
-import SuccessScreen from './src/screens/SuccessScreen'
 import Test from './src/screens/text'
 if (!global.btoa) {  global.btoa = encode }
 if (!global.atob) { global.atob = decode }
@@ -99,14 +97,14 @@ export default function App() {
 
 	function Tabs(props) {
 		return (
-			<Tab.Navigator>
-				<Tab.Screen name="HomeStack" options={{tabBarLabel:"主頁"}}>
+			<Tab.Navigator tabBarOptions={tabBarOptions}>
+				<Tab.Screen name="HomeStack" options={tabBarObject('主頁', 'home')}>
 					{props => <HomeStackScreen {...props} user={user} />}
 				</Tab.Screen>
-				<Tab.Screen name="ChatStack" options={{tabBarLabel:"聊天室"}}>
+				<Tab.Screen name="ChatStack" options={tabBarObject('聊天室', 'chat')}>
 					{props => <ChatStackScreen {...props} user={user} />}
 				</Tab.Screen>
-				<Tab.Screen name="SettingStack" options={{tabBarLabel:"帳戶"}}>
+				<Tab.Screen name="SettingStack" options={tabBarObject('帳戶', 'profile')}>
 					{props => <SettingStackScreen {...props} user={user} />}
 				</Tab.Screen>
 			</Tab.Navigator>
@@ -130,18 +128,26 @@ export default function App() {
 						{props => <CommentScreen {...props} user={user} />}
 					</Stack.Screen>
 					<Stack.Screen name="Login" component={LoginScreen}/>
+					
+					<Stack.Screen name="FillInfo" component={FillInfoScreen} user={user}/>
+					<Stack.Screen name="Topic" options={{title: "選擇興趣"}}>
+						{props => <TopicSelectScreen {...props} user={user} />}
+					</Stack.Screen>
+					<Stack.Screen name="Success" options={{title: ""}}>
+						{props => <SuccessScreen {...props} user={user} />}
+					</Stack.Screen>
 				</Stack.Navigator>
 			) :  
 			(
 				<Stack.Navigator>
 					<Stack.Screen name="Login" component={LoginScreen}/>
-					<Stack.Screen name="FillInfo" component={FillInfoScreen}/>
 					<Stack.Screen name="Registration" component={RegistrationScreen} />
-					<Stack.Screen name="Success" options={{title: ""}}>
-						{props => <Test {...props} user={user} />}
-					</Stack.Screen>
+					<Stack.Screen name="FillInfo" component={FillInfoScreen}/>
 					<Stack.Screen name="Topic" options={{title: "選擇興趣"}}>
 						{props => <TopicSelectScreen {...props} user={user} />}
+					</Stack.Screen>
+					<Stack.Screen name="Success" options={{title: ""}}>
+						{props => <SuccessScreen {...props} user={user} />}
 					</Stack.Screen>
 				</Stack.Navigator>
 			)} 

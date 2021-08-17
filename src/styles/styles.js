@@ -5,6 +5,7 @@ export const styles = {
     ...color,
     text: {
         ...color.textDark,
+        flexWrap: "wrap",
         fontSize: 16,
         textAlign: 'justify'
     },
@@ -43,6 +44,12 @@ export const styles = {
         resizeMode: 'contain',
         alignSelf: 'center',
         tintColor: Color.grey0
+    },
+    bg: {
+        justifyContent: "center",
+        resizeMode:'cover',
+        margin: 0,
+        // alignItems: 'center',
     },
     container: {
         flex: 1,

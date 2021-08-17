@@ -1,46 +1,61 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { StyleSheet, View, TouchableOpacity, Text, Image } from 'react-native'
 import { styles, Color } from '../styles'
 import Asset, { Icon } from './assets'
 import time from '../utils/time'
 import { OptionOverlay, OptionItem } from './overlay'
+import { firebase } from '../firebase/config'
 
 export function ListItem({ item, onPress, style, onButtonPress }) {
     const [ isSaved, setIsSaved ] = useState(item.isSaved)
+    const [ imageUrl, setImageUrl ] = useState('')
  // console.log(item.id, isSaved)
+    const storageRef = firebase.storage().ref()
+    storageRef.child('articles/' + item.id + '/images/' + item.meta.coverImage).getDownloadURL().then((url) => {
+        setImageUrl(url)
+    })
 
     const listItemStyle = StyleSheet.create({
         container: {
             flex: 1,
+            width: '100%',
             flexDirection: 'row',
-            height: 90,
-            paddingVertical: 8,
+            height: 100,
+            marginVertical: 8,
             paddingHorizontal: 16,
             overflow: 'hidden',
         },
         image: {
-            width: 90,
-            height: 90,
+            width: 100,
+            height: 100,
             borderRadius: 6,
         },
         textContainer: {
             flexDirection: 'column',
             flexShrink: 1,
+            flexGrow: 1,
             paddingLeft: 16,
+            height: 100,
         },
         title: {
             ...styles.text,
+            // height: 48,
             flexWrap: 'wrap',
+            overflow: 'hidden',
+            paddingBottom: 3,
         },
         description: {
             ...styles.textS,
             ...styles.textGrey,
-            height: 32,
+            flexBasis: 34,
+            // flexGrow: 1,
+            flexShrink: 1,
             flexWrap: 'wrap',
             overflow: 'hidden',
         },
         bottom: {
             flexDirection: 'row',
+            flexShrink: 0,
             flex: 1,
             justifyContent: 'space-between',
         },
@@ -68,11 +83,17 @@ export function ListItem({ item, onPress, style, onButtonPress }) {
         setIsSaved(!isSaved)
     }
     const [ showOption, setShowOption ] = useState(false)
+    const [ descriptionLines, setDescriptionLines ] = useState(2)
 
     const optionItems = [
         {iconSrc: 'share.png', text: '分享'},
         {iconSrc: 'report.png', text: '舉報'},
     ]
+
+    const onTextLayout =e => {
+        // console.log( e.nativeEvent.lines.length)
+        // setDescriptionLines(4 - e.nativeEvent.lines.length)
+    }
 
     return (
         <TouchableOpacity onPress={onPress} >
@@ -81,13 +102,20 @@ export function ListItem({ item, onPress, style, onButtonPress }) {
                 options={optionItems}
                 onBackCB={()=>{setShowOption(false)}}
             /> */}
+            
             <View style={style? [listItemStyle.container, style.container] : listItemStyle.container}>
-                <Image style={style? [listItemStyle.image, style.image] : listItemStyle.image} source={{uri: item.imageUrl}}/>
+                <Image style={style? [listItemStyle.image, style.image] : listItemStyle.image} source={{uri: imageUrl}}/>
                 <View style={style? [listItemStyle.textContainer, style.textContainer] : listItemStyle.textContainer}>
-                    <Text style={style? [listItemStyle.title, style.title] : listItemStyle.title}>
+                    <Text style={style? [listItemStyle.title, style.title] : listItemStyle.title}
+                        onTextLayout={(e) => onTextLayout(e)}
+                        numberOfLines={2}
+                        ellipsizeMode={"tail"}>
                         {item.title}
                     </Text>
-                    <Text style={style? [listItemStyle.description, style.description] : listItemStyle.description}>
+                    <Text style={style? [listItemStyle.description, style.description] : listItemStyle.description}
+                        numberOfLines={2}
+                        // onLayout={(e) => setDescriptionLines(e.nativeEvent.layout.height > 34 ? 2 : 1)}
+                        ellipsizeMode={"tail"}>
                         {item.meta.abstract}
                     </Text>
                     <View style={style? [listItemStyle.bottom, style.bottom] : listItemStyle.bottom}>

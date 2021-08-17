@@ -1,15 +1,21 @@
 import React, { useEffect, useState, useCallback } from 'react'
-import { ImageBackground, Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import { setHeaderOptions } from '../components/header'
+import { ImageBackground, Image, Text, TextInput, Keyboard, View } from 'react-native'
+import { useFocusEffect } from "@react-navigation/native";
+import { setHeaderOptions } from '../components/navigation'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+// import { DateTimePicker } from 'react-native-ui-lib/DateTimePicker'
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Button } from '../components/forms'
 import styles from '../styles/profileStyles'
 import { firebase } from '../firebase/config'
 import Asset from '../components/assets'
+import time from '../utils/time'
 import { stylesheet, Color } from '../styles'
 
 export default function ProfileScreen(props) {
     const [info, setInfo] = useState({})
+    const [identity, setIdentity] = useState({})
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false)
 
     const options = {
         title: '編輯帳戶',
@@ -25,13 +31,7 @@ export default function ProfileScreen(props) {
                 color: Color.white,
             }
         },
-        headerLeft: {
-            icon: 'left',
-            style: {
-                tintColor: Color.white
-            },
-            onPress: () => props.navigation.goBack()
-        },
+        headerLeft: 'back'
     }
     setHeaderOptions(props.navigation, options)
 
@@ -42,14 +42,24 @@ export default function ProfileScreen(props) {
         let user = await snapshot.data()
      // console.log(user)
         setInfo(user.info)
+        setIdentity(user.identity)
     }
 
-    const updateUserData = useCallback( async () => {
-     // console.log(info)
+    const updateUserData = async () => {
+        // console.log(identity)
+        if (!identity.grade || isNaN(identity.grade)) {
+            // console.log(identity.grade)
+            alert("請設定年級為數字（例：1）")
+            return
+        }
         await props.user.ref.update({
-            info: info
+            info: info,
+            identity: {
+                ...identity,
+                grade: Number(identity.grade),
+            }
         })
-    }, [info])
+    }
 
     function changeProfileImage() {
      // console.log(info.profileImage)
@@ -59,6 +69,12 @@ export default function ProfileScreen(props) {
         let image = "profile-image-" + currentId + ".png"
         setInfo({ ...info, profileImage: image })
         // updateUserData()
+    }
+
+    function setBirthday(date) {
+        let birthday = time(date).toFirestore()
+        setInfo({ ...info, birthday: birthday })
+        setDatePickerVisibility(false)
     }
 
     function signOut() {
@@ -79,7 +95,7 @@ export default function ProfileScreen(props) {
                 <View style={styles.green}>
                     <Image
                         style={styles.propic}
-                        source={info.profileImage? Asset(info.profileImage) : null}/>
+                        source={info.profileImage? Asset(info.profileImage) : Asset('profile-image-0.png')}/>
                 </View>
                 <View>
                     <ImageBackground source={Asset('bg-profile.jpg')} resizeMode="cover" style={styles.bg}>
@@ -107,12 +123,29 @@ export default function ProfileScreen(props) {
                     />
                     <TextInput
                         style={styles.input}
-                        defaultValue={info.birthday}
+                        defaultValue={info.birthday? time(info.birthday).format('YYYY-MM-DD') : ''}
+                        value={info.birthday? time(info.birthday).format('YYYY-MM-DD') : ''}
                         placeholder='生日'
                         placeholderTextColor="#aaaaaa"
                         underlineColorAndroid="transparent"
                         autoCapitalize="none"
-                        onChangeText={(input) => setInfo({ ...info, birthday: input })}
+                        showSoftInputOnFocus={false}
+                        // onChangeText={(input) => setInfo({ ...info, birthday: input })}
+                        onFocus={()=>{
+                            setDatePickerVisibility(true)
+                            Keyboard.dismiss()}
+                        }
+                    />                    
+                    <TextInput
+                        style={stylesheet.input}
+                        defaultValue={identity.grade? identity.grade.toString() : null}
+                        placeholder='年級（請輸入數字，例：1）'
+                        placeholderTextColor="#aaaaaa"
+                        underlineColorAndroid="transparent"
+                        autoCapitalize="none"
+                        onChangeText={(input) => {
+                            // console.log(identity)
+                            setIdentity({ ...identity, grade: input })}}
                     />
                     {/* <TextInput
                         style={styles.input}
@@ -134,7 +167,15 @@ export default function ProfileScreen(props) {
                         onPress={() => signOut()} 
                         title='登出'
                     />
+                    
                 </View>
+                <DateTimePickerModal
+                    isVisible={isDatePickerVisible}
+                    mode="date"
+                    date={info.birthday? info.birthday.toDate() : new Date()}
+                    onConfirm={(date)=>setBirthday(date)}
+                    onCancel={()=>setDatePickerVisibility(false)}
+                />
                  
             </KeyboardAwareScrollView>
         </View>

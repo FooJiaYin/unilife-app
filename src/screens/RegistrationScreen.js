@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import View from "react-native-ui-lib/view"
 import { Image, Text, TextInput, TouchableOpacity, Button } from "react-native"
-import { setHeaderOptions } from '../components/header'
+import { setHeaderOptions } from '../components/navigation'
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 import { Checkbox } from "../components/forms"
 import { stylesheet, Color } from "../styles"

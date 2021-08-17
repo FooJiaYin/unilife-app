@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { GiftedChat } from 'react-native-gifted-chat'
 import { FlatList, Keyboard, Text, SafeAreaView, Image, View, TextInput, TouchableOpacity } from 'react-native'
-import { setHeaderOptions } from '../components/header'
+import { setHeaderOptions } from '../components/navigation'
 import { stylesheet } from '../styles/styles'
 import { firebase } from '../firebase/config'
 import RenderHtml from 'react-native-render-html'
@@ -37,7 +37,7 @@ export default function MessageScreen(props) {
                     const message = doc.data()
                     messageList[id].id = doc.id
                     promises.push(
-                        message.user.get()
+                        firebase.firestore().doc('users/' + message.user).get()
                             .then(snapshot => {
                                 messageList[id].user = snapshot.data().info.nickname
                                 messageList[id].position = 'left'
@@ -73,7 +73,7 @@ export default function MessageScreen(props) {
     function sendMessage(inputText) {
         if (inputText && inputText.length > 0) {
             const data = {
-                user: firebase.firestore().doc('users/' + user.id),
+                user: user.id,
                 content: inputText,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             }

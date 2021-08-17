@@ -28,14 +28,14 @@ export function TopicItem ({item, index, onPress=()=>null, initSelected=false}){
             fontWeight: '700'
         }
     })
-    console.log(topicItemStyle)
+    // console.log(topicItemStyle)
     return(
         <TouchableOpacity style={topicItemStyle.topicItem} onPress={()=>{
             onPress(index,setSelected)
         }}
         >
-            <Image style={[topicItemStyle.cover, {zIndex:1}]} source={Asset(`topics/cover_${index+1}.jpg`)}/>
-            <Image style={[topicItemStyle.cover, {zIndex:2}]} source={Asset(`topics/overlay${selected?'_selected':''}.png`)}/>
+            <Image style={[topicItemStyle.cover, {zIndex:1}]} source={Asset(`topic-${index+1}`)}/>
+            <Image style={[topicItemStyle.cover, {zIndex:2}]} source={Asset(`overlay${selected?'_selected':''}`)}/>
             <Text style={[topicItemStyle.text, {zIndex:3}]}>{item}</Text>
         </TouchableOpacity>
         )

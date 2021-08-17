@@ -8,7 +8,7 @@ export const Checkbox = RNUI_Checkbox
 const formStyles = StyleSheet.create({
     button: {
         marginTop: 8,
-        height: 40,
+        // height: 40,
         borderRadius: 24,
         flex: 1,            // 宽度和高度自适应                                                                                                                                             
         alignItems: 'center',

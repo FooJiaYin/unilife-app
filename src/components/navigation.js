@@ -8,6 +8,9 @@ export const setHeaderOptions = (navigation, options = {}) => {
     if (options.headerLeft == 'back')  {
         options.headerLeft = {
             icon: 'left',
+            style: {
+                tintColor: options.style? options.style.headerTintColor || Color.grey0 : Color.grey0,
+            },
             onPress: () => navigation.goBack()
         }
         options.cardStyleInterpolator = CardStyleInterpolators.forFadeFromBottomAndroid
@@ -59,4 +62,48 @@ export function HeaderButton({title, icon, style, onPress, custom}) {
             </TouchableOpacity>
         )
     )
+}
+
+const tabBarStyle = (focused) => {
+    let color = focused? Color.blue : Color.grey1
+    return {
+        label: {
+            fontSize: 11,
+            marginVertical: 8,
+            color: focused? Color.blue : Color.grey1,
+        },
+        icon:{
+            width: 26, 
+            height: 26, 
+            tintColor: color, 
+            resizeMode: 'contain',
+            marginVertical: 8,
+        }
+    }
+}
+export function tabIcon(icon, focused) {
+    return (
+        <Image
+            source={Asset(icon)}
+            style={tabBarStyle(focused).icon}
+        />
+    )
+}
+
+export const tabBarOptions = {
+    style: {
+        paddingBottom: 6,
+        paddingTop: 4,
+        height: 56
+    },
+    activeTintColor: Color.blue,
+    inactiveTintColor: Color.grey1,
+}
+
+export function tabBarObject(title, icon) {
+    return {
+        title: title,
+        // tabBarLabel: ({focused}) => <Text style={tabBarStyle(focused).label}>{title}</Text>,
+        tabBarIcon: ({focused}) => tabIcon(icon, focused),
+    }
 }

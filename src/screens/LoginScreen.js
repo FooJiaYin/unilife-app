@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Dimension, ImageBackground, Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import { setHeaderOptions } from '../components/header'
+import { setHeaderOptions } from '../components/navigation'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Asset from '../components/assets'
 import { Button } from '../components/forms'
@@ -22,8 +22,6 @@ export default function LoginScreen({navigation}) {
     }
     
     const onLoginPress = () => {
-        navigation.navigate('Tabs')
-
         firebase
             .auth()
             .signInWithEmailAndPassword(email, password)
@@ -38,7 +36,11 @@ export default function LoginScreen({navigation}) {
                             return
                         }
                         const user = doc.data()
-                        navigation.navigate('FillInfo', {user: user})
+                        if(user.interests && user.interests.length == 5) {
+                            navigation.navigate('Tabs')
+                        } else {
+                            navigation.navigate('FillInfo', {user: doc})
+                        }
                     })
                     .catch(error => {
                         alert(error)
@@ -54,12 +56,12 @@ export default function LoginScreen({navigation}) {
         })
       }, [navigation])
     return (
-        //    <KeyboardAwareScrollView
-        //         style={{ flex: 1, width: '100%'}}
-        //         keyboardShouldPersistTaps="always">
+           
         <View style={{ flex: 1, width: '100%', justifyContent: 'center' }}>
             <ImageBackground source={Asset('bg-login.jpg')} resizeMode="cover" style={styles.bg}>
             </ImageBackground>
+            <KeyboardAwareScrollView
+                style={{ flex: 1, width: '100%'}}>
             <Image
                 style={styles.logo}
                 source={Asset('logo_with_text.png')}
@@ -69,6 +71,7 @@ export default function LoginScreen({navigation}) {
                     style={styles.input}
                     placeholder='E-mail'
                     placeholderTextColor="#aaaaaa"
+                    // defaultValue={'student@test.com'}
                     onChangeText={(text) => setEmail(text)}
                     value={email}
                     underlineColorAndroid="transparent"
@@ -79,6 +82,7 @@ export default function LoginScreen({navigation}) {
                     placeholderTextColor="#aaaaaa"
                     secureTextEntry
                     placeholder='Password'
+                    // defaultValue={'password'}
                     onChangeText={(text) => setPassword(text)}
                     value={password}
                     underlineColorAndroid="transparent"
@@ -89,7 +93,7 @@ export default function LoginScreen({navigation}) {
             <View style={styles.footerView}>
                 <Text style={styles.footerText}>Don't have an account? <Text onPress={onFooterLinkPress} style={styles.footerLink}>Sign up</Text></Text>
             </View>
-            {/* </KeyboardAwareScrollView> */}
+            </KeyboardAwareScrollView>
         </View>
     )
 }

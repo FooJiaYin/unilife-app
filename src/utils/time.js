@@ -11,6 +11,7 @@ class Time {
         this.now = moment(t)
         // console.log(this.now)
     }
+    moment = moment.locale('zh-tw')
     fromFirestore = (firestoreTime) => new Time(firestoreTime.toDate())
     toFirestore = () => {
         return firebase.firestore.Timestamp.fromDate(this.now.toDate())

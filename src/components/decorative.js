@@ -9,16 +9,17 @@ import { headerIcon } from './headerIcon'
 //   PanningProvider,
 //   PanResponderView } from 'react-native-ui-lib'
 
-export function ProfilePicture({user, icon, borderStyle, diameter}){
+export function ProfilePicture({user, icon, image, diameter}){
     
-    const userImage = () => {
-        // TODO: get user profile image here
-        return Asset('profile-image-0.png')
-    }
+    // const userImage = () => {
+    //     // TODO: get user profile image here
+    //     return Asset('profile-image-0.png')
+    // }
     
-    const defaultImage = Asset('profile-image-1.png')
+    const defaultImage = Asset('profile-image-0.png')
     
-    const imageSource = icon?Asset(`icons/${icon}`):user?userImage:defaultImage
+    // const imageSource = icon?Asset(`${icon}`):user?userImage:defaultImage
+    const imageSource = image ? Asset(image) : defaultImage
     
     const profilePictureStyles = StyleSheet.create({
         border:{
@@ -27,8 +28,9 @@ export function ProfilePicture({user, icon, borderStyle, diameter}){
             borderRadius: 1000,
             position: 'relative',
             padding: 10,
+            marginTop: 40,
             margin: 8,
-            
+            alignSelf: 'center'
         },
         secondBorder:{
             //position: 'absolute',
@@ -55,7 +57,7 @@ export function ProfilePicture({user, icon, borderStyle, diameter}){
 
 )}
 
-export function CurvedBg({pureColor = Color.green, image = Asset('topics/cover_1.jpg'), height= 300, diameter=400, ...props}){
+export function CurvedBg({pureColor = Color.green, image = Asset('topic-1'), height= 300, diameter=400, ...props}){
 
     const imageSource = image
     const bgstyle = {
@@ -78,12 +80,12 @@ export function CurvedBg({pureColor = Color.green, image = Asset('topics/cover_1
         },
         image:{
             alignSelf: 'center',
-            justifySelf: 'flex-end',
+            // justifySelf: 'flex-end',
             height: 300,
             width: '40%',
             resizeMode:'cover',
             borderRadius:1000,
-            resizeBy: '0 100'
+            // resizeBy: '0 100'
         },
     }
     const curveStyles = StyleSheet.create(bgstyle)
@@ -141,7 +143,6 @@ export function ExpandCard({height = 320, ...props}){
         },
         card:{
             marginTop:height-20,
-            paddingBottom: 60,
             height: vh,
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,

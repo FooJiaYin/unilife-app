@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { ToastAndroid, StyleSheet, Image, Text, TouchableOpacity, View, FlatList} from 'react-native'
+import { ToastAndroid, StyleSheet, Image, Text, TouchableOpacity, View, FlatList, useWindowDimensions } from 'react-native'
+import { setHeaderOptions } from '../components/navigation'
 import Asset from '../components/assets'
 import { stylesheet } from '../styles/styles'
 import { TopicItem } from '../components/topicItem'
@@ -7,10 +8,17 @@ import { Button } from '../components/forms'
 import { Color } from '../styles'
 import { color } from '../styles/color'
 
-export default function TopicSelectScreen({navigation}){
+export default function TopicSelectScreen(props) {
     const [selectedItems, setSelectedItems] = useState([])
     const [proceed, setProceed] = useState(false)
     const [confirm, setConfirm] = useState(false)
+    const width = useWindowDimensions().width
+
+    const options = {
+        title: '選擇興趣',
+        headerLeft: 'back'
+    }
+    setHeaderOptions(props.navigation, options)
 
     const topics=[
         '影集戲劇', '國際政經', '時事評論',
@@ -42,10 +50,15 @@ export default function TopicSelectScreen({navigation}){
         nextButtonContainer:{
             position:'absolute',
             bottom: 60,
-            alignItems: 'center'
+            // height: 40,
+            width: width,
+            alignItems: 'center',
+            justifyContent: 'center'
         },
         nextButton:{
             width:320,
+            // height: 40,
+            // flexGrow: 1,
             alignSelf: 'center'
         },
         
@@ -69,9 +82,9 @@ export default function TopicSelectScreen({navigation}){
             var l=array.length
             for(var i=0; i<l&&l==array.length; i++){
                 if (array[i]==index){
-                    console.log(array)
+                    // console.log(array)
                     array.splice(i)
-                    console.log(array)
+                    // console.log(array)
                     setSelectedItems(array)
                     onSelected(false)
                     if(array.length<5){
@@ -80,7 +93,7 @@ export default function TopicSelectScreen({navigation}){
                 }
             }
         }
-        console.log(array)
+        // console.log(array)
     }
     
     const topicItem = ({item, index}) => {
@@ -112,11 +125,15 @@ export default function TopicSelectScreen({navigation}){
 
     const submit = () => {
         // TODO: submit user input here
-        return navigation.goBack()
+        props.route.params.user.ref.update({
+            interests: selectedItems
+        })
+        // return props.navigation.navigate('Tabs')
+        return props.navigation.navigate('Success')
     }
     return(
         <>
-            <View style={topicStyle.container}>
+            <View style={[topicStyle.container, {flex: 1}]}>
                 <View style={topicStyle.hintMessage}>
                     <Text style={stylesheet.text}>{confirm?'興趣主題':'選擇你最感興趣的主題（至少5個）'}</Text>
                     <Text style={stylesheet.text}>{selectedItems.length}{!confirm&&'/5'}</Text>
@@ -133,22 +150,25 @@ export default function TopicSelectScreen({navigation}){
                         data={selectedItems}
                         renderItem={selectedTopicsItem}
                         numColumns={3}
+                        style={{flex: 1}}
                         initSelected
                         keyExtractor={(item, index)=>'d'+selectedItems.index}
                      />
                 }
-                <View style={topicStyle.nextButtonContainer}>
                 {confirm
                 ?
-                <>
-                <Button onPress={submit} title="完成"  style={[topicStyle.nextButton, {backgroundColor:Color.blue}]}></Button>
-                <Button onPress={() => {setConfirm(false); setProceed(false); setSelectedItems([])}} title="重新選擇"  style={[topicStyle.nextButton, {backgroundColor:'transparent'}]} titleStyle={{ color: Color.blue}}></Button>
-                </>
-                :proceed
+                <View style={[topicStyle.nextButtonContainer, {height: 60}]}>
+                    <Button onPress={submit} title="完成"  style={[topicStyle.nextButton, {backgroundColor:Color.blue}]}></Button>
+                    <Button onPress={() => {setConfirm(false); setProceed(false); setSelectedItems([])}} title="重新選擇"  style={[topicStyle.nextButton, {backgroundColor:'transparent'}]} titleStyle={{ color: Color.blue}}></Button>
+                </View>
+                :
+                <View style={topicStyle.nextButtonContainer}>
+                    {proceed
                     ?<Button onPress={goNext} title="下一步"  style={[topicStyle.nextButton, {backgroundColor:Color.blue}]}></Button>
                     :<Button onPress={goNext} title="下一步"  style={[topicStyle.nextButton, {backgroundColor:Color.lightgrey}]}></Button>
-                }
+                    }
                 </View>
+                }
             </View>
         </>
     )

@@ -24,7 +24,8 @@
     "ios": {
       "supportsTablet": true
     },
-    "description": "Built by the team behind https://www.instamobile.io https://www.iosapptemplates.com https://www.instaflutter.com and https://www.instakotlin.com",
-    "githubUrl": "https://github.com/foojiayin/unilife-app"
+    "userInterfaceStyle": "automatic",
+    "githubUrl": "https://github.com/foojiayin/unilife-app",
+    "description": ""
   }
 }

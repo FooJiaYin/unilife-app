@@ -2,9 +2,13 @@ import React, { useState } from 'react'
 import { StyleSheet, View, TouchableOpacity, Text, Image, Linking } from 'react-native'
 import { styles, Color } from '../styles'
 import Asset from './assets'
+import { firebase } from '../firebase/config'
 
 export function HomeShortcutItem ({item}){
     // console.log(item.title)
+    const storageRef = firebase.storage().ref()
+    const [imageUrl, setImageUrl] = useState('')
+
     const homeStyle = StyleSheet.create({
         item:{
             alignItems:'center',
@@ -34,6 +38,10 @@ export function HomeShortcutItem ({item}){
             textAlign: 'center',
         }
     })
+
+    storageRef.child('icons/' + item.icon).getDownloadURL().then((url) => {
+        setImageUrl(url)
+    })
     
     function openLink(){
         // open url in browser
@@ -43,7 +51,7 @@ export function HomeShortcutItem ({item}){
     return(
         <TouchableOpacity style={homeStyle.item} onPress={()=>openLink()}>
             <View style={homeStyle.round}>
-                {item.icon&&<Image style={[homeStyle.icon]} source={Asset(item.icon)}/>}
+                {item.icon&&<Image style={[homeStyle.icon]} source={{uri: imageUrl}}/>}
             </View>
             <Text style={[homeStyle.title]}>{item.title}</Text>
         </TouchableOpacity>

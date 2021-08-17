@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { FlatList, Keyboard, Text, SafeAreaView, ScrollView, View, TextInput, TouchableOpacity, useWindowDimensions } from 'react-native'
-import { setHeaderOptions } from '../components/header'
+import { setHeaderOptions } from '../components/navigation'
 import { stylesheet } from '../styles/styles'
 import { firebase } from '../firebase/config'
 import RenderHtml from 'react-native-render-html'
@@ -32,8 +32,9 @@ export default function ArticleScreen(props) {
 
     /* Get Images */
     let newContent = content;
-    // storageRef.child('articles/' + article.id + '/images/').listAll()
-    storageRef.child('articles/9qAFUBpb7n0U1bzylreO/images/').listAll()
+    console.log('articles/' + article.id + '/images/')
+    storageRef.child('articles/' + article.id + '/images/').listAll()
+    // storageRef.child('articles/9qAFUBpb7n0U1bzylreO/images/').listAll()
         .then(async res => {
             for (const imageRef of res.items) {
                 // console.log('<img src="'+imageRef.name+'"')
@@ -44,67 +45,6 @@ export default function ArticleScreen(props) {
             }
             setContent(newContent)
         })
-    
-    useEffect(() => {
-        commentsRef
-            .orderBy('timestamp', 'desc')
-            .limit(5)
-            // .orderBy('timestamp')
-            .onSnapshot(
-                querySnapshot => {
-                    const comments = []
-                    querySnapshot.forEach(async doc => {
-                        const comment = doc.data()
-                        comment.id = doc.id
-                        // console.log(comment)
-                        const snapshot = await comment.user.get()
-                        comment.user = snapshot.data().info.nickname
-                        comment.replies = commentsRef.doc(doc.id).collection('replies')
-                        if (comment.timestamp == null) {
-                            comment.timestamp = firebase.firestore.Timestamp.now();
-                        }
-                        comments.unshift(comment)
-                        setComments(comments)
-                    });
-                },
-                error => {
-                    // console.log(error)
-                }
-            )
-            // setComments([
-            //     {id: '1', user: 'zdv', comment: 'First Comment', timestamp: Date.now(), replies: null},
-            //     {id: '2', user: 'sdcxrg', comment: 'Second Comment', timestamp: Date.now(), replies: null},
-            //     {id: '1', user: 'xdfger', comment: 'Third Comment', timestamp: Date.now(), replies: null}
-            // ])
-    }, [])
-
-    const commentItem = ({item}) => {
-        return (
-            <View style={stylesheet.commentItem}>
-                <Text style={stylesheet.inputText}>{item.user}</Text>
-                <Text style={stylesheet.inputText}>{item.timestamp.toDate().toString()}</Text>
-                <Text style={stylesheet.inputText}>{item.content}</Text>
-            </View>
-        )
-    }
-    
-    const addComment = () => {
-        if (inputText && inputText.length > 0) {
-            const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-            const data = {
-                user: firebase.firestore().doc('users/' + user.id),
-                comment: inputText,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-            };
-            commentsRef.add(data)
-                .then(_doc => {
-                    Keyboard.dismiss()
-                })
-                .catch((error) => {
-                    alert(error)
-                });
-        }
-    }
 
     const tagsStyles = {
         b: {
