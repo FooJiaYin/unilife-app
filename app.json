@@ -1,0 +1,37 @@
+{
+  "expo": {
+    "name": "UniLife",
+    "slug": "unilife",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/splash.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0f355c"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "cc.UniLife.UniLife",
+      "buildNumber": "0.1.0"
+    },
+    "android": {
+      "package": "cc.unilife.unilife",
+      "versionCode": 1
+    },
+    "userInterfaceStyle": "automatic",
+    "githubUrl": "https://github.com/Unilife-App/unilife-app",
+    "description": ""
+  }
+}
