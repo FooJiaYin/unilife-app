@@ -113,7 +113,7 @@ export default function App() {
 
 	return (
 		<NavigationContainer>
-			{ user ? (
+			{ firebase.auth().currentUser ? (
 				<Stack.Navigator>	
 					{/* <Stack.Screen name="Chatroom">
 						{props => <ChatroomScreen {...props} user={user} />}
@@ -127,7 +127,7 @@ export default function App() {
 					<Stack.Screen name="Comment">
 						{props => <CommentScreen {...props} user={user} />}
 					</Stack.Screen>
-					<Stack.Screen name="Login" component={LoginScreen}/>
+					<Stack.Screen name="Login2" component={LoginScreen}/>
 					
 					<Stack.Screen name="FillInfo" component={FillInfoScreen} user={user}/>
 					<Stack.Screen name="Topic" options={{title: "選擇興趣"}}>

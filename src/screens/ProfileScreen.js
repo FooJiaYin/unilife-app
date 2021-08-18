@@ -79,7 +79,8 @@ export default function ProfileScreen(props) {
 
     function signOut() {
         firebase.auth().signOut().then(() => {
-            props.navigation.navigate('Login')
+            console.log( firebase.auth().currentUser)
+            props.navigation.navigate('Login2')
         })
     }
 

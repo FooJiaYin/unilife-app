@@ -112,7 +112,7 @@ export default function MessageScreen(props) {
         <View style={stylesheet.container}>
             <GiftedChat
                 messages={messages}
-                renderBubble={renderBubble}
+                // renderBubble={renderBubble}
                 renderAvatar={renderAvatar}
                 renderSend={renderSend} 
                 // onSend={messages => Send(messages[0].text)}

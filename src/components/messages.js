@@ -210,7 +210,7 @@ export function Chatroom({item, size, navigation, matchState = {}, toggleWaiting
             ...styles.textCenter,
             height: size * 0.15,
             flexWrap: "wrap",
-            lineHeight: 20,
+            // lineHeight: 20,
             // justifyContent: 'center',
             // alignItems: 'center',
         },

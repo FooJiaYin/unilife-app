@@ -84,7 +84,7 @@ export default function LoginScreen({navigation}) {
                     style={styles.input}
                     placeholderTextColor="#aaaaaa"
                     secureTextEntry
-                    placeholder='邀請碼'
+                    placeholder='密碼'
                     // defaultValue={'password'}
                     onChangeText={(text) => setPassword(text)}
                     value={password}
@@ -94,7 +94,7 @@ export default function LoginScreen({navigation}) {
                 <Button onPress={() => onLoginPress()} style={stylesheet.bgGreen} title="登入" />
             </View>
             <View style={styles.footerView}>
-                <Text style={styles.footerText}>沒有邀請碼？<Text onPress={onFooterLinkPress} style={styles.footerLink}>預約試用</Text></Text>
+                <Text style={styles.footerText}>沒有帳號？<Text onPress={onFooterLinkPress} style={styles.footerLink}>馬上預約</Text></Text>
             </View>
             </KeyboardAwareScrollView>
         </View>
