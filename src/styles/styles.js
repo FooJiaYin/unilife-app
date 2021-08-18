@@ -7,7 +7,8 @@ export const styles = {
         ...color.textDark,
         flexWrap: "wrap",
         fontSize: 16,
-        textAlign: 'justify'
+        textAlign: 'justify',
+        lineHeight: 20,
     },
     textCenter: {
         textAlign: 'center',
@@ -28,6 +29,7 @@ export const styles = {
         fontSize: 24,
         fontWeight: "900",
         marginVertical: 8,
+        lineHeight: 30,
     },
     button: {
         marginVertical: 8,

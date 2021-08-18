@@ -154,6 +154,7 @@ build/
 .gradle
 local.properties
 *.iml
+*.hprof
 
 # node.js
 #
@@ -165,6 +166,7 @@ yarn-error.log
 buck-out/
 \.buckd/
 *.keystore
+!debug.keystore
 
 # fastlane
 #
@@ -184,5 +186,6 @@ buck-out/
 /ios/Pods/
 
 # Expo
+.expo/
 .expo/*
 web-build/

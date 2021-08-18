@@ -48,7 +48,7 @@ export function HomeShortcutItem ({item}){
         // open url in browser
         if (item.url && item.url != '') {
             WebBrowser.openBrowserAsync(item.url);
-            Linking.openURL(item.url)
+            // Linking.openURL(item.url)
         }
     }
 

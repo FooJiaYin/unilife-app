@@ -1,9 +1,9 @@
 import React from 'react'
 import { StyleSheet, View, TouchableOpacity, Text, TextInput } from 'react-native'
 import { styles } from '../styles'
-import * as RNUI_Checkbox from 'react-native-ui-lib/checkbox'
+// import * as RNUI_Checkbox from 'react-native-ui-lib/checkbox'
 
-export const Checkbox = RNUI_Checkbox
+// export const Checkbox = RNUI_Checkbox
 
 const formStyles = StyleSheet.create({
     button: {
@@ -19,6 +19,7 @@ const formStyles = StyleSheet.create({
     buttonTitle: {
         ...styles.textWhite,
         fontSize: 16,
+        height: 18,
         fontWeight: "bold"
     },
 })

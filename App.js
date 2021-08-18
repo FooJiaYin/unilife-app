@@ -149,6 +149,9 @@ export default function App() {
 					<Stack.Screen name="Success" options={{title: ""}}>
 						{props => <SuccessScreen {...props} user={user} />}
 					</Stack.Screen>
+					<Stack.Screen name="Tabs" options={{headerShown: false}}>
+						{props => <Tabs {...props} user={user} />}
+					</Stack.Screen>
 				</Stack.Navigator>
 			)} 
 		</NavigationContainer>

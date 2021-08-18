@@ -50,6 +50,7 @@ const messageStyle = StyleSheet.create({
     messageText: {
         ...styles.text,
         ...styles.textBubble,
+        // borderRadius: 40,
         // overflow: 'wrap',
         backgroundColor: '#f2f3f3',
         fontSize: 15,
@@ -209,6 +210,7 @@ export function Chatroom({item, size, navigation, matchState = {}, toggleWaiting
             ...styles.textCenter,
             height: size * 0.15,
             flexWrap: "wrap",
+            lineHeight: 20,
             // justifyContent: 'center',
             // alignItems: 'center',
         },
@@ -218,6 +220,7 @@ export function Chatroom({item, size, navigation, matchState = {}, toggleWaiting
             fontWeight: '700',
             flexWrap: "wrap",
             paddingBottom: 16,
+            lineHeight: 40
         },
         button: {
             ...styles.outlineWhite,

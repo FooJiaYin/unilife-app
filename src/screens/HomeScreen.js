@@ -14,11 +14,11 @@ import * as WebBrowser from 'expo-web-browser';
 export default function HomeScreen(props) {
     // console.log(props)
     
-    let user
     // console.log(props.user)
     const storageRef = firebase.storage().ref()
     const articlesRef = firebase.firestore().collection('articles')
     const [articles, setArticles] = useState([])
+    const [nickname, setNickname] = useState('');
     
     const [myShortcuts, setMyShortcuts] = useState([
         {icon: 'ic-class.png', title: '', url: ''},
@@ -51,6 +51,7 @@ export default function HomeScreen(props) {
         // console.log("identity", user.identity.community)
         let snapshot = await props.user.ref.get()
         user = await snapshot.data()
+        setNickname(user.info.nickname)
         const newArticles = []
         const savedArticles = user.bookmarks || []
         // console.log("bookmarks", savedArticles)
@@ -165,7 +166,7 @@ export default function HomeScreen(props) {
             <View style={homeCardStyle.container}>
                 <View style={stylesheet.row}>
                     <View style={{flex:1}}>
-                        <Text style={homeCardStyle.greeting}>小攸，午安！</Text>
+                        <Text style={homeCardStyle.greeting}>{ nickname}，你好！</Text>
                         <Text style={homeCardStyle.time}>{time().format('LLLL')}</Text>
                     </View>
                     {/* <TouchableOpacity>

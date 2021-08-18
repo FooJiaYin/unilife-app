@@ -39,7 +39,7 @@ export function ListItem({ item, onPress, style, onButtonPress }) {
         },
         title: {
             ...styles.text,
-            // height: 48,
+            // height: 42,
             flexWrap: 'wrap',
             overflow: 'hidden',
             paddingBottom: 3,
@@ -48,6 +48,7 @@ export function ListItem({ item, onPress, style, onButtonPress }) {
             ...styles.textS,
             ...styles.textGrey,
             flexBasis: 34,
+            lineHeight: 16,
             // flexGrow: 1,
             flexShrink: 1,
             flexWrap: 'wrap',
