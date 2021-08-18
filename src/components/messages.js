@@ -50,7 +50,7 @@ const messageStyle = StyleSheet.create({
     messageText: {
         ...styles.text,
         ...styles.textBubble,
-        borderRadius: 40,
+        // borderRadius: 40,
         // overflow: 'wrap',
         backgroundColor: '#f2f3f3',
         fontSize: 15,
