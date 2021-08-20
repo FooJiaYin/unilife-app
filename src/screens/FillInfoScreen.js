@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { Image, Text, TextInput, TouchableOpacity, View, Keyboard } from 'react-native'
+import { Image, Text, TextInput, Modal, View, Keyboard, useWindowDimensions, ScrollView } from 'react-native'
 import { setHeaderOptions } from '../components/navigation'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { stylesheet, Color } from '../styles/styles'
+import { stylesheet, htmlStyles } from '../styles/styles'
 import { firebase } from '../firebase/config'
+import { Picker } from '@react-native-picker/picker'
 import { Button } from '../components/forms'
-import DateTimePickerModal from "react-native-modal-datetime-picker";
+import RenderHtml from 'react-native-render-html'
+import DateTimePickerModal from "react-native-modal-datetime-picker"
 import time from '../utils/time'
 
 export default function FillInfoScreen(props) {
@@ -14,7 +16,11 @@ export default function FillInfoScreen(props) {
 	const [password, setPassword] = useState("")
 	const [confirmPassword, setConfirmPassword] = useState("")
     const [agree, setAgree] = useState(false)
+    const [termsAndConditions, setTermsAndConditions] = useState(false)
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false)
+    const [isModalVisible, setModalVisibility] = useState(false)
+    const [currentHTML, setCurrentHTML] = useState("")
+    const [departments, setDepartments] = useState([])
 
     let user = props.route.params.user
 
@@ -24,6 +30,31 @@ export default function FillInfoScreen(props) {
     }
     setHeaderOptions(props.navigation, options)
 
+    async function loadTermsAndConditions() {
+        // console.log(firebase.auth().currentUser)
+        // console.log("community", user.community)
+        // console.log("identity", user.identity.community)
+        let snapshot = await firebase.firestore().doc('config/terms').get()
+        let termsData = await snapshot.data()
+        // console.log(termsData)
+        setTermsAndConditions(termsData)
+        setCurrentHTML(termsData.terms)
+    }
+
+    async function loadDepartments(community) {
+        let querySnapshot = await firebase.firestore().doc('communities/' + community).collection('departments').get()
+        let newDepartments = []
+        querySnapshot.forEach(snapshot => {
+            newDepartments.push({
+                id: snapshot.id,
+                ...snapshot.data()
+            })
+        })
+        setDepartments(newDepartments)
+        console.log(newDepartments)
+        // console.log(departments)
+    }
+
     async function loadUserData() {
         // console.log(firebase.auth().currentUser)
         // console.log("community", user.community)
@@ -31,6 +62,7 @@ export default function FillInfoScreen(props) {
         let snapshot = await user.ref.get()
         let userData = await snapshot.data()
         // console.log(userData)
+        loadDepartments(userData.identity.community)
         if(userData.info) setInfo(userData.info)
         if(userData.identity) setIdentity(userData.identity)
     }
@@ -69,18 +101,43 @@ export default function FillInfoScreen(props) {
         setDatePickerVisibility(false)
     }
 
+    const onLinkPress = (event, href) => {
+        if (href.includes("privacy")) setCurrentHTML(termsAndConditions.privacy)
+        if (href.includes("rules")) setCurrentHTML(termsAndConditions.rules)
+    }
+
+    const onRequestClose = () => {
+        if (currentHTML === termsAndConditions.terms) setModalVisibility(false)
+        else setCurrentHTML(termsAndConditions.terms)
+    }
+
     const onRegisterPress = () => {
+        if (!info.name || info.name == '') {
+            alert("請設定姓名")
+            return
+        }
+        if (!info.nickname || info.nickname == '') {
+            alert("請設定暱稱")
+            return
+        }
         if (!info.birthday) {
             alert("請設定生日日期")
             return
         }
-        const genders = ['男', '女', '其他']
-        if (!genders.includes(info.gender)) {
-            alert("請設定性別為男/女/其他")
+        if (!info.gender || info.gender == '') {
+            alert("請選擇性別")
             return
         }
-        if (!identity.grade || isNaN(identity.grade)) {
-            alert("請設定年級為數字（例：1）")
+        if (!identity.department || identity.department == '') {
+            alert("請選擇系所")
+            return
+        }
+        if (!identity.degree || identity.degree == '') {
+            alert("請選擇學位")
+            return
+        }
+        if (!identity.grade || identity.grade == '') {
+            alert("請選擇年級")
             return
         }
         if (password.length < 6) {
@@ -91,16 +148,54 @@ export default function FillInfoScreen(props) {
             alert("確認密碼不相符！")
             return
         }
-        let checkbox = true
-        if (!checkbox) {
-            alert("確認密碼不相符！")
+        if (!agree) {
+            // alert("請閲讀並同意UniLife服務條款")
+            setModalVisibility(true)
             return
         }
         updateUserData()
     }
 
+    const PopupModal = ({html}) => {
+        return (
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={isModalVisible}
+                onRequestClose={() => onRequestClose()}
+            >
+                <View style={stylesheet.modal}>
+                <ScrollView>
+                    <View style={{paddingLeft: 20, paddingRight: 40}}>
+                        <RenderHtml
+                            source={{html: html}}
+                            // tagsStyles={htmlStyles}
+                            contentWidth={120}
+                            renderersProps={{a: {onPress: onLinkPress}}}
+                        />
+                    </View>
+                </ScrollView>
+                {currentHTML === termsAndConditions.terms ?
+                    <View style={{paddingHorizontal: 30}}>
+                    
+                    <Button
+                        style={[stylesheet.bgGreen, {height: 50, wid: '100%'}]}
+                        onPress={() => {
+                            setAgree(true)
+                            setModalVisibility(false)
+                        }} 
+                        title='同意'
+                    />
+                    </View> : <></>
+                }
+            </View>
+            </Modal>
+        )
+    }
+
     useEffect(() => {
         loadUserData()
+        loadTermsAndConditions()
         setInfo({
             email: firebase.auth().currentUser.email,
             profileImage: info.profileImage || 'profile-image-0.png'
@@ -109,10 +204,21 @@ export default function FillInfoScreen(props) {
 
     return (
         <View style={stylesheet.container}>
+            <PopupModal html={currentHTML} />
             <KeyboardAwareScrollView
                 style={{ flex: 1, width: '100%', height:'100%'}}
                 keyboardShouldPersistTaps="always">
                 <View style={{padding: 16}}>
+                    <TextInput
+                        style={[stylesheet.input, stylesheet.textGrey]}
+                        value={info.email}
+                        placeholder='Email'
+                        placeholderTextColor="#aaaaaa"
+                        onChangeText={(text) => setEmail(text)}
+                        underlineColorAndroid="transparent"
+                        autoCapitalize="none"
+                        editable={false}
+                    />
                     <TextInput
                         style={stylesheet.input}
                         defaultValue={info.name}
@@ -145,35 +251,70 @@ export default function FillInfoScreen(props) {
                             setDatePickerVisibility(true)
                             Keyboard.dismiss()}
                         }
-                    />                    
-                    <TextInput
-                        style={stylesheet.input}
-                        defaultValue={info.gender}
-                        placeholder='性別（男/女/其他）'
-                        placeholderTextColor="#aaaaaa"
-                        underlineColorAndroid="transparent"
-                        autoCapitalize="none"
-                        onChangeText={(input) => setInfo({ ...info, gender: input })}
                     />
-                    <TextInput
-                        style={stylesheet.input}
-                        defaultValue={identity.grade}
-                        placeholder='年級（請輸入數字，例：1）'
-                        placeholderTextColor="#aaaaaa"
-                        underlineColorAndroid="transparent"
-                        autoCapitalize="none"
-                        onChangeText={(input) => setIdentity({ ...identity, grade: input })}
-                    />
-                    <TextInput
-                        style={[stylesheet.input, stylesheet.textGrey]}
-                        value={info.email}
-                        placeholder='Email'
-                        placeholderTextColor="#aaaaaa"
-                        onChangeText={(text) => setEmail(text)}
-                        underlineColorAndroid="transparent"
-                        autoCapitalize="none"
-                        editable={false}
-                    />
+                    <View style={[stylesheet.input, {justifyContent: 'center'}]}>
+                        <Picker
+                            selectedValue={''}
+                            onValueChange={(itemValue, itemIndex) =>{
+                                setInfo({ ...info, gender: itemValue })
+                            }}
+                            style={{padding: 0, margin: -10}}
+                            // mode="dropdown"
+                        >
+                            <Picker.Item label="請選擇生理性別..." value="" />
+                            <Picker.Item label="男" value="男" />
+                            <Picker.Item label="女" value="女" />
+                        </Picker> 
+                    </View>  
+                    <View style={[stylesheet.input, {justifyContent: 'center'}]}>
+                        <Picker
+                            selectedValue={''}
+                            onValueChange={(itemValue, itemIndex) =>{
+                                setIdentity({ ...identity, department: itemValue })
+                            }}
+                            style={{padding: 0, margin: -10}}
+                            // mode="dropdown"
+                        >
+                            <Picker.Item label="請選擇系所..." value="" />
+                            {departments.map((department, i)=>
+                                <Picker.Item label={department.name} value={department.id} />
+                            )}
+                        </Picker> 
+                    </View>  
+                    <View style={[stylesheet.input, {justifyContent: 'center'}]}>
+                        <Picker
+                            selectedValue={''}
+                            onValueChange={(itemValue, itemIndex) =>{
+                                setIdentity({ ...identity, degree: itemValue })
+                            }}
+                            style={{padding: 0, margin: -10}}
+                            // mode="dropdown"
+                        >
+                            <Picker.Item label="請選擇學位..." value="" />
+                            <Picker.Item label="大學部" value="bachelor" />
+                            <Picker.Item label="碩士班" value="master" />
+                            <Picker.Item label="博士班" value="phd" />
+                        </Picker> 
+                    </View> 
+                    <View style={[stylesheet.input, {justifyContent: 'center'}]}>
+                        <Picker
+                            selectedValue={''}
+                            onValueChange={(itemValue, itemIndex) =>{
+                                setIdentity({ ...identity, grade: itemValue })
+                            }}
+                            style={{padding: 0, margin: -10}}
+                            // mode="dropdown"
+                        >
+                            <Picker.Item label="請選擇年級..." value="" />
+                            <Picker.Item label="1" value={1} />
+                            <Picker.Item label="2" value={2} />
+                            <Picker.Item label="3" value={3} />
+                            <Picker.Item label="4" value={4} />
+                            <Picker.Item label="5" value={5} />
+                            <Picker.Item label="6" value={6} />
+                            <Picker.Item label="7" value={7} />
+                        </Picker> 
+                    </View> 
                     <TextInput
                         style={stylesheet.input}
                         placeholderTextColor="#aaaaaa"
@@ -194,18 +335,19 @@ export default function FillInfoScreen(props) {
                         underlineColorAndroid="transparent"
                         autoCapitalize="none"
                     />
-                    <View style={{height: 100}} />
+                    {/* <View style={{height:70}} /> */}
                     <View style={stylesheet.footerView}>
-                        {/* <Text style={stylesheet.footerText}>
-                        <Button
+                        <Text style={stylesheet.footerText}>
+                        {/* <Button
                             onPress={()=>setAgree(true)}
                             color={agree?'#00aebb':'#e2e3e4'}>
                                     v
-                            </Button>
+                            </Button> */}
                             
-                            我同意 
-                            <Text onPress={onFooterLinkPress} style={stylesheet.footerLink}>UniLife個資授權書與使用者條款</Text>
-                        </Text> */}
+                            請閲讀並同意
+                            <Text onPress={()=>setModalVisibility(true)}
+                                style={stylesheet.footerLink}>UniLife服務條款</Text>
+                        </Text>
                     </View>
                     <Button
                         style={stylesheet.bgGreen}

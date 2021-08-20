@@ -40,6 +40,14 @@ export default function HomeScreen(props) {
     // setHeaderOptions(props.navigation, options)
 
     async function loadShortcuts() {
+        // firebase.firestore().doc('communities/test').update({
+        //     shortcuts: [
+        //         {icon: 'package.png', title: '新生懶人包', url: 'https://supr.link/5VQbC', share: false},
+        //         {icon: 'community.png', title: '新生社群', url: 'https://supr.link/3VyQQ', share: false},
+        //         {icon: 'issue.png', title: '問題回報', url: 'https://supr.link/znUbr', share: false},
+        //         {icon: 'invite.png', title: '邀請好友', url: 'https://supr.link/0SFBI', share: true, message: 'Hey！我最近在使用UniLife，一個新的App。 \r\n最近推出了「校園引路人」企劃， 可以和同校跨科系的學長姊、學弟妹聊天、分享大學生活經驗。 \r\n完全匿名、不顯示性別資料， 且為三人一間的聊天室，不用擔心一對一可能產生的尷尬互動。  \r\n點擊以下連結，就可以快速報名，成爲UniLife在地生活圈的一員~ \r\nhttps://supr.link/0SFBI'}
+        //     ]
+        // })
         let snapshot = await props.user.ref.get()
         user = await snapshot.data()
         snapshot = await firebase.firestore().doc('communities/' + user.identity.community).get()
@@ -52,6 +60,7 @@ export default function HomeScreen(props) {
         // console.log("identity", user.identity.community)
         let snapshot = await props.user.ref.get()
         user = await snapshot.data()
+        if (!user.interests || user.interests.length == 0) props.navigation.navigate('FillInfo', {user: snapshot})
         setNickname(user.info.nickname)
         const newArticles = []
         const savedArticles = user.bookmarks || []

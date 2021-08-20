@@ -5,6 +5,7 @@ import { setHeaderOptions } from '../components/navigation'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 // import { DateTimePicker } from 'react-native-ui-lib/DateTimePicker'
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import {Picker} from '@react-native-picker/picker'
 import { Button } from '../components/forms'
 import styles from '../styles/profileStyles'
 import { firebase } from '../firebase/config'
@@ -16,6 +17,7 @@ export default function ProfileScreen(props) {
     const [info, setInfo] = useState({})
     const [identity, setIdentity] = useState({})
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false)
+    const [departments, setDepartments] = useState([])
 
     const options = {
         title: '編輯帳戶',
@@ -35,11 +37,26 @@ export default function ProfileScreen(props) {
     }
     setHeaderOptions(props.navigation, options)
 
+    async function loadDepartments(community) {
+        let querySnapshot = await firebase.firestore().doc('communities/' + community).collection('departments').get()
+        let newDepartments = []
+        querySnapshot.forEach(snapshot => {
+            newDepartments.push({
+                id: snapshot.id,
+                ...snapshot.data()
+            })
+        })
+        setDepartments(newDepartments)
+        console.log(newDepartments)
+        // console.log(departments)
+    }
+
     async function loadUserData() {
         // console.log("community", user.community)
         // console.log("identity", user.identity.community)
         let snapshot = await props.user.ref.get()
         let user = await snapshot.data()
+        loadDepartments(user.identity.community)
      // console.log(user)
         setInfo(user.info)
         setIdentity(user.identity)
@@ -59,6 +76,38 @@ export default function ProfileScreen(props) {
                 grade: Number(identity.grade),
             }
         })
+    }
+
+    const onSavePress = () => {
+        if (!info.name || info.name == '') {
+            alert("請設定姓名")
+            return
+        }
+        if (!info.nickname || info.nickname == '') {
+            alert("請設定暱稱")
+            return
+        }
+        if (!info.birthday) {
+            alert("請設定生日日期")
+            return
+        }
+        if (!info.gender || info.gender == '') {
+            alert("請選擇性別")
+            return
+        }
+        if (!identity.degree || identity.degree == '') {
+            alert("請選擇學位")
+            return
+        }
+        if (!identity.department || identity.department == '') {
+            alert("請選擇系所")
+            return
+        }
+        if (!identity.grade || identity.grade == '') {
+            alert("請選擇年級")
+            return
+        }
+        updateUserData()
     }
 
     function changeProfileImage() {
@@ -105,6 +154,16 @@ export default function ProfileScreen(props) {
                 </View>
                 <View style={styles.container}>
                     <TextInput
+                        style={[stylesheet.input, stylesheet.textGrey]}
+                        value={info.email}
+                        placeholder='Email'
+                        placeholderTextColor="#aaaaaa"
+                        onChangeText={(text) => setEmail(text)}
+                        underlineColorAndroid="transparent"
+                        autoCapitalize="none"
+                        editable={false}
+                    />
+                    <TextInput
                         style={styles.input}
                         defaultValue={info.name}
                         placeholder='姓名'
@@ -136,18 +195,56 @@ export default function ProfileScreen(props) {
                             setDatePickerVisibility(true)
                             Keyboard.dismiss()}
                         }
-                    />                    
-                    <TextInput
-                        style={stylesheet.input}
-                        defaultValue={identity.grade? identity.grade.toString() : null}
-                        placeholder='年級（請輸入數字，例：1）'
-                        placeholderTextColor="#aaaaaa"
-                        underlineColorAndroid="transparent"
-                        autoCapitalize="none"
-                        onChangeText={(input) => {
-                            // console.log(identity)
-                            setIdentity({ ...identity, grade: input })}}
-                    />
+                    /> 
+                    <View style={[stylesheet.input, {justifyContent: 'center'}]}>
+                        <Picker
+                            selectedValue={identity.department}
+                            onValueChange={(itemValue, itemIndex) =>{
+                                setIdentity({ ...identity, department: itemValue })
+                            }}
+                            style={{padding: 0, margin: -10}}
+                            // mode="dropdown"
+                        >
+                            <Picker.Item label="請選擇系所..." value="" />
+                            {departments.map((department, i)=>
+                                <Picker.Item label={department.name} value={department.id} />
+                            )}
+                        </Picker> 
+                    </View>  
+                    <View style={[stylesheet.input, {justifyContent: 'center'}]}>
+                        <Picker
+                            selectedValue={identity.degree}
+                            onValueChange={(itemValue, itemIndex) =>{
+                                setIdentity({ ...identity, degree: itemValue })
+                            }}
+                            style={{padding: 0, margin: -10}}
+                            // mode="dropdown"
+                        >
+                            <Picker.Item label="請選擇學位..." value="" />
+                            <Picker.Item label="大學部" value="bachelor" />
+                            <Picker.Item label="碩士班" value="master" />
+                            <Picker.Item label="博士班" value="phd" />
+                        </Picker> 
+                    </View> 
+                    <View style={[stylesheet.input, {justifyContent: 'center'}]}>
+                        <Picker
+                            selectedValue={identity.grade}
+                            onValueChange={(itemValue, itemIndex) =>{
+                                setIdentity({ ...identity, grade: itemValue })
+                            }}
+                            style={{padding: 0, margin: -10}}
+                            // mode="dropdown"
+                        >
+                            <Picker.Item label="請選擇年級..." value="" />
+                            <Picker.Item label="1" value={1} />
+                            <Picker.Item label="2" value={2} />
+                            <Picker.Item label="3" value={3} />
+                            <Picker.Item label="4" value={4} />
+                            <Picker.Item label="5" value={5} />
+                            <Picker.Item label="6" value={6} />
+                            <Picker.Item label="7" value={7} />
+                        </Picker> 
+                    </View>
                     {/* <TextInput
                         style={styles.input}
                         defaultValue={info.email}
@@ -159,7 +256,7 @@ export default function ProfileScreen(props) {
                     /> */}
                     <Button
                         style={stylesheet.bgGreen}
-                        onPress={() => updateUserData()} 
+                        onPress={() => onSavePress()} 
                         title='儲存'
                     />
                     <Button

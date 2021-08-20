@@ -10,7 +10,7 @@ const formStyles = StyleSheet.create({
         marginTop: 8,
         // height: 40,
         borderRadius: 24,
-        flex: 1,            // 宽度和高度自适应                                                                                                                                             
+        // flex: 1,            // 宽度和高度自适应                                                                                                                                             
         alignItems: 'center',
         justifyContent: 'center',
         // alignSelf: 'center',

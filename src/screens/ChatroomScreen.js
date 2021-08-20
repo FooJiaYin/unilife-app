@@ -31,7 +31,6 @@ export default function ChatroomScreen(props) {
             active: true,
             userNames: [],
             id: '0',
-            style: stylesheet.bgLight,
             startedAt: firebase.firestore.Timestamp.now()
         }) 
         setChatrooms(newChatrooms)
@@ -40,8 +39,8 @@ export default function ChatroomScreen(props) {
     async function loadSetting() {
         let snapshot = await props.user.ref.get()
         let userData = snapshot.data()
-        snapshot = await firebase.firestore().doc('config/20210816').get()
-        let matchConfig = snapshot.data().matching
+        snapshot = await firebase.firestore().doc('config/matching').get()
+        let matchConfig = snapshot.data()
         setMatchState({
             ...matchConfig,
             waiting: (userData.settings && userData.settings.chat) ? userData.settings.chat : false,

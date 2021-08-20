@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { FlatList, Keyboard, Text, SafeAreaView, ScrollView, View, TextInput, TouchableOpacity, useWindowDimensions } from 'react-native'
 import { setHeaderOptions } from '../components/navigation'
-import { stylesheet } from '../styles/styles'
+import { stylesheet, htmlStyles } from '../styles/styles'
 import { firebase } from '../firebase/config'
 import RenderHtml from 'react-native-render-html'
 import { WebView } from 'react-native-webview';
@@ -47,39 +47,6 @@ export default function ArticleScreen(props) {
             setContent(newContent)
         })
 
-    const tagsStyles = {
-        b: {
-            fontWeight: 'bold'
-        },
-        h2: {
-            fontSize: 20,
-            fontWeight: 'bold',
-            marginTop: 18,
-            marginBottom: 4,
-        },
-        p: {
-            fontSize: 16,
-            lineHeight: 28,
-            marginBottom: 8,
-            textAlign: 'justify',
-        },
-        ul: {
-            marginBottom: 8
-        },
-        li: {
-            fontSize: 16,
-            lineHeight: 28,
-            marginLeft: 8
-        },
-        img: {
-            enableExperimentalPercentWidth: true,
-            width: '100%',
-            justifyContent: 'center',
-            alignText: 'center',
-            marginVertical: 8
-          }
-    }
-    
     return (
         <SafeAreaView style={stylesheet.container}>
             {(article.meta.url && article.meta.url != '') ? 
@@ -96,7 +63,7 @@ export default function ArticleScreen(props) {
                     </Text>
                     <RenderHtml
                         source={{html: content}}
-                        tagsStyles={tagsStyles}
+                        tagsStyles={htmlStyles}
                         contentWidth={useWindowDimensions().width - 40}
                     />
                     </View>

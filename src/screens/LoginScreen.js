@@ -33,16 +33,16 @@ export default function LoginScreen({navigation}) {
                 usersRef
                     .doc(uid)
                     .get()
-                    .then(doc => {
-                        if (!doc.exists) {
+                    .then(snapshot => {
+                        if (!snapshot.exists) {
                             alert("User does not exist anymore.")
                             return
                         }
-                        const user = doc.data()
+                        const user = snapshot.data()
                         if(user.interests && user.interests.length == 5) {
                             navigation.navigate('Tabs')
                         } else {
-                            navigation.navigate('FillInfo', {user: doc})
+                            navigation.navigate('FillInfo', {user: snapshot})
                         }
                     })
                     .catch(error => {
@@ -93,8 +93,8 @@ export default function LoginScreen({navigation}) {
                 />
                 <Button onPress={() => onLoginPress()} style={stylesheet.bgGreen} title="登入" />
             </View>
-            <View style={styles.footerView}>
-                <Text style={styles.footerText}>沒有帳號？<Text onPress={onFooterLinkPress} style={styles.footerLink}>馬上預約</Text></Text>
+            <View style={stylesheet.footerView}>
+                <Text style={stylesheet.footerText}>沒有帳號？<Text onPress={onFooterLinkPress} style={stylesheet.footerLink}>馬上預約</Text></Text>
             </View>
             </KeyboardAwareScrollView>
         </View>

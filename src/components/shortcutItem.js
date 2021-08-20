@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { StyleSheet, View, TouchableOpacity, Text, Image, Linking } from 'react-native'
+import { StyleSheet, View, TouchableOpacity, Text, Image, Share } from 'react-native'
 import { styles, Color } from '../styles'
 import Asset from './assets'
 import * as WebBrowser from 'expo-web-browser';
@@ -45,10 +45,25 @@ export function HomeShortcutItem ({item}){
     })
     
     function openLink(){
+        if (item.share && item.share == true) {
+            share(item)
+        } else {
         // open url in browser
-        if (item.url && item.url != '') {
-            WebBrowser.openBrowserAsync(item.url);
-            // Linking.openURL(item.url)
+            if (item.url && item.url != '') {
+                WebBrowser.openBrowserAsync(item.url);
+                // Linking.openURL(item.url)
+            }
+        }
+    }
+
+    async function share(item) {
+        try {
+            const result = Share.share({
+                message: item.message,
+                url: item.url,
+            });
+        } catch(err) {
+            console.log(err)
         }
     }
 

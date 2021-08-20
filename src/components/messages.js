@@ -200,6 +200,7 @@ export function Chatroom({item, size, navigation, matchState = {}, toggleWaiting
             // aspectRatio: 1.33,
             width: size * 0.4,
             paddingHorizontal: 38,
+            // paddingVertical: 60,
             borderRadius: 36,
             justifyContent: 'center',
             // alignItems: 'center',
@@ -208,7 +209,7 @@ export function Chatroom({item, size, navigation, matchState = {}, toggleWaiting
         text: {
             ...styles.textWhite,
             ...styles.textCenter,
-            // height: size * 0.15,
+            height: size * 0.15 + 30,
             // overflow: 'visible',
             flexWrap: "wrap",
             // lineHeight: 20,
@@ -227,7 +228,7 @@ export function Chatroom({item, size, navigation, matchState = {}, toggleWaiting
             ...styles.outlineWhite,
             borderWidth: 1.5,
             // flex: 1,
-            marginTop: 64,
+            // marginTop: 64,
             marginBottom: 8,
             paddingVertical: 20
         }
@@ -237,7 +238,7 @@ export function Chatroom({item, size, navigation, matchState = {}, toggleWaiting
     return (
         <View style={cardStyle.fullHeight}>
             {item.id == 0? 
-                (<View style={[cardStyle.card, item.style]}>
+                (<View style={[cardStyle.card, matchState.waiting? stylesheet.bgBlue : stylesheet.bgLight,]}>
                     <Text style={cardStyle.text}>
                         <Text style={cardStyle.textL}>{'下次配對\n'}</Text>
                         <Text>{matchState.text + '\n' + (matchState.waiting? '等待配對中...' : '') }</Text>

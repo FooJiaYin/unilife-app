@@ -47,6 +47,40 @@ export const styles = {
         alignSelf: 'center',
         tintColor: Color.grey0
     },
+    footerView: {
+        flex: 1,
+        alignItems: "center",
+        marginVertical: 20
+    },
+    footerText: {
+        fontSize: 16,
+        color: '#2e2e2d'
+    },
+    footerLink: {
+        color: Color.blue,
+        fontWeight: "bold",
+        fontSize: 16,
+        borderBottomColor: Color.blue,
+        borderBottomWidth: 2
+    },
+    modal: {
+        marginHorizontal: 20,
+        marginTop: 60,
+        marginBottom: 100,
+        backgroundColor: "white",
+        borderRadius: 10,
+        paddingVertical: 30,
+        paddingHorizontal: 0,
+        // alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
     bg: {
         justifyContent: "center",
         resizeMode:'cover',
@@ -109,7 +143,8 @@ export const styles = {
         backgroundColor: '#f2f3f3',
         marginTop: 8,
         marginBottom: 8,
-        paddingLeft: 16
+        paddingLeft: 16,
+        fontSize: 14,
     },
     disabledButton: {
         backgroundColor: "#e2e3e4",
@@ -137,24 +172,6 @@ export const styles = {
         color: 'white',
         fontSize: 16
     },
-    footerView: {
-        flex: 1,
-        justifyContent:'flex-end',
-        alignItems: "center",
-        marginBottom: 20,
-        marginTop: "auto"
-    },
-    footerText: {
-        fontSize: 12,
-        color: '#2e2e2d'
-    },
-    footerLink: {
-        fontSize: 12,
-        color: "#0F355C",
-        fontWeight: 'bold',
-        borderBottomColor: "#0F355C",
-        borderBottomWidth: 1,
-    },
     row:{
         paddingHorizontal: 16,
         flexDirection: 'row',
@@ -173,6 +190,39 @@ export const styles = {
         flex:1,
         justifyContent: 'center',
     }
+}
+
+export const htmlStyles = {
+    b: {
+        fontWeight: 'bold'
+    },
+    h2: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginTop: 18,
+        marginBottom: 4,
+    },
+    p: {
+        fontSize: 16,
+        lineHeight: 28,
+        marginBottom: 8,
+        textAlign: 'justify',
+    },
+    ul: {
+        marginBottom: 8
+    },
+    li: {
+        fontSize: 16,
+        lineHeight: 28,
+        marginLeft: 8
+    },
+    img: {
+        enableExperimentalPercentWidth: true,
+        width: '100%',
+        justifyContent: 'center',
+        alignText: 'center',
+        marginVertical: 8
+      }
 }
 
 export const stylesheet = StyleSheet.create(styles)

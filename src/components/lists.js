@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import { StyleSheet, View, TouchableOpacity, Text, Image } from 'react-native'
+import { StyleSheet, View, TouchableOpacity, Text, Image, Modal } from 'react-native'
 import { styles, Color } from '../styles'
 import Asset, { Icon } from './assets'
 import time from '../utils/time'
@@ -101,7 +101,7 @@ export function ListItem({ item, onPress, style, onButtonPress }) {
             {/* <OptionOverlay
                 visible={showOption}
                 options={optionItems}
-                onBackCB={()=>{setShowOption(false)}}
+                onBackCB={()=>setShowOption(false)}
             /> */}
             
             <View style={style? [listItemStyle.container, style.container] : listItemStyle.container}>
