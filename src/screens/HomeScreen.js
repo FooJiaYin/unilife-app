@@ -19,6 +19,7 @@ export default function HomeScreen(props) {
     const articlesRef = firebase.firestore().collection('articles')
     const [articles, setArticles] = useState([])
     const [nickname, setNickname] = useState('');
+    let user
     
     const [myShortcuts, setMyShortcuts] = useState([
         {icon: 'ic-class.png', title: '', url: ''},

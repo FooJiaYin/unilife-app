@@ -65,7 +65,7 @@ export default function MessageScreen(props) {
             })
     }
 
-    function sendMessage(inputText) {
+    function sendMessage(inputText, clearInput) {
         if (inputText && inputText.length > 0) {
             const data = {
                 user: user.id,
@@ -80,6 +80,7 @@ export default function MessageScreen(props) {
                     alert(error)
                 })
         }
+        clearInput({}, true)
     }
 
     const options = {
@@ -106,7 +107,7 @@ export default function MessageScreen(props) {
 
   const renderAvatar = ({currentMessage}) =>  <ProfileImage url={currentMessage.user.avatar} />
 
-  const renderSend = ({text}) => <SendButton input={text} onSend={sendMessage}/>
+  const renderSend = ({text, onSend}) => <SendButton input={text} onSend={() => sendMessage(text, onSend)} />
 
     return (
         <View style={stylesheet.container}>
@@ -115,6 +116,7 @@ export default function MessageScreen(props) {
                 // renderBubble={renderBubble}
                 renderAvatar={renderAvatar}
                 renderSend={renderSend} 
+                renderUsernameOnMessage={true}
                 // onSend={messages => Send(messages[0].text)}
                 renderAvatarOnTop = {true}
                 user={{

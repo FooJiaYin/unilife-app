@@ -21,6 +21,7 @@ export default function App() {
 	
 	const [loading, setLoading] = useState(true)
 	const [user, setUser] = useState(null)
+	console.log(user)
 	
 	useEffect(() => {
 		const usersRef = firebase.firestore().collection('users')
@@ -96,7 +97,9 @@ export default function App() {
 	}
 
 	function Tabs(props) {
+		console.log(props.user) 
 		return (
+			props.user ? (
 			<Tab.Navigator tabBarOptions={tabBarOptions}>
 				<Tab.Screen name="HomeStack" options={tabBarObject('主頁', 'home')}>
 					{props => <HomeStackScreen {...props} user={user} />}
@@ -108,6 +111,9 @@ export default function App() {
 					{props => <SettingStackScreen {...props} user={user} />}
 				</Tab.Screen>
 			</Tab.Navigator>
+			) : (
+				<></>
+			)
 		)
 	}
 

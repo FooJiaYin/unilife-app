@@ -208,7 +208,8 @@ export function Chatroom({item, size, navigation, matchState = {}, toggleWaiting
         text: {
             ...styles.textWhite,
             ...styles.textCenter,
-            height: size * 0.15,
+            // height: size * 0.15,
+            // overflow: 'visible',
             flexWrap: "wrap",
             // lineHeight: 20,
             // justifyContent: 'center',
@@ -242,7 +243,7 @@ export function Chatroom({item, size, navigation, matchState = {}, toggleWaiting
                         <Text>{matchState.text + '\n' + (matchState.waiting? '等待配對中...' : '') }</Text>
                     </Text>
                     <Button style={cardStyle.button} title={(matchState.waiting? '關閉配對' : '開啟配對')} onPress={() => toggleWaiting()}/>
-                    <Text style={[stylesheet.textWhite, stylesheet.textCenter]}>{time().getNextDayofWeek(matchState.day, matchState.time).fromNow('倒數計時 %d %H %M')}</Text>
+                    {/* <Text style={[stylesheet.textWhite, stylesheet.textCenter]}>{time().getNextDayofWeek(matchState.day, matchState.time).fromNow('倒數計時 %d %H %M')}</Text> */}
                     {/* <Text style={cardStyle.text}>{active ? 'Active' : 'Inactive'}</Text> */}
                 </View>) 
                 :
