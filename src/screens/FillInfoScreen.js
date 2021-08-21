@@ -4,11 +4,9 @@ import { setHeaderOptions } from '../components/navigation'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { stylesheet, htmlStyles } from '../styles/styles'
 import { firebase } from '../firebase/config'
-import { Picker } from '@react-native-picker/picker'
-import { Button } from '../components/forms'
+import { Button, Select } from '../components/forms'
 import RenderHtml from 'react-native-render-html'
 import DateTimePickerModal from "react-native-modal-datetime-picker"
-import DropDownPicker from 'react-native-dropdown-picker'
 import time from '../utils/time'
 
 export default function FillInfoScreen(props) {
@@ -21,15 +19,34 @@ export default function FillInfoScreen(props) {
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false)
     const [isModalVisible, setModalVisibility] = useState(false)
     const [currentHTML, setCurrentHTML] = useState("")
-    const [departments, setDepartments] = useState([])
+    const [options, setOptions] = useState({
+        grade: [
+            {label: '一年級', value: 1},
+            {label: '二年級', value: 2},
+            {label: '三年級', value: 3},
+            {label: '四年級', value: 4},
+            {label: '五年級', value: 5},
+            {label: '六年級', value: 6},
+            {label: '七年級', value: 7},
+        ],
+        degree: [
+            {label: '大學部', value: 'bachelor'},
+            {label: '碩士班', value: 'master'},
+            {label: '博士班', value: 'phd'},
+        ],
+        gender: [
+            {label: '男', value: '男'},
+            {label: '女', value: '女'}
+        ]
+    }) 
 
     let user = props.route.params.user
 
-    const options = {
+    const headerOptions = {
         title: '註冊',
         headerLeft: 'back'
     }
-    setHeaderOptions(props.navigation, options)
+    setHeaderOptions(props.navigation, headerOptions)
 
     async function loadTermsAndConditions() {
         // console.log(firebase.auth().currentUser)
@@ -47,11 +64,11 @@ export default function FillInfoScreen(props) {
         let newDepartments = []
         querySnapshot.forEach(snapshot => {
             newDepartments.push({
-                id: snapshot.id,
-                ...snapshot.data()
+                value: snapshot.id,
+                label: snapshot.data().name
             })
         })
-        setDepartments(newDepartments)
+        setOptions({...options, departments: newDepartments})
         console.log(newDepartments)
         // console.log(departments)
     }
@@ -253,21 +270,31 @@ export default function FillInfoScreen(props) {
                             Keyboard.dismiss()}
                         }
                     />
-                    <View style={[stylesheet.input, {justifyContent: 'center'}]}>
-                        <Picker
-                            selectedValue={''}
-                            onValueChange={(itemValue, itemIndex) =>{
-                                setInfo({ ...info, gender: itemValue })
-                            }}
-                            style={{padding: 0, margin: -10}}
-                            // mode="dropdown"
-                        >
-                            <Picker.Item label="請選擇生理性別..." value="" />
-                            <Picker.Item label="男" value="男" />
-                            <Picker.Item label="女" value="女" />
-                        </Picker> 
-                    </View>  
-                    <View style={[stylesheet.input, {justifyContent: 'center'}]}>
+                    <Select 
+                        // value={info.gender} 
+                        items={options.gender}
+                        onChange={(input) => setInfo({ ...info, gender: input })}
+                        placeholder='請選擇生理性別...'
+                    />
+                    <Select 
+                        // value={identity.department} 
+                        items={options.departments}
+                        onChange={(input) => setIdentity({ ...identity, department: input })}
+                        placeholder='請選擇系所...'
+                    />
+                    <Select 
+                        // value={identity.degree} 
+                        items={options.degree}
+                        onChange={(input) => setIdentity({ ...identity, degree: input })}
+                        placeholder='請選擇學位...'
+                    />
+                    <Select 
+                        // value={identity.grade} 
+                        items={options.grade}
+                        onChange={(input) => setIdentity({ ...identity, grade: input })}
+                        placeholder='請選擇年級...'
+                    /> 
+                    {/* <View style={[stylesheet.input, {justifyContent: 'center'}]}>
                         <Picker
                             selectedValue={''}
                             onValueChange={(itemValue, itemIndex) =>{
@@ -315,7 +342,7 @@ export default function FillInfoScreen(props) {
                             <Picker.Item label="6" value={6} />
                             <Picker.Item label="7" value={7} />
                         </Picker> 
-                    </View> 
+                    </View>  */}
                     <TextInput
                         style={stylesheet.input}
                         placeholderTextColor="#aaaaaa"

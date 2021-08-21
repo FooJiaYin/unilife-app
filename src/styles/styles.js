@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { color, Color } from './color'
+import RNPickerSelect from 'react-native-picker-select';
 
 export const styles = {
     ...color,
@@ -223,6 +224,30 @@ export const htmlStyles = {
         alignText: 'center',
         marginVertical: 8
       }
+}
+
+export const pickerSelectStyles = {
+    inputIOS: {
+        ...styles.input,
+        paddingHorizontal: 10,
+        paddingVertical: 8,
+        borderWidth: 0,
+        paddingRight: 30
+    },
+    inputAndroid: {
+        height: 40,
+        borderRadius: 20,
+        overflow: 'hidden',
+        backgroundColor: '#f2f3f3',
+        marginTop: 8,
+        marginBottom: 8,
+        paddingLeft: 16,
+        fontSize: 14,
+        paddingHorizontal: 10,
+        paddingVertical: 8,
+        borderWidth: 0,
+        paddingRight: 30, // to ensure the text is never behind the icon
+    },
 }
 
 export const stylesheet = StyleSheet.create(styles)

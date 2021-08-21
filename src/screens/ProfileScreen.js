@@ -5,9 +5,8 @@ import { setHeaderOptions } from '../components/navigation'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 // import { DateTimePicker } from 'react-native-ui-lib/DateTimePicker'
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import DropDownPicker from 'react-native-dropdown-picker'
-import {Picker} from '@react-native-picker/picker'
-import { Button } from '../components/forms'
+import { Button, Select } from '../components/forms'
+
 import styles from '../styles/profileStyles'
 import { firebase } from '../firebase/config'
 import Asset from '../components/assets'
@@ -18,15 +17,28 @@ export default function ProfileScreen(props) {
     const [info, setInfo] = useState({})
     const [identity, setIdentity] = useState({})
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false)
-    const [departments, setDepartments] = useState([])
-    const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
-  const [items, setItems] = useState([
-    {label: 'Apple', value: 'apple'},
-    {label: 'Banana', value: 'banana'}
-  ]);
+    const [options, setOptions] = useState({
+        grade: [
+            {label: '一年級', value: 1},
+            {label: '二年級', value: 2},
+            {label: '三年級', value: 3},
+            {label: '四年級', value: 4},
+            {label: '五年級', value: 5},
+            {label: '六年級', value: 6},
+            {label: '七年級', value: 7},
+        ],
+        degree: [
+            {label: '大學部', value: 'bachelor'},
+            {label: '碩士班', value: 'master'},
+            {label: '博士班', value: 'phd'},
+        ],
+        gender: [
+            {label: '男', value: '男'},
+            {label: '女', value: '女'}
+        ]
+    }) 
 
-    const options = {
+    const headerOptions = {
         title: '編輯帳戶',
         style: {
             headerStyle: {
@@ -42,18 +54,25 @@ export default function ProfileScreen(props) {
         },
         headerLeft: 'back'
     }
-    setHeaderOptions(props.navigation, options)
+    setHeaderOptions(props.navigation, headerOptions)
+
+    async function loadOptions() {
+        const snapshot = await firebase.firestore().doc('config/options').get()
+        const newOptions = await snapshot.data()
+        setOptions(newOptions)
+        console.log(newOptions)
+    }
 
     async function loadDepartments(community) {
         let querySnapshot = await firebase.firestore().doc('communities/' + community).collection('departments').get()
         let newDepartments = []
         querySnapshot.forEach(snapshot => {
             newDepartments.push({
-                id: snapshot.id,
-                ...snapshot.data()
+                value: snapshot.id,
+                label: snapshot.data().name
             })
         })
-        setDepartments(newDepartments)
+        setOptions({...options, departments: newDepartments})
         console.log(newDepartments)
         // console.log(departments)
     }
@@ -64,7 +83,7 @@ export default function ProfileScreen(props) {
         let snapshot = await props.user.ref.get()
         let user = await snapshot.data()
         loadDepartments(user.identity.community)
-     // console.log(user)
+        // console.log(user)
         setInfo(user.info)
         setIdentity(user.identity)
     }
@@ -141,6 +160,27 @@ export default function ProfileScreen(props) {
     }
 
     useEffect(() => {
+        // firebase.firestore().doc('config/options').update({
+        //     grade: [
+        //         {label: '一年級', value: 1},
+        //         {label: '二年級', value: 2},
+        //         {label: '三年級', value: 3},
+        //         {label: '四年級', value: 4},
+        //         {label: '五年級', value: 5},
+        //         {label: '六年級', value: 6},
+        //         {label: '七年級', value: 7},
+        //     ],
+        //     degree: [
+        //         {label: '大學部', value: 'bachelor'},
+        //         {label: '碩士班', value: 'master'},
+        //         {label: '博士班', value: 'phd'},
+        //     ],
+        //     gender: [
+        //         {label: '男', value: '男'},
+        //         {label: '女', value: '女'}
+        //     ],
+        // })
+        // loadOptions()
         loadUserData()
     }, [])
 
@@ -202,26 +242,26 @@ export default function ProfileScreen(props) {
                             setDatePickerVisibility(true)
                             Keyboard.dismiss()}
                         }
-                    /> 
-                    {/* <DropDownPicker
-                        items={[
-                            {label: 'English', value: 'en'},
-                            {label: 'Deutsch', value: 'de'},
-                            {label: 'French', value: 'fr'},
-                        ]}
-                        defaultIndex={0}
-                        open={open}
-                        value={value}
-                        items={items}
-                        setOpen={setOpen}
-                        setValue={setValue}
-                        setItems={setItems}
-                        // dropDownDirection="AUTO"
-                        style={[stylesheet.input, {borderWidth: 0}]}
-                        dropDownContainerStyle={{borderWidth: 0}}
-                        onChangeItem={item => console.log(item.label, item.value)}
-                    /> */}
-                    <View style={[stylesheet.input, {justifyContent: 'center'}]}>
+                    />
+                    <Select 
+                        value={identity.department} 
+                        items={options.departments}
+                        onChange={(input) => setIdentity({ ...identity, department: input })}
+                        placeholder='請選擇系所...'
+                    />
+                    <Select 
+                        value={identity.degree} 
+                        items={options.degree}
+                        onChange={(input) => setIdentity({ ...identity, degree: input })}
+                        placeholder='請選擇學位...'
+                    />
+                    <Select 
+                        value={identity.grade} 
+                        items={options.grade}
+                        onChange={(input) => setIdentity({ ...identity, grade: input })}
+                        placeholder='請選擇年級...'
+                    />
+                    {/* <View style={[stylesheet.input, {justifyContent: 'center'}]}>
                         <Picker
                             selectedValue={identity.department}
                             onValueChange={(itemValue, itemIndex) =>{
@@ -231,8 +271,8 @@ export default function ProfileScreen(props) {
                             // mode="dropdown"
                         >
                             <Picker.Item label="請選擇系所..." value="" />
-                            {departments.map((department, i)=>
-                                <Picker.Item label={department.name} value={department.id} />
+                            {options.departments && options.departments.map((department, i)=>
+                                <Picker.Item label={department.label} value={department.value} />
                             )}
                         </Picker> 
                     </View>  
@@ -268,8 +308,8 @@ export default function ProfileScreen(props) {
                             <Picker.Item label="5" value={5} />
                             <Picker.Item label="6" value={6} />
                             <Picker.Item label="7" value={7} />
-                        </Picker> 
-                    </View>
+                        </Picker>
+                        </View> */}
                     {/* <TextInput
                         style={styles.input}
                         defaultValue={info.email}
