@@ -5,6 +5,7 @@ import { setHeaderOptions } from '../components/navigation'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 // import { DateTimePicker } from 'react-native-ui-lib/DateTimePicker'
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import DropDownPicker from 'react-native-dropdown-picker'
 import {Picker} from '@react-native-picker/picker'
 import { Button } from '../components/forms'
 import styles from '../styles/profileStyles'
@@ -18,6 +19,12 @@ export default function ProfileScreen(props) {
     const [identity, setIdentity] = useState({})
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false)
     const [departments, setDepartments] = useState([])
+    const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState([
+    {label: 'Apple', value: 'apple'},
+    {label: 'Banana', value: 'banana'}
+  ]);
 
     const options = {
         title: '編輯帳戶',
@@ -196,6 +203,24 @@ export default function ProfileScreen(props) {
                             Keyboard.dismiss()}
                         }
                     /> 
+                    {/* <DropDownPicker
+                        items={[
+                            {label: 'English', value: 'en'},
+                            {label: 'Deutsch', value: 'de'},
+                            {label: 'French', value: 'fr'},
+                        ]}
+                        defaultIndex={0}
+                        open={open}
+                        value={value}
+                        items={items}
+                        setOpen={setOpen}
+                        setValue={setValue}
+                        setItems={setItems}
+                        // dropDownDirection="AUTO"
+                        style={[stylesheet.input, {borderWidth: 0}]}
+                        dropDownContainerStyle={{borderWidth: 0}}
+                        onChangeItem={item => console.log(item.label, item.value)}
+                    /> */}
                     <View style={[stylesheet.input, {justifyContent: 'center'}]}>
                         <Picker
                             selectedValue={identity.department}

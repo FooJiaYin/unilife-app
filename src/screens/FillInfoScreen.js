@@ -8,6 +8,7 @@ import { Picker } from '@react-native-picker/picker'
 import { Button } from '../components/forms'
 import RenderHtml from 'react-native-render-html'
 import DateTimePickerModal from "react-native-modal-datetime-picker"
+import DropDownPicker from 'react-native-dropdown-picker'
 import time from '../utils/time'
 
 export default function FillInfoScreen(props) {
