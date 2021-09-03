@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "898870383375",
+    "firebase_url": "https://gleaming-bot-319115-default-rtdb.firebaseio.com",
+    "project_id": "gleaming-bot-319115",
+    "storage_bucket": "gleaming-bot-319115.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:898870383375:android:b6b137fae8a89de068a47a",
+        "android_client_info": {
+          "package_name": "cc.unilife.unilife"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "898870383375-1er63um2mgsgp1fvbam1k0680lk433of.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEHeGoqKRTuGFq5s6d8-Zv-6lAAEkfIBY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "898870383375-1er63um2mgsgp1fvbam1k0680lk433of.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "898870383375-nvc39v9rgaos873q53ii5g769vaqji59.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "cc.UniLife.UniLife"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

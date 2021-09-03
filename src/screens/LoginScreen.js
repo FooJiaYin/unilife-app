@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Dimension, ImageBackground, Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Dimension, ImageBackground, Image, Text, TextInput, Alert, View } from 'react-native'
 import { setHeaderOptions } from '../components/navigation'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Asset from '../components/assets'
@@ -19,8 +19,8 @@ export default function LoginScreen({navigation}) {
     setHeaderOptions(navigation)
 
     const onFooterLinkPress = () => {
-        // navigation.navigate('Registration')
-        WebBrowser.openBrowserAsync('https://supr.link/kmbjI');
+        navigation.navigate('Registration')
+        // WebBrowser.openBrowserAsync('https://supr.link/kmbjI');
         // Linking.openURL('https://supr.link/kmbjI')
     }
 
@@ -35,12 +35,12 @@ export default function LoginScreen({navigation}) {
                     .get()
                     .then(snapshot => {
                         if (!snapshot.exists) {
-                            alert("User does not exist anymore.")
+                            Alert.alert('', "該帳號不存在")
                             return
                         }
                         const user = snapshot.data()
                         if(user.interests && user.interests.length == 5) {
-                            navigation.navigate('Tabs')
+                            navigation.navigate('Home')
                         } else {
                             navigation.navigate('FillInfo', {user: snapshot})
                         }
@@ -94,7 +94,7 @@ export default function LoginScreen({navigation}) {
                 <Button onPress={() => onLoginPress()} style={stylesheet.bgGreen} title="登入" />
             </View>
             <View style={stylesheet.footerView}>
-                <Text style={stylesheet.footerText}>沒有帳號？<Text onPress={onFooterLinkPress} style={stylesheet.footerLink}>馬上預約</Text></Text>
+                <Text style={stylesheet.footerText}>沒有帳號？<Text onPress={onFooterLinkPress} style={stylesheet.footerLink}>現在註冊</Text></Text>
             </View>
             </KeyboardAwareScrollView>
         </View>

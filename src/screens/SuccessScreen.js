@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { ImageBackground, Image, Text, TextInput, TouchableOpacity, View, TouchableHighlight, StyleSheet } from 'react-native'
+import { ImageBackground, Image, Text, Linking, TouchableOpacity, View, TouchableHighlight, StyleSheet } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { setHeaderOptions } from '../components/navigation'
 import { Button } from '../components/forms'
@@ -56,6 +56,7 @@ export default function Test(props) {
     
 
     const [info, setInfo] = useState({})
+    const [verification, setVerification] = useState({})
     const user = props.user || props.route.params.user
 
     async function loadUserData() {
@@ -65,6 +66,7 @@ export default function Test(props) {
         let data = await snapshot.data()
      // console.log(user)
         setInfo(data.info)
+        setVerification(data.verification)
     }
 
     const updateUserData = useCallback( async () => {
@@ -91,6 +93,11 @@ export default function Test(props) {
         props.navigation.navigate('Tabs')
     }
 
+    async function onVerifyPress() {
+        Linking.openURL("https://supr.link/RWZbE")
+        props.navigation.navigate('Tabs')
+    }
+
     return (
             
         <View style={stylesheet.container}>
@@ -109,12 +116,22 @@ export default function Test(props) {
             </ImageBackground>
             <View style={screenStyle.desc}>
                 <Text style={stylesheet.articleTitle}>註冊成功！</Text>
-                <Text style={[stylesheet.text, {flex:1, flexGrow: 1}]}>恭喜！你已成功註冊UniLife帳號！</Text>
-                <Button 
-                    title='開始使用' 
-                    style={screenStyle.bottomButton}
-                    onPress={() => onStartPress()} 
-                />
+                { verification.status == true?
+                <>
+                    <Text style={[stylesheet.text, {flex:1, flexGrow: 1}]}>恭喜！你已成功註冊UniLife帳號！</Text>
+                    <Button 
+                        title='開始使用' 
+                        style={screenStyle.bottomButton}
+                        onPress={() => onStartPress()} 
+                    /> 
+                </> : <>
+                    <Text style={[stylesheet.text, {flex:1, flexGrow: 1}]}>馬上前往驗證，開通聊天、留言功能！</Text>
+                    <Button 
+                        title='前往驗證' 
+                        style={screenStyle.bottomButton}
+                        onPress={() => onVerifyPress()} 
+                    /> 
+                </>}
             </View>
             </KeyboardAwareScrollView>
         </View>

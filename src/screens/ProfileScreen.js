@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react'
-import { ImageBackground, Image, Text, TextInput, Keyboard, View } from 'react-native'
+import { ImageBackground, Image, Text, TextInput, Keyboard, View, Alert } from 'react-native'
 import { useFocusEffect } from "@react-navigation/native";
 import { setHeaderOptions } from '../components/navigation'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -16,6 +16,7 @@ import { stylesheet, Color } from '../styles'
 export default function ProfileScreen(props) {
     const [info, setInfo] = useState({})
     const [identity, setIdentity] = useState({})
+    const [user, setUser] = useState({})
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false)
     const [options, setOptions] = useState({
         grade: [
@@ -86,13 +87,14 @@ export default function ProfileScreen(props) {
         // console.log(user)
         setInfo(user.info)
         setIdentity(user.identity)
+        setUser(user)
     }
 
     const updateUserData = async () => {
         // console.log(identity)
         if (!identity.grade || isNaN(identity.grade)) {
             // console.log(identity.grade)
-            alert("請設定年級為數字（例：1）")
+            Alert.alert('', "請設定年級為數字（例：1）")
             return
         }
         await props.user.ref.update({
@@ -106,31 +108,31 @@ export default function ProfileScreen(props) {
 
     const onSavePress = () => {
         if (!info.name || info.name == '') {
-            alert("請設定姓名")
+            Alert.alert('', "請設定姓名")
             return
         }
         if (!info.nickname || info.nickname == '') {
-            alert("請設定暱稱")
+            Alert.alert('', "請設定暱稱")
             return
         }
         if (!info.birthday) {
-            alert("請設定生日日期")
+            Alert.alert('', "請設定生日日期")
             return
         }
         if (!info.gender || info.gender == '') {
-            alert("請選擇性別")
+            Alert.alert('', "請選擇性別")
             return
         }
         if (!identity.degree || identity.degree == '') {
-            alert("請選擇學位")
+            Alert.alert('', "請選擇學位")
             return
         }
         if (!identity.department || identity.department == '') {
-            alert("請選擇系所")
+            Alert.alert('', "請選擇系所")
             return
         }
         if (!identity.grade || identity.grade == '') {
-            alert("請選擇年級")
+            Alert.alert('', "請選擇年級")
             return
         }
         updateUserData()
@@ -153,9 +155,13 @@ export default function ProfileScreen(props) {
     }
 
     function signOut() {
-        firebase.auth().signOut().then(() => {
-            console.log( firebase.auth().currentUser)
-            props.navigation.navigate('Login2')
+        firebase.firestore().doc('users/' + user.id).update({
+            pushToken: null
+        }).then(() => {
+            firebase.auth().signOut().then(() => {
+                console.log( firebase.auth().currentUser)
+                props.navigation.navigate('Login2')
+            })
         })
     }
 
@@ -201,7 +207,7 @@ export default function ProfileScreen(props) {
                 </View>
                 <View style={styles.container}>
                     <TextInput
-                        style={[stylesheet.input, stylesheet.textGrey]}
+                        style={[styles.input]}
                         value={info.email}
                         placeholder='Email'
                         placeholderTextColor="#aaaaaa"

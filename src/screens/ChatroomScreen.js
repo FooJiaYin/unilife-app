@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, useWindowDimensions, KeyboardAwareScrollView } from 'react-native'
+import { View, useWindowDimensions, Linking, Alert } from 'react-native'
 import { setHeaderOptions } from '../components/navigation'
 import { stylesheet, Color, styles } from '../styles'
 import { Chatroom } from '../components/messages'
@@ -20,6 +20,7 @@ export default function ChatroomScreen(props) {
         day: 0,
         time: 20,
         waiting: false,
+        inChat: false,
     })
     // carousel = React.createRef<typeof Carousel>();
     const window = useWindowDimensions()
@@ -39,24 +40,44 @@ export default function ChatroomScreen(props) {
     async function loadSetting() {
         let snapshot = await props.user.ref.get()
         let userData = snapshot.data()
-        snapshot = await firebase.firestore().doc('config/matching').get()
-        let matchConfig = snapshot.data()
-        setMatchState({
-            ...matchConfig,
-            waiting: (userData.settings && userData.settings.chat) ? userData.settings.chat : false,
+        firebase.firestore().doc('config/matching').onSnapshot(snapshot => {
+            // console.log('onSnapshot', snapshot)
+            let matchConfig = snapshot.data()
+            setMatchState({
+                ...matchConfig,
+                waiting: (userData.settings && userData.settings.chat) ? userData.settings.chat : false,
+                inChat: (userData.settings && userData.settings.inChat) ? userData.settings.inChat : false,
+                verified: (userData.verification && userData.verification.status) ? userData.verification.status : false,
+            })
         })
     }
 
     function toggleWaiting() {
-        props.user.ref.update({
-            settings: {
-                chat: !matchState.waiting,
-            }
-        })
-        setMatchState({
-            ...matchState,
-            waiting: !matchState.waiting,
-        })
+        if (!matchState.verified) {  
+            Alert.alert('', "您尚未完成身分驗證，請先完成學生身分驗證。",
+                [{
+                    text: "前往驗證",
+                    onPress: () => Linking.openURL("https://supr.link/RWZbE")
+                }, {
+                    text: "取消",
+                    // onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel"
+                }]
+            )
+        } else if (!matchState.inChat) {
+            props.user.ref.update({
+                settings: {
+                    chat: !matchState.waiting,
+                    inChat: false,
+                }
+            })
+            setMatchState({
+                ...matchState,
+                waiting: !matchState.waiting,
+            })
+        } else {
+            Alert.alert('', matchState.alert)
+        }
     }
 
     useEffect(() => {

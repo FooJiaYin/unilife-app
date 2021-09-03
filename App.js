@@ -1,5 +1,8 @@
 import 'react-native-gesture-handler'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
+import { Platform } from 'react-native';
+import Constants from 'expo-constants';
+import * as Notifications from 'expo-notifications';
 import { firebase } from './src/firebase/config'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack'
@@ -17,11 +20,55 @@ if (!global.atob) { global.atob = decode }
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
 
+Notifications.setNotificationHandler({
+	handleNotification: async () => ({
+		shouldShowAlert: true,
+		shouldPlaySound: true,
+		shouldSetBadge: true,
+	}),
+});
+
+async function registerForPushNotificationsAsync() {
+	let token;
+	if (Constants.isDevice) {
+		const { status: existingStatus } = await Notifications.getPermissionsAsync();
+		let finalStatus = existingStatus;
+		if (existingStatus !== 'granted') {
+			const { status } = await Notifications.requestPermissionsAsync();
+			finalStatus = status;
+		}
+		if (finalStatus !== 'granted') {
+			alert('Failed to get push token for push notification!');
+			return;
+		}
+
+		let experienceId = '@foojiayin/unilife';
+		token = (await Notifications.getExpoPushTokenAsync({experienceId: '@foojiayin/unilife'})).data;
+		console.log(token);
+	} else {
+		alert('Must use physical device for Push Notifications');
+	}
+
+	if (Platform.OS === 'android') {
+		Notifications.setNotificationChannelAsync('default', {
+			name: 'default',
+			importance: Notifications.AndroidImportance.MAX,
+			vibrationPattern: [0, 250, 250, 250],
+			lightColor: '#FF231F7C',
+		});
+	}
+	return token;
+}
+
 export default function App() {
 	
+	const notificationListener = useRef();
+	const responseListener = useRef();
+	const [expoPushToken, setExpoPushToken] = useState('');
+	const [notification, setNotification] = useState(false);
 	const [loading, setLoading] = useState(true)
 	const [user, setUser] = useState(null)
-	console.log(user)
+	// console.log(user)
 	
 	useEffect(() => {
 		const usersRef = firebase.firestore().collection('users')
@@ -31,16 +78,46 @@ export default function App() {
 				.doc(user.uid)
 				.get()
 				.then((doc) => {
-				setLoading(false)
-				setUser(doc)
+					setLoading(false)
+					setUser(doc)
 				})
 				.catch((error) => {
-				setLoading(false)
+					setLoading(false)
 				})
 			} else {
-			setLoading(false)
+				setLoading(false)
+			}
+			if (expoPushToken !== '') {
+				usersRef.doc(user.uid).update({
+					pushToken: expoPushToken
+				})
 			}
 		})
+		
+		registerForPushNotificationsAsync().then(token => {
+			console.log('token', token)
+			setExpoPushToken(token)
+			console.log('user token', token)
+			if (user) {
+				console.log('user token', token)
+				usersRef.doc(user.id).update({
+					pushToken: token
+				})
+			}
+		})
+
+		notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+			setNotification(notification);
+		});
+
+		responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+			console.log(response);
+		});
+
+		return () => {
+			Notifications.removeNotificationSubscription(notificationListener.current);
+			Notifications.removeNotificationSubscription(responseListener.current);
+		};
 	}, [])
 
 	if (loading) {
@@ -97,7 +174,7 @@ export default function App() {
 	}
 
 	function Tabs(props) {
-		console.log(props.user) 
+		// console.log(props.user) 
 		return (
 			props.user ? (
 			<Tab.Navigator tabBarOptions={tabBarOptions}>
@@ -134,7 +211,7 @@ export default function App() {
 						{props => <CommentScreen {...props} user={user} />}
 					</Stack.Screen>
 					<Stack.Screen name="Login2" component={LoginScreen}/>
-					
+					<Stack.Screen name="Registration" component={RegistrationScreen} />
 					<Stack.Screen name="FillInfo" component={FillInfoScreen} user={user}/>
 					<Stack.Screen name="Topic" options={{title: "選擇興趣"}}>
 						{props => <TopicSelectScreen {...props} user={user} />}

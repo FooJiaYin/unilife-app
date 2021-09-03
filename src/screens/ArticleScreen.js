@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList, Keyboard, Text, SafeAreaView, ScrollView, View, TextInput, TouchableOpacity, useWindowDimensions } from 'react-native'
+import { FlatList, Alert, Text, SafeAreaView, ScrollView, View, TextInput, Linking, useWindowDimensions } from 'react-native'
 import { setHeaderOptions } from '../components/navigation'
 import { stylesheet, htmlStyles } from '../styles/styles'
 import { firebase } from '../firebase/config'
 import RenderHtml from 'react-native-render-html'
 import { WebView } from 'react-native-webview';
+import { GiftedChat } from 'react-native-gifted-chat'
+import { CommentBubble, ProfileImage, SendButton } from '../components/messages'
 // import HTMLView from 'react-native-htmlview';
+// import CommentScreen from './CommentScreen'
 import time from '../utils/time'
 
 export default function ArticleScreen(props) {
@@ -16,7 +19,7 @@ export default function ArticleScreen(props) {
     const commentsRef = firebase.firestore().collection('articles').doc(article.id).collection('comments')
 
     const [content, setContent] = useState(article.content)
-    const [comments, setComments] = useState([])
+    const [messages, setMessages] = useState([])
     const [inputText, setInputText] = useState([])
 
     const options = {
@@ -25,11 +28,26 @@ export default function ArticleScreen(props) {
         headerRight: {
             icon: 'chat',
             size: 18,
-            onPress: () => {props.navigation.navigate('Comment', {article: article, commentsRef: commentsRef})}
+            onPress: () => {
+                if (user.verification && user.verification.status) {
+                    props.navigation.navigate('Comment', {article: article, commentsRef: commentsRef})
+                } else {
+                    Alert.alert('', "您尚未完成身分驗證，請先完成學生身分驗證。",
+                        [{
+                            text: "前往驗證",
+                            onPress: () => Linking.openURL("https://supr.link/RWZbE")
+                        }, {
+                            text: "取消",
+                            // onPress: () => console.log("Cancel Pressed"),
+                            style: "cancel"
+                        }]
+                    )
+                }
+            }
         }
     }
- // console.log('title', article.meta.source)
     setHeaderOptions(props.navigation, options)
+ // console.log('title', article.meta.source)
 
     /* Get Images */
     let newContent = content;
@@ -46,6 +64,92 @@ export default function ArticleScreen(props) {
             }
             setContent(newContent)
         })
+
+        function loadMessages() {
+            commentsRef.orderBy('timestamp', 'desc')//.limit(20)
+                .onSnapshot(querySnapshot => {
+                    const messageList = []
+                    let promises = []
+                    querySnapshot.forEach(async doc => {
+                        const id = messageList.push(doc.data()) -1
+                        // console.log(messageList)
+                        const message = doc.data()
+                        messageList[id].id = doc.id
+                        promises.push(
+                            firebase.firestore().doc('users/' + message.user).get()
+                                .then(snapshot => {
+                                    messageList[id].user = snapshot.data().info.nickname
+                                    messageList[id].position = 'left'
+                                    messageList[id].replies = commentsRef.doc(doc.id).collection('replies')
+                                    if (messageList[id].timestamp == null) {
+                                        messageList[id].timestamp = firebase.firestore.Timestamp.now()
+                                    }
+                                    messageList[id].position = 'left'
+                                    // messageList[id].replies = commentsRef.doc(doc.id).collection('replies')
+                                    messageList[id].timestamp = messageList[id].timestamp.toDate()
+                                    messageList[id]._id = id
+                                    messageList[id].createdAt = messageList[id].timestamp
+                                    messageList[id].text = messageList[id].content
+                                    messageList[id].user = {
+                                        _id: snapshot.data().id,
+                                        name: snapshot.data().info.nickname,
+                                        avatar: snapshot.data().info.profileImage
+                                    }
+                                    // console.log(messageList[id].user._id, user.id)
+                                })
+                        )
+                        // const snapshot = await message.user.get()
+                        // messageList[id].user = snapshot.data().info.nickname
+                        // messageList[id].replies = commentsRef.doc(doc.id).collection('replies')
+                        // if (messageList[id].timestamp == null) {
+                        //     messageList[id].timestamp = firebase.firestore.Timestamp.now();
+                        // }
+                    })
+                    Promise.all(promises).then(() => {setMessages(messageList)})
+                })
+        }
+    
+        function sendMessage(inputText, clearInput) {
+            if (inputText && inputText.length > 0) {
+                const data = {
+                    user: user.id,
+                    content: inputText,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                }
+                commentsRef.add(data)
+                    .then(_doc => {
+                        Keyboard.dismiss()
+                    })
+                    .catch((error) => {
+                        alert(error)
+                    })
+            }
+            clearInput({}, true)
+        }
+    
+        useEffect(() => {
+            loadMessages()
+        }, [])
+    
+        const renderBubble = ({user, currentMessage}) => {
+            const message = {
+                user: currentMessage.user.name,
+                timestamp: currentMessage.createdAt,
+                content: currentMessage.text,
+                position: currentMessage.position
+            }
+            return (
+                <CommentBubble {...message} />
+            )
+        }
+    
+      const renderAvatar = ({currentMessage}) => {
+        //   console.log(currentMessage)
+            return <ProfileImage url={currentMessage.user.avatar} />
+      }
+    
+    //   const renderSend = ({text}) => <SendButton input={text} onSend={sendMessage}/>
+      const renderSend = ({text, onSend}) => <SendButton input={text} onSend={() => sendMessage(text, onSend)} />
 
     return (
         <SafeAreaView style={stylesheet.container}>
@@ -67,7 +171,18 @@ export default function ArticleScreen(props) {
                         contentWidth={useWindowDimensions().width - 40}
                     />
                     </View>
-
+                    {/* <GiftedChat
+                        messages={messages}
+                        renderBubble={renderBubble}
+                        renderAvatar={renderAvatar}
+                        renderSend={renderSend} 
+                        renderDay={() => <></>}
+                        // onSend={messages => Send(messages[0].text)}
+                        showAvatarForEveryMessage={true}
+                        renderAvatarOnTop = {true}
+                        // alignTop={true}
+                        user={{_id: ''}}
+                    /> */}
                 {/* <FlatList
                     data={comments}
                     renderItem={commentItem}

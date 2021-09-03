@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { Image, Text, TextInput, Modal, View, Keyboard, useWindowDimensions, ScrollView } from 'react-native'
+import { Image, Text, TextInput, Modal, View, Keyboard, Alert, ScrollView } from 'react-native'
 import { setHeaderOptions } from '../components/navigation'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { stylesheet, htmlStyles } from '../styles/styles'
@@ -98,7 +98,8 @@ export default function FillInfoScreen(props) {
                 grade: Number(identity.grade),
             },
             settings: {
-                chat: false
+                chat: false,
+                inChat: false,
             }
         })
         try {
@@ -131,43 +132,43 @@ export default function FillInfoScreen(props) {
 
     const onRegisterPress = () => {
         if (!info.name || info.name == '') {
-            alert("請設定姓名")
+            Alert.alert('', "請設定姓名")
             return
         }
         if (!info.nickname || info.nickname == '') {
-            alert("請設定暱稱")
+            Alert.alert('', "請設定暱稱")
             return
         }
         if (!info.birthday) {
-            alert("請設定生日日期")
+            Alert.alert('', "請設定生日日期")
             return
         }
         if (!info.gender || info.gender == '') {
-            alert("請選擇性別")
+            Alert.alert('', "請選擇性別")
             return
         }
         if (!identity.department || identity.department == '') {
-            alert("請選擇系所")
+            Alert.alert('', "請選擇系所")
             return
         }
         if (!identity.degree || identity.degree == '') {
-            alert("請選擇學位")
+            Alert.alert('', "請選擇學位")
             return
         }
         if (!identity.grade || identity.grade == '') {
-            alert("請選擇年級")
+            Alert.alert('', "請選擇年級")
             return
         }
         if (password.length < 6) {
-            alert("密碼長度不足")
+            Alert.alert('', "密碼長度不足")
             return
         }
         if (password !== confirmPassword) {
-            alert("確認密碼不相符！")
+            Alert.alert('', "確認密碼不相符！")
             return
         }
         if (!agree) {
-            // alert("請閲讀並同意UniLife服務條款")
+            // Alert.alert('', "請閲讀並同意UniLife服務條款")
             setModalVisibility(true)
             return
         }

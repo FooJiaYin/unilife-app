@@ -10,6 +10,8 @@ import { useFocusEffect } from "@react-navigation/native";
 import { StickedBg, ExpandCard } from '../components/decorative'
 import { HomeShortcutItem } from '../components/shortcutItem'
 import * as WebBrowser from 'expo-web-browser';
+import { set } from 'react-native-reanimated'
+
 
 export default function HomeScreen(props) {
     // console.log(props)
@@ -20,7 +22,7 @@ export default function HomeScreen(props) {
     const [articles, setArticles] = useState([])
     const [nickname, setNickname] = useState('');
     let user
-    
+    const [text, setText] = useState({})
     const [myShortcuts, setMyShortcuts] = useState([
         {icon: 'ic-class.png', title: '', url: ''},
         {icon: 'ic-book.png', title: '', url: ''},
@@ -40,19 +42,14 @@ export default function HomeScreen(props) {
     // setHeaderOptions(props.navigation, options)
 
     async function loadShortcuts() {
-        // firebase.firestore().doc('communities/test').update({
-        //     shortcuts: [
-        //         {icon: 'package.png', title: '新生懶人包', url: 'https://supr.link/5VQbC', share: false},
-        //         {icon: 'community.png', title: '新生社群', url: 'https://supr.link/3VyQQ', share: false},
-        //         {icon: 'issue.png', title: '問題回報', url: 'https://supr.link/znUbr', share: false},
-        //         {icon: 'invite.png', title: '邀請好友', url: 'https://supr.link/0SFBI', share: true, message: 'Hey！我最近在使用UniLife，一個新的App。 \r\n最近推出了「校園引路人」企劃， 可以和同校跨科系的學長姊、學弟妹聊天、分享大學生活經驗。 \r\n完全匿名、不顯示性別資料， 且為三人一間的聊天室，不用擔心一對一可能產生的尷尬互動。  \r\n點擊以下連結，就可以快速報名，成爲UniLife在地生活圈的一員~ \r\nhttps://supr.link/0SFBI'}
-        //     ]
-        // })
         let snapshot = await props.user.ref.get()
         user = await snapshot.data()
         snapshot = await firebase.firestore().doc('communities/' + user.identity.community).get()
-        const data = await snapshot.data()
+        let data = await snapshot.data()
         setMyShortcuts(data.shortcuts)
+        snapshot = await firebase.firestore().doc('config/text').get()
+        data = await snapshot.data()
+        setText(data.home)
     }
 
     async function loadArticles() {
@@ -176,7 +173,7 @@ export default function HomeScreen(props) {
             <View style={homeCardStyle.container}>
                 <View style={stylesheet.row}>
                     <View style={{flex:1}}>
-                        <Text style={homeCardStyle.greeting}>{ nickname}，你好！</Text>
+                        <Text style={homeCardStyle.greeting}>{ nickname}{text.greeting}</Text>
                         <Text style={homeCardStyle.time}>{time().format('LLLL')}</Text>
                     </View>
                     {/* <TouchableOpacity>

@@ -65,6 +65,27 @@ export default function MessageScreen(props) {
             })
     }
 
+    async function sendPushNotification(token, content) {
+        if (!token || token == '') return
+        const message = {
+            to: token,
+            sound: 'default',
+            title: '來自' + user.info.name + '的訊息',
+            body: content,
+            data: { data: 'goes here' },
+        };
+    
+        await fetch('https://exp.host/--/api/v2/push/send', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Accept-encoding': 'gzip, deflate',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(message),
+        });
+      }
+
     function sendMessage(inputText, clearInput) {
         if (inputText && inputText.length > 0) {
             const data = {
@@ -75,6 +96,15 @@ export default function MessageScreen(props) {
             messagesRef.add(data)
                 .then(_doc => {
                     Keyboard.dismiss()
+                    chatroom.users.forEach(u => {
+                        if (u != user.id) {
+                            console.log('send notification')
+                            firebase.firestore().doc('users/' + u).get()
+                                .then(userSnapshot => 
+                                    sendPushNotification(userSnapshot.data().pushToken, inputText)
+                                )
+                        }
+                    })
                 })
                 .catch((error) => {
                     alert(error)
@@ -111,18 +141,34 @@ export default function MessageScreen(props) {
 
     return (
         <View style={stylesheet.container}>
-            <GiftedChat
-                messages={messages}
-                // renderBubble={renderBubble}
-                renderAvatar={renderAvatar}
-                renderSend={renderSend} 
-                renderUsernameOnMessage={true}
-                // onSend={messages => Send(messages[0].text)}
-                renderAvatarOnTop = {true}
-                user={{
-                    _id: user.id,
-                }}
-            />
+            { chatroom.active == true ?
+                <GiftedChat
+                    messages={messages}
+                    // renderBubble={renderBubble}
+                    renderAvatar={renderAvatar}
+                    renderSend={renderSend} 
+                    renderUsernameOnMessage={true}
+                    // onSend={messages => Send(messages[0].text)}
+                    renderAvatarOnTop = {true}
+                    user={{
+                        _id: user.id,
+                    }}
+                /> 
+            :
+                <GiftedChat
+                    messages={messages}
+                    // renderBubble={renderBubble}
+                    renderAvatar={renderAvatar}
+                    renderSend={renderSend} 
+                    renderInputToolbar={() => <></>}
+                    renderUsernameOnMessage={true}
+                    // onSend={messages => Send(messages[0].text)}
+                    renderAvatarOnTop = {true}
+                    user={{
+                        _id: user.id,
+                    }}
+                />
+            }
         </View>
     )
 }

@@ -4,16 +4,15 @@ import { FlatList, Keyboard, Text, SafeAreaView, Image, View, TextInput, Touchab
 import { setHeaderOptions } from '../components/navigation'
 import { stylesheet } from '../styles/styles'
 import { firebase } from '../firebase/config'
-import RenderHtml from 'react-native-render-html'
 import { CommentBubble, ProfileImage, SendButton } from '../components/messages'
 import Asset from '../components/assets'
 
 export default function MessageScreen(props) {
-    const article = props.route.params.article
+    const article = props.route.params.article || props.params.article
     // console.log('chatroom', chatroom)
     const user = props.user.data()
     const storageRef = firebase.storage().ref()
-    const commentsRef = props.route.params.commentsRef
+    const commentsRef = props.route.params.commentsRef ||　props.params.article
 
     const [messages, setMessages] = useState([])
     const [inputText, setInputText] = useState([])
@@ -70,7 +69,7 @@ export default function MessageScreen(props) {
             })
     }
 
-    function sendMessage(inputText) {
+    function sendMessage(inputText, clearInput) {
         if (inputText && inputText.length > 0) {
             const data = {
                 user: user.id,
@@ -85,6 +84,7 @@ export default function MessageScreen(props) {
                     alert(error)
                 })
         }
+        clearInput({}, true)
     }
 
     useEffect(() => {
@@ -108,7 +108,8 @@ export default function MessageScreen(props) {
         return <ProfileImage url={currentMessage.user.avatar} />
   }
 
-  const renderSend = ({text}) => <SendButton input={text} onSend={sendMessage}/>
+//   const renderSend = ({text}) => <SendButton input={text} onSend={sendMessage}/>
+  const renderSend = ({text, onSend}) => <SendButton input={text} onSend={() => sendMessage(text, onSend)} />
 
     return (
         <View style={stylesheet.container}>
