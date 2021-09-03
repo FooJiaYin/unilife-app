@@ -20,13 +20,13 @@ if (!global.atob) { global.atob = decode }
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
 
-Notifications.setNotificationHandler({
-	handleNotification: async () => ({
-		shouldShowAlert: true,
-		shouldPlaySound: true,
-		shouldSetBadge: true,
-	}),
-});
+// Notifications.setNotificationHandler({
+// 	handleNotification: async () => ({
+// 		shouldShowAlert: true,
+// 		shouldPlaySound: true,
+// 		shouldSetBadge: true,
+// 	}),
+// });
 
 async function registerForPushNotificationsAsync() {
 	let token;
@@ -69,41 +69,23 @@ export default function App() {
 	const [loading, setLoading] = useState(true)
 	const [user, setUser] = useState(null)
 	// console.log(user)
-	
-	useEffect(() => {
-		const usersRef = firebase.firestore().collection('users')
-		firebase.auth().onAuthStateChanged(user => {
-			if (user) {
-			usersRef
-				.doc(user.uid)
-				.get()
-				.then((doc) => {
-					setLoading(false)
-					setUser(doc)
-				})
-				.catch((error) => {
-					setLoading(false)
-				})
-			} else {
-				setLoading(false)
-			}
-			if (expoPushToken !== '') {
-				usersRef.doc(user.uid).update({
-					pushToken: expoPushToken
-				})
-			}
-		})
-		
+
+	function setupNotification(uid) {
+		console.log('uid', uid)
 		registerForPushNotificationsAsync().then(token => {
 			console.log('token', token)
 			setExpoPushToken(token)
 			console.log('user token', token)
-			if (user) {
+			// alert(token)
+			if (uid) {
 				console.log('user token', token)
-				usersRef.doc(user.id).update({
+				firebase.firestore().doc('users/' + uid).update({
 					pushToken: token
 				})
 			}
+		}).catch(err => {
+			console.log('error', err)
+			// alert(err)
 		})
 
 		notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
@@ -111,13 +93,37 @@ export default function App() {
 		});
 
 		responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-			console.log(response);
+			// console.log(response);
 		});
 
 		return () => {
 			Notifications.removeNotificationSubscription(notificationListener.current);
 			Notifications.removeNotificationSubscription(responseListener.current);
 		};
+	}
+	
+	useEffect(() => {
+		const usersRef = firebase.firestore().collection('users')
+		firebase.auth().onAuthStateChanged(user => {
+			if (user) {
+				usersRef
+					.doc(user.uid)
+					.get()
+					.then((doc) => {
+						setLoading(false)
+						setUser(doc)
+						console.log('auth', user.uid)
+						setupNotification(user.uid)
+					})
+					.catch((error) => {
+						setLoading(false)
+					})
+			} else {
+				setLoading(false)
+			}
+			// alert('push token', expoPushToken)
+		})
+		if (user) setupNotification(user.id)
 	}, [])
 
 	if (loading) {

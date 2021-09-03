@@ -141,12 +141,13 @@ export default function MessageScreen(props) {
 
     return (
         <View style={stylesheet.container}>
-            { chatroom.active == true ?
+            { chatroom.active == false ?
                 <GiftedChat
                     messages={messages}
                     // renderBubble={renderBubble}
                     renderAvatar={renderAvatar}
-                    renderSend={renderSend} 
+                    renderSend={renderSend}
+                    renderInputToolbar={() => <></>}
                     renderUsernameOnMessage={true}
                     // onSend={messages => Send(messages[0].text)}
                     renderAvatarOnTop = {true}
@@ -160,7 +161,6 @@ export default function MessageScreen(props) {
                     // renderBubble={renderBubble}
                     renderAvatar={renderAvatar}
                     renderSend={renderSend} 
-                    renderInputToolbar={() => <></>}
                     renderUsernameOnMessage={true}
                     // onSend={messages => Send(messages[0].text)}
                     renderAvatarOnTop = {true}
