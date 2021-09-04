@@ -7,7 +7,7 @@
       "android",
       "web"
     ],
-    "version": "1.2.2",
+    "version": "1.2.3",
     "orientation": "portrait",
     "icon": "./assets/logo.png",
     "splash": {
@@ -24,11 +24,11 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "cc.UniLife.UniLife",
-      "buildNumber": "1.2.2"
+      "buildNumber": "1.2.3"
     },
     "android": {
       "package": "cc.unilife.unilife",
-      "versionCode": 5,
+      "versionCode": 6,
       "googleServicesFile": "./google-services.json"
     },
     "userInterfaceStyle": "automatic",
