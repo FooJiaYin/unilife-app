@@ -70,7 +70,7 @@ export default function MessageScreen(props) {
         const message = {
             to: token,
             sound: 'default',
-            title: '來自' + user.info.name + '的訊息',
+            title: '來自' + user.info.nickname + '的訊息',
             body: content,
             data: { data: 'goes here' },
         };
