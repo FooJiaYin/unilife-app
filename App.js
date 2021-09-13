@@ -8,7 +8,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs' 
 import { LoginScreen, RegistrationScreen, FillInfoScreen, TopicSelectScreen, SuccessScreen } from './src/screens'
-import { HomeScreen, SavedScreen, ArticleScreen, CommentScreen } from './src/screens'
+import { HomeScreen, FilterScreen, ArticleScreen, CommentScreen } from './src/screens'
 import { ChatroomScreen, MessageScreen } from './src/screens'
 import { SettingScreen, ProfileScreen } from './src/screens'
 import { tabBarObject, tabBarOptions } from './src/components/navigation'
@@ -151,8 +151,8 @@ export default function App() {
 				<Stack.Screen name="Home">
 					{props => <HomeScreen {...props} user={user} />}
 				</Stack.Screen>
-				<Stack.Screen name="Saved">
-					{props => <SavedScreen {...props} user={user} />}
+				<Stack.Screen name="Filter">
+					{props => <FilterScreen {...props} user={user} />}
 				</Stack.Screen>
 				<Stack.Screen name="Article">
 					{props => <ArticleScreen {...props} user={user} />}

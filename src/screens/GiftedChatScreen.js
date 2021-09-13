@@ -84,7 +84,7 @@ export default function MessageScreen(props) {
             },
             body: JSON.stringify(message),
         });
-      }
+    }
 
     function sendMessage(inputText, clearInput) {
         if (inputText && inputText.length > 0) {

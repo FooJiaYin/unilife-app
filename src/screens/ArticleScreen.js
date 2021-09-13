@@ -6,10 +6,12 @@ import { firebase } from '../firebase/config'
 import RenderHtml from 'react-native-render-html'
 import { WebView } from 'react-native-webview';
 import { GiftedChat } from 'react-native-gifted-chat'
+import { Chip } from '../components/chip'
 import { CommentBubble, ProfileImage, SendButton } from '../components/messages'
 // import HTMLView from 'react-native-htmlview';
 // import CommentScreen from './CommentScreen'
 import time from '../utils/time'
+import { tagNames } from '../firebase/functions'
 
 export default function ArticleScreen(props) {
 
@@ -29,7 +31,7 @@ export default function ArticleScreen(props) {
             icon: 'chat',
             size: 18,
             onPress: () => {
-                if (user.verification && user.verification.status) {
+                if (user.verification && user.verification.status == true) {
                     props.navigation.navigate('Comment', {article: article, commentsRef: commentsRef})
                 } else {
                     Alert.alert('', "您尚未完成身分驗證，請先完成學生身分驗證。",
@@ -151,6 +153,11 @@ export default function ArticleScreen(props) {
     //   const renderSend = ({text}) => <SendButton input={text} onSend={sendMessage}/>
       const renderSend = ({text, onSend}) => <SendButton input={text} onSend={() => sendMessage(text, onSend)} />
 
+      const Chips = []
+      for (const tag of (article.tags || [])) {
+          Chips.push(<Chip label={tagNames[tag]} type={'tag'} action={()=>props.navigation.navigate('Filter', {type: 'tag', data: tag}) } />)
+      }
+
     return (
         <SafeAreaView style={stylesheet.container}>
             {(article.meta.url && article.meta.url != '') ? 
@@ -161,17 +168,20 @@ export default function ArticleScreen(props) {
                     <Text style={stylesheet.articleTitle}>
                         {article.title}
                     </Text>
-                    <Text style={stylesheet.textS}>
-                        {article.meta.source + ' '}
-                        {time(article.publishedAt).format('YYYY/M/D h:mm a')}
-                    </Text>
+                    <View style={{flexDirection: 'row'}}>
+                        <Text style={[stylesheet.textS, {marginRight: 6}]}>
+                            {article.meta.source + ' @ '}
+                            {time(article.publishedAt).format('YYYY/M/D h:mm a')}
+                        </Text>
+                        { Chips }
+                    </View>
                     <RenderHtml
                         source={{html: content}}
                         tagsStyles={htmlStyles}
                         contentWidth={useWindowDimensions().width - 40}
                     />
                     </View>
-                    {/* <GiftedChat
+                    <GiftedChat
                         messages={messages}
                         renderBubble={renderBubble}
                         renderAvatar={renderAvatar}
@@ -182,7 +192,7 @@ export default function ArticleScreen(props) {
                         renderAvatarOnTop = {true}
                         // alignTop={true}
                         user={{_id: ''}}
-                    /> */}
+                    />
                 {/* <FlatList
                     data={comments}
                     renderItem={commentItem}

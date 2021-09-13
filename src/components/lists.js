@@ -1,19 +1,29 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { StyleSheet, View, TouchableOpacity, Text, Image, Modal } from 'react-native'
 import { styles, Color } from '../styles'
 import Asset, { Icon } from './assets'
 import time from '../utils/time'
-import { OptionOverlay, OptionItem } from './overlay'
+import { Chip } from './chip'
 import { firebase } from '../firebase/config'
+import { tagNames } from '../firebase/functions'
+import { NavigationContainer, CommonActions } from '@react-navigation/native';
 
-export function ListItem({ item, onPress, style, onButtonPress }) {
+export function ListItem({ item, onPress, style, onButtonPress, props, chipAction }) {
     const [ isSaved, setIsSaved ] = useState(item.isSaved)
     const [ imageUrl, setImageUrl ] = useState('')
  // console.log(item.id, isSaved)
     const storageRef = firebase.storage().ref()
-    storageRef.child('articles/' + item.id + '/images/' + item.meta.coverImage).getDownloadURL().then((url) => {
-        setImageUrl(url)
-    })
+
+    useEffect(() => {
+        if(item.images && item.images.src && item.images.src!='') {
+            // console.log(item.images.src)    
+            setImageUrl(item.images.src) 
+        } else {
+            storageRef.child('articles/' + item.id + '/images/' + item.meta.coverImage).getDownloadURL().then((url) => {
+                setImageUrl(url)
+            })
+        }
+    }, [])
 
     const listItemStyle = StyleSheet.create({
         container: {
@@ -91,9 +101,14 @@ export function ListItem({ item, onPress, style, onButtonPress }) {
         {iconSrc: 'report.png', text: '舉報'},
     ]
 
-    const onTextLayout =e => {
+    const onTextLayout = e => {
         // console.log( e.nativeEvent.lines.length)
         // setDescriptionLines(4 - e.nativeEvent.lines.length)
+    }
+
+    const Chips = []
+    for (const tag of (item.tags || [])) {
+          Chips.push(<Chip label={tagNames[tag]} type={'tag'} action={chipAction? ()=> chipAction('tag', tag) : ()=>props.navigation.navigate('Filter', {type: 'tag', data: tag}) } />)
     }
 
     return (
@@ -120,6 +135,8 @@ export function ListItem({ item, onPress, style, onButtonPress }) {
                         {item.meta.abstract}
                     </Text>
                     <View style={style? [listItemStyle.bottom, style.bottom] : listItemStyle.bottom}>
+                        {/* (for tags of item.tags) */}
+                        { Chips }
                         <Text style={style? [listItemStyle.bottomText, style.bottomText] : listItemStyle.bottomText}>
                             {time(item.publishedAt).fromNow()}
                         </Text>
