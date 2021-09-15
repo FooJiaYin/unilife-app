@@ -7,7 +7,7 @@ import { firebase } from './src/firebase/config'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs' 
-import { LoginScreen, RegistrationScreen, FillInfoScreen, TopicSelectScreen, SuccessScreen } from './src/screens'
+import { LoginScreen, ResetPasswordScreen, RegistrationScreen, FillInfoScreen, TopicSelectScreen, SuccessScreen } from './src/screens'
 import { HomeScreen, FilterScreen, ArticleScreen, CommentScreen } from './src/screens'
 import { ChatroomScreen, MessageScreen } from './src/screens'
 import { SettingScreen, ProfileScreen } from './src/screens'
@@ -230,6 +230,7 @@ export default function App() {
 			(
 				<Stack.Navigator>
 					<Stack.Screen name="Login" component={LoginScreen}/>
+					<Stack.Screen name="ResetPassword" component={ResetPasswordScreen}/>
 					<Stack.Screen name="Registration" component={RegistrationScreen} />
 					<Stack.Screen name="FillInfo" component={FillInfoScreen}/>
 					<Stack.Screen name="Topic" options={{title: "選擇興趣"}}>

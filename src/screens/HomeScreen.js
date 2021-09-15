@@ -16,7 +16,7 @@ import { Chip } from '../components/chip'
 import { tagNames, featuredTags } from '../firebase/functions'
 
 
-export function ArticleTabs(props) {
+export function ArticleTabs({articles, ...props}) {
     const layout = useWindowDimensions();
   
     const [index, setIndex] = React.useState(0);
@@ -26,81 +26,6 @@ export function ArticleTabs(props) {
       { key: 'local', title: '在地資訊' },
       { key: 'news', title: '精選新聞' },
     ]);
-    
-    let user
-    const articlesRef = firebase.firestore().collection('articles')
-    const [articles, setArticles] = useState({
-        all: [],
-        announcement: [],
-        local: [],
-        news: []
-    })
-
-    useEffect(() => {
-        loadArticles()
-    }, [])
-
-    useFocusEffect(
-        React.useCallback(() => {
-         // console.log("Hello")
-            loadArticles()
-        }, [])
-    );
-
-    
-    async function loadArticles() {
-        // console.log("community", user.community)
-        // console.log("identity", user.identity.community)
-        let snapshot = await props.user.ref.get()
-        user = await snapshot.data()
-        const newArticles = {
-            all: [],
-            announcement: [],
-            local: [],
-            news: []
-        }
-        const savedArticles = user.bookmarks || []
-        // console.log("bookmarks", savedArticles)
-        articlesRef
-            .where("community", "in", ["all", user.identity.community])
-            .where("status", "==", "published")
-            .orderBy('pinned', 'desc')
-            .orderBy('publishedAt', 'desc')
-            .get().then(querySnapshot => {
-                let promises = []
-                querySnapshot.forEach(async snapshot => {
-                    const id = newArticles.all.push(snapshot.data()) -1
-                    // const article = snapshot.data()
-                    newArticles.all[id].id = snapshot.id
-                    // console.log("article", article)
-                    // console.log(storageRef.child('articles/' + article.id + '/images/' + article.coverImage))
-                    /* Get Images */
-                    if(savedArticles!= undefined){
-                        newArticles.all[id].isSaved = savedArticles.includes(newArticles.all[id].id)
-                    }
-                    if(newArticles.all[id].isSaved) console.log(newArticles.all[id].id, "is saved")
-                    // promises.push(
-                    //     storageRef.child('articles/' + newArticles[id].id + '/images/' + article.meta.coverImage).getDownloadURL()
-                    //     // storageRef.child('articles/9qAFUBpb7n0U1bzylreO/images/' + newArticles[id].meta.coverImage).getDownloadURL()
-                    //         .then((url) => {
-                    //             newArticles[id].imageUrl = url
-                    //         })
-                    // )
-                })
-                Promise.all(promises).finally(() => {
-                 // console.log("End promises", newArticles)
-                    for (const article of newArticles.all) {
-                        if (article.category && ['announcement', 'local', 'news'].includes(article.category)) {
-                            newArticles[article.category].push(article)
-                        }
-                    }
-                    setArticles(newArticles)
-                })
-            }).finally(() => {
-                // console.log("finally", newArticles)
-                // setArticles(newArticles)
-            })
-    }
 
     const articleListItem = (itemProps) => 
         <ListItem {...itemProps} props={props}
@@ -196,9 +121,8 @@ export default function HomeScreen(props) {
     // console.log(props.user)
     const storageRef = firebase.storage().ref()
     const articlesRef = firebase.firestore().collection('articles')
-    const [articles, setArticles] = useState([])
-    const [nickname, setNickname] = useState('');
     let user
+    const [nickname, setNickname] = useState('');
     const [text, setText] = useState({})
     const [myShortcuts, setMyShortcuts] = useState([
         {icon: 'ic-class.png', title: '', url: ''},
@@ -206,6 +130,66 @@ export default function HomeScreen(props) {
         {icon: 'ic-bus.png', title: '', url: ''},
         {icon: 'ic-announce.png', title: '', url: ''},
     ])
+    const [articles, setArticles] = useState({
+        all: [],
+        announcement: [],
+        local: [],
+        news: []
+    })
+    
+    async function loadArticles() {
+        // console.log("community", user.community)
+        // console.log("identity", user.identity.community)
+        let snapshot = await props.user.ref.get()
+        user = await snapshot.data()
+        const newArticles = {
+            all: [],
+            announcement: [],
+            local: [],
+            news: []
+        }
+        const savedArticles = user.bookmarks || []
+        // console.log("bookmarks", savedArticles)
+        articlesRef
+            .where("community", "in", ["all", user.identity.community])
+            .where("status", "==", "published")
+            .orderBy('pinned', 'desc')
+            .orderBy('publishedAt', 'desc')
+            .get().then(querySnapshot => {
+                let promises = []
+                querySnapshot.forEach(async snapshot => {
+                    const id = newArticles.all.push(snapshot.data()) -1
+                    // const article = snapshot.data()
+                    newArticles.all[id].id = snapshot.id
+                    // console.log("article", article)
+                    // console.log(storageRef.child('articles/' + article.id + '/images/' + article.coverImage))
+                    /* Get Images */
+                    if(savedArticles!= undefined){
+                        newArticles.all[id].isSaved = savedArticles.includes(newArticles.all[id].id)
+                    }
+                    if(newArticles.all[id].isSaved) console.log(newArticles.all[id].id, "is saved")
+                    // promises.push(
+                    //     storageRef.child('articles/' + newArticles[id].id + '/images/' + article.meta.coverImage).getDownloadURL()
+                    //     // storageRef.child('articles/9qAFUBpb7n0U1bzylreO/images/' + newArticles[id].meta.coverImage).getDownloadURL()
+                    //         .then((url) => {
+                    //             newArticles[id].imageUrl = url
+                    //         })
+                    // )
+                })
+                Promise.all(promises).finally(() => {
+                 // console.log("End promises", newArticles)
+                    for (const article of newArticles.all) {
+                        if (article.category && ['announcement', 'local', 'news'].includes(article.category)) {
+                            newArticles[article.category].push(article)
+                        }
+                    }
+                    setArticles(newArticles)
+                })
+            }).finally(() => {
+                // console.log("finally", newArticles)
+                // setArticles(newArticles)
+            })
+    }
     // console.log("Ref", firebase.firestore().doc('articles/9qAFUBpb7n0U1bzylreO'))
 
     // const options = {
@@ -235,12 +219,13 @@ export default function HomeScreen(props) {
         React.useCallback(() => {
          // console.log("Hello")
             loadShortcuts()
-            // loadArticles()
+            loadArticles()
         }, [])
     );
 
-    // useEffect(() => {
-    // }, [])
+    useEffect(() => {
+        loadArticles()
+    }, [])
     
     const homeCardStyle = StyleSheet.create({
         container:{
@@ -314,7 +299,7 @@ export default function HomeScreen(props) {
                         style={{marginBottom: 0, paddingBottom: 20}}
                     />
                 )} */}
-                <ArticleTabs {...props} />
+                <ArticleTabs articles={articles} {...props} />
             </ExpandCard>
         </View>
     )

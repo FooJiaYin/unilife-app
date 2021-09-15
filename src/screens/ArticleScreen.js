@@ -7,7 +7,7 @@ import RenderHtml from 'react-native-render-html'
 import { WebView } from 'react-native-webview';
 import { GiftedChat } from 'react-native-gifted-chat'
 import { Chip } from '../components/chip'
-import { CommentBubble, ProfileImage, SendButton } from '../components/messages'
+import { CommentBubble, ProfileImage, SendButton, Message } from '../components/messages'
 // import HTMLView from 'react-native-htmlview';
 // import CommentScreen from './CommentScreen'
 import time from '../utils/time'
@@ -181,7 +181,7 @@ export default function ArticleScreen(props) {
                         contentWidth={useWindowDimensions().width - 40}
                     />
                     </View>
-                    <GiftedChat
+                    {/* <GiftedChat
                         messages={messages}
                         renderBubble={renderBubble}
                         renderAvatar={renderAvatar}
@@ -192,10 +192,10 @@ export default function ArticleScreen(props) {
                         renderAvatarOnTop = {true}
                         // alignTop={true}
                         user={{_id: ''}}
-                    />
-                {/* <FlatList
-                    data={comments}
-                    renderItem={commentItem}
+                    /> */}
+                <FlatList
+                    data={messages}
+                    renderItem={Message}
                     keyExtractor={(item, index) => index.toString()}
                     // removeClippedSubviews={true}
                 />
@@ -212,7 +212,7 @@ export default function ArticleScreen(props) {
                     <TouchableOpacity style={stylesheet.button} onPress={addComment}>
                         <Text style={stylesheet.buttonText}>送出</Text>
                     </TouchableOpacity>
-                </View> */}
+                </View>
                 </ScrollView>
             }
         </SafeAreaView>
