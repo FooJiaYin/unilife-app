@@ -217,6 +217,7 @@ export default function App() {
 						{props => <CommentScreen {...props} user={user} />}
 					</Stack.Screen>
 					<Stack.Screen name="Login2" component={LoginScreen}/>
+						<Stack.Screen name="ResetPassword" component={ResetPasswordScreen}/>
 					<Stack.Screen name="Registration" component={RegistrationScreen} />
 					<Stack.Screen name="FillInfo" component={FillInfoScreen} user={user}/>
 					<Stack.Screen name="Topic" options={{title: "選擇興趣"}}>
