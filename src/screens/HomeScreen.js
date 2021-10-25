@@ -165,14 +165,6 @@ export default function HomeScreen(props) {
                     if (article.category && ['announcement', 'local', 'news'].includes(article.category)) {
                         newArticles[article.category].push(article)
                     }
-                    if(newArticles.all[id].isSaved) console.log(newArticles.all[id].id, "is saved")
-                    // promises.push(
-                    //     storageRef.child('articles/' + newArticles[id].id + '/images/' + article.meta.coverImage).getDownloadURL()
-                    //     // storageRef.child('articles/9qAFUBpb7n0U1bzylreO/images/' + newArticles[id].meta.coverImage).getDownloadURL()
-                    //         .then((url) => {
-                    //             newArticles[id].imageUrl = url
-                    //         })
-                    // )
                 })
             }).then(async () => {
                 // console.log("finally", newArticles)
@@ -381,24 +373,7 @@ export default function HomeScreen(props) {
                 </copilot.View>
                 </copilot.Step>
             </View>
-            </View>
-            {/* <FlatList
-                data = {myShortcuts}
-                renderItem = {(itemProps) => <HomeShortcutItem {...itemProps}/>}
-                keyExtractor={(item, index) => 'sc'+index}
-                numColumns={4}
-            /> */}
             <ExpandCard>
-                {/* { articles && (
-                    <FlatList
-                        data={articles}
-                        renderItem={articleListItem}
-                        keyExtractor={(item) => item.id}
-                        removeClippedSubExpandCards={true}
-                        nestedScrollEnabled={true}
-                        style={{marginBottom: 0, paddingBottom: 20}}
-                    />
-                )} */}
                 <ArticleTabs articles={articles} {...props} />
             </ExpandCard>
         </View>
