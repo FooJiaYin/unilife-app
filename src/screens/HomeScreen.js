@@ -149,23 +149,20 @@ export default function HomeScreen(props) {
             news: []
         }
         const savedArticles = user.bookmarks || []
-        // console.log("bookmarks", savedArticles)
+        let recommendations = []
+        // console.log(user.recommendation)
+        // newArticles.all = user.recommendation.map(articleId => {id: articleId}) || []
         articlesRef
             .where("community", "in", ["all", user.identity.community])
             .where("status", "==", "published")
-            .orderBy('pinned', 'desc')
-            .orderBy('publishedAt', 'desc')
+            .where("pinned", "==", true)
             .get().then(querySnapshot => {
                 let promises = []
                 querySnapshot.forEach(async snapshot => {
-                    const id = newArticles.all.push(snapshot.data()) -1
-                    // const article = snapshot.data()
-                    newArticles.all[id].id = snapshot.id
-                    // console.log("article", article)
-                    // console.log(storageRef.child('articles/' + article.id + '/images/' + article.coverImage))
-                    /* Get Images */
-                    if(savedArticles!= undefined){
-                        newArticles.all[id].isSaved = savedArticles.includes(newArticles.all[id].id)
+                    const article = snapshot.data()
+                    newArticles.all.push(article)
+                    if (article.category && ['announcement', 'local', 'news'].includes(article.category)) {
+                        newArticles[article.category].push(article)
                     }
                     if(newArticles.all[id].isSaved) console.log(newArticles.all[id].id, "is saved")
                     // promises.push(
@@ -176,9 +173,34 @@ export default function HomeScreen(props) {
                     //         })
                     // )
                 })
-                Promise.all(promises).finally(() => {
-                 // console.log("End promises", newArticles)
-                    for (const article of newArticles.all) {
+            }).then(async () => {
+                // console.log("finally", newArticles)
+                setArticles(newArticles)
+                firebase.firestore().collection('articles')
+                .where("community", "in", ["all", user.identity.community])
+                .where('status', '==', 'published')
+                .where('pinned', '==', false)
+                .where('publishedAt', '>=', user.lastActive.toDate())
+                .orderBy('publishedAt', 'desc').get().then(article_querySnapshot => {
+                    article_querySnapshot.forEach(articleSnapshot => {
+                        const data = articleSnapshot.data()
+                        // console.log(data.title, data.publishedAt.toDate(), data.topic)
+                        recommendations.push({id: articleSnapshot.id, score: user.score[data.topic]})
+                        // console.log(score[data.topic],data.title, data.topic)
+                    })
+                }).catch(err => {
+                    alert(err)
+                }).finally(async () => {
+                    // console.log(newArticles.all)
+                    recommendations.sort((a, b) => b.score - a.score);
+                    // console.log(data.recommendation)
+                    recommendations = recommendations.map(recommendation => recommendation.id)
+                    recommendations = recommendations.concat(user.recommendation).slice(0, 200)
+                    for (const articleId of recommendations) {
+                        const snapshot = await firebase.firestore().doc('articles/' + articleId).get()
+                        const article = snapshot.data()
+                        // console.log(articleId, article)
+                        newArticles['all'].push(article)
                         if (article.category && ['announcement', 'local', 'news'].includes(article.category)) {
                             newArticles[article.category].push(article)
                         }
@@ -186,9 +208,52 @@ export default function HomeScreen(props) {
                     setArticles(newArticles)
                 })
             }).finally(() => {
-                // console.log("finally", newArticles)
+                // console.log(newArticles.all)
                 // setArticles(newArticles)
+                // console.log(recommendations.concat(data.recommendation).slice(0,200))
+                // console.log(recommendations.concat(data.recommendation).slice(0,200))
             })
+        // console.log("bookmarks", savedArticles)
+
+        // articlesRef
+        //     .where("community", "in", ["all", user.identity.community])
+        //     .where("status", "==", "published")
+        //     .orderBy('pinned', 'desc')
+        //     .orderBy('publishedAt', 'desc')
+        //     .get().then(querySnapshot => {
+        //         let promises = []
+        //         querySnapshot.forEach(async snapshot => {
+        //             const id = newArticles.all.push(snapshot.data()) -1
+        //             // const article = snapshot.data()
+        //             newArticles.all[id].id = snapshot.id
+        //             // console.log("article", article)
+        //             // console.log(storageRef.child('articles/' + article.id + '/images/' + article.coverImage))
+        //             /* Get Images */
+        //             if(savedArticles!= undefined){
+        //                 newArticles.all[id].isSaved = savedArticles.includes(newArticles.all[id].id)
+        //             }
+        //             if(newArticles.all[id].isSaved) console.log(newArticles.all[id].id, "is saved")
+        //             // promises.push(
+        //             //     storageRef.child('articles/' + newArticles[id].id + '/images/' + article.meta.coverImage).getDownloadURL()
+        //             //     // storageRef.child('articles/9qAFUBpb7n0U1bzylreO/images/' + newArticles[id].meta.coverImage).getDownloadURL()
+        //             //         .then((url) => {
+        //             //             newArticles[id].imageUrl = url
+        //             //         })
+        //             // )
+        //         })
+        //         Promise.all(promises).finally(() => {
+        //          // console.log("End promises", newArticles)
+        //             for (const article of newArticles.all) {
+        //                 if (article.category && ['announcement', 'local', 'news'].includes(article.category)) {
+        //                     newArticles[article.category].push(article)
+        //                 }
+        //             }
+        //             setArticles(newArticles)
+        //         })
+        //     }).finally(() => {
+        //         // console.log("finally", newArticles)
+        //         // setArticles(newArticles)
+        //     })
     }
     // console.log("Ref", firebase.firestore().doc('articles/9qAFUBpb7n0U1bzylreO'))
 
@@ -217,7 +282,7 @@ export default function HomeScreen(props) {
 
     useFocusEffect(
         React.useCallback(() => {
-         // console.log("Hello")
+            // console.log("Hello")
             loadShortcuts()
             loadArticles()
         }, [])
