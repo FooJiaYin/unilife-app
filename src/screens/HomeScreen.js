@@ -126,10 +126,10 @@ export default function HomeScreen(props) {
     const [nickname, setNickname] = useState('');
     const [text, setText] = useState({})
     const [myShortcuts, setMyShortcuts] = useState([
-        {icon: 'ic-class.png', title: '', url: ''},
-        {icon: 'ic-book.png', title: '', url: ''},
-        {icon: 'ic-bus.png', title: '', url: ''},
-        {icon: 'ic-announce.png', title: '', url: ''},
+        {icon: 'blank.png', title: '', url: ''},
+        {icon: 'blank.png', title: '', url: ''},
+        {icon: 'blank.png', title: '', url: ''},
+        {icon: 'blank.png', title: '', url: ''},
     ])
     const [articles, setArticles] = useState({
         all: [],

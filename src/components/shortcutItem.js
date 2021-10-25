@@ -28,7 +28,8 @@ export function HomeShortcutItem ({item}){
         icon:{
             resizeMode: 'contain',
             height:28,
-            width:28
+            width:28,
+            tintColor: Color.blue
         },
         title:{
             margin: 4,
@@ -45,6 +46,7 @@ export function HomeShortcutItem ({item}){
     })
     
     function openLink(){
+        console.log('openlink', item)
         if (item.share && item.share == true) {
             share(item)
         } else {
