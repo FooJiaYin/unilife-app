@@ -5,7 +5,7 @@ import { setHeaderOptions } from '../components/navigation'
 import { stylesheet } from '../styles/styles'
 import { firebase } from '../firebase/config'
 import RenderHtml from 'react-native-render-html'
-import { MessageBubble, ProfileImage, SendButton } from '../components/messages'
+import { MessageBubble, ProfileImage, SendButton, Message } from '../components/messages'
 import Asset from '../components/assets'
 
 export default function MessageScreen(props) {
@@ -70,7 +70,7 @@ export default function MessageScreen(props) {
         const message = {
             to: token,
             sound: 'default',
-            title: '來自' + user.info.nickname + '的訊息',
+            title: user.info.nickname,
             body: content,
             data: { data: 'goes here' },
         };
@@ -95,7 +95,7 @@ export default function MessageScreen(props) {
             }
             messagesRef.add(data)
                 .then(_doc => {
-                    Keyboard.dismiss()
+                    // Keyboard.dismiss()
                     chatroom.users.forEach(u => {
                         if (u != user.id) {
                             console.log('send notification')
@@ -125,6 +125,7 @@ export default function MessageScreen(props) {
 
     const renderBubble = ({user, currentMessage}) => {
         const message = {
+            currentMessage: currentMessage,
             user: currentMessage.user.name,
             timestamp: currentMessage.createdAt,
             content: currentMessage.text,
@@ -144,11 +145,12 @@ export default function MessageScreen(props) {
             { chatroom.active == false ?
                 <GiftedChat
                     messages={messages}
-                    // renderBubble={renderBubble}
+                    renderBubble={renderBubble}
+                    // renderMessage={Message}
                     renderAvatar={renderAvatar}
                     renderSend={renderSend}
                     renderInputToolbar={() => <></>}
-                    renderUsernameOnMessage={true}
+                    // renderUsernameOnMessage={true}
                     // onSend={messages => Send(messages[0].text)}
                     renderAvatarOnTop = {true}
                     user={{
@@ -158,10 +160,10 @@ export default function MessageScreen(props) {
             :
                 <GiftedChat
                     messages={messages}
-                    // renderBubble={renderBubble}
+                    renderBubble={renderBubble}
                     renderAvatar={renderAvatar}
                     renderSend={renderSend} 
-                    renderUsernameOnMessage={true}
+                    // renderUsernameOnMessage={true}
                     // onSend={messages => Send(messages[0].text)}
                     renderAvatarOnTop = {true}
                     user={{

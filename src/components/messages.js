@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, View, Image, TouchableOpacity, Text, TextInput, useWindowDimensions } from 'react-native'
 // import { InputToolbar } from 'react-native-gifted-chat'
+import * as GiftedChat from 'react-native-gifted-chat'
 import { styles, stylesheet } from '../styles'
 import Asset from './assets'
 import { Button } from './forms'
@@ -43,19 +44,26 @@ const messageStyle = StyleSheet.create({
         ...styles.textGrey,
         flexWrap: "wrap",
         flexBasis: 50,
-        flexShrink: 1,
+        flexShrink: 0,
         alignSelf: 'flex-end',
         marginHorizontal: 8,
     },
     messageText: {
         ...styles.text,
-        ...styles.textBubble,
+        // ...styles.textBubble,
         // borderRadius: 40,
         // overflow: 'wrap',
-        backgroundColor: '#f2f3f3',
+        // backgroundColor: '#f2f3f3',
         fontSize: 15,
         flexShrink: 1,
         // flexGrow: 1,
+    },
+    wrapper: {
+        ...styles.textBubble,
+        paddingVertical: 4,
+        paddingHorizontal: 6,
+        backgroundColor: '#f2f3f3',
+        marginRight: 0,
     },
     right: {
         flexDirection: 'row-reverse',
@@ -67,18 +75,37 @@ const messageStyle = StyleSheet.create({
 export function MessageBubble(message) {
     // moment.locale('zh-tw')
     // console.log(message.position)
+    const width = useWindowDimensions().width
+    
     return (
         <View style={[messageStyle.messageRight]}>
             <Text style={[stylesheet.textXS, stylesheet.textGrey, (message.position=='right') ?messageStyle.right:{}]}>
                 {message.user}
             </Text>
             <View style={[messageStyle.messageRow, (message.position=='right') ?messageStyle.right:{}]}>
-                <Text style={messageStyle.messageText}>
+                {/* <Text style={messageStyle.messageText}>
                     {message.content}
-                </Text>
-                <Text style={[messageStyle.messageTime, (message.position=='right') ?messageStyle.right:{}]}>
+                </Text> */}
+                <View style={{flexShrink: 1}}>
+                    <GiftedChat.Bubble 
+                        currentMessage={message.currentMessage}
+                        renderUsernameOnMessage={false}
+                        renderMessageText={()=><GiftedChat.MessageText {...message} linkStyle={{right:styles.textWhite}}/>}
+                        renderTime={()=>{<></>}}
+                        textStyle={{left: [messageStyle.messageText, (message.position=='right') ? styles.textWhite : {}]}}
+                        wrapperStyle={{left: [messageStyle.wrapper, 
+                            (message.position=='right') ? 
+                            (message.currentMessage.user.avatar.includes('0'))? styles.bgGreen : 
+                            (message.currentMessage.user.avatar.includes('1'))? styles.bgBlue : 
+                            styles.bgRed : {},
+                            {maxWidth: width - 90},
+                        ]}}
+                        // containerStyle={{left: styles.textBubble}}
+                    />
+                </View>
+                <Text style={[messageStyle.messageTime, (message.position=='right') ? messageStyle.right:{}]}>
                     {/* {moment(message.timestamp.toDate()).calendar()} */}
-                    {time(message.timestamp).format('h:mm A')}
+                    {time(message.timestamp).format('A h:mm')}
                 </Text>
             </View>
         </View>
@@ -107,16 +134,20 @@ export function ProfileImage({url}) {
         <Image source={Asset(url)} style={messageStyle.profileImage} />
     )
 }
+
+export function Message ({props}) {
+    return <GiftedChat.Message {...props} linkStyle={{right: styles.textWhite}}/>
+} 
     
-export function Message(message) {
-    // console.log('Message', message)
-    return (
-        <View style={[messageStyle.message, {justifyContent: message.position}]}>
-            <ProfileImage id={0} />
-            <Bubble {...message} />
-        </View>
-    )
-}
+// export function Message(message) {
+//     // console.log('Message', message)
+//     return (
+//         <View style={[messageStyle.message, {justifyContent: message.position}]}>
+//             <ProfileImage id={0} />
+//             <Bubble {...message} />
+//         </View>
+//     )
+// }
 
 export function InputBar({onSend}, ...props) {
     const [inputText, setInputText] = useState('')
@@ -162,7 +193,7 @@ export function Chatroom({item, size, navigation, matchState = {}, toggleWaiting
     // console.log('props', props)
     // const window = useWindowDimensions()
     const [ users, setUsers ] = useState([])
-    // const [ active, setActive ] = useState(true)
+    const [ active, setActive ] = useState(true)
     const [ messagesRef, setMessagesRef ] = useState(true)
     const [ chatroom, setChatroom ] = useState(true)
     //     let promises = []
@@ -195,7 +226,7 @@ export function Chatroom({item, size, navigation, matchState = {}, toggleWaiting
             alignItems: 'center',
         },
         card: {
-            flex: 0.7,
+            flex: 0.55,
             // height: size * 0.6,
             // aspectRatio: 1.33,
             width: size * 0.4,
@@ -209,8 +240,9 @@ export function Chatroom({item, size, navigation, matchState = {}, toggleWaiting
         text: {
             ...styles.textWhite,
             ...styles.textCenter,
-            height: size * 0.15 + 30,
+            // height: size * 0.15 + 30,
             // overflow: 'visible',
+            paddingBottom: 12,
             flexWrap: "wrap",
             // lineHeight: 20,
             // justifyContent: 'center',
@@ -218,11 +250,11 @@ export function Chatroom({item, size, navigation, matchState = {}, toggleWaiting
         },
         textL: {
             ...styles.textWhite,
-            fontSize: size * 0.04,
+            fontSize: 22,
             fontWeight: '700',
             flexWrap: "wrap",
-            paddingBottom: 16,
-            lineHeight: 40
+            // paddingBottom: 30,
+            lineHeight: 32
         },
         button: {
             ...styles.outlineWhite,
@@ -230,15 +262,17 @@ export function Chatroom({item, size, navigation, matchState = {}, toggleWaiting
             // flex: 1,
             // marginTop: 64,
             marginBottom: 8,
-            paddingVertical: 20
+            paddingVertical: 15
         }
     }) 
     // console.log('item', item)
     // console.log('matchConfig', matchState)
     return (
+        item.id == 0 && matchState.inChat == true? <></> :
         <View style={cardStyle.fullHeight}>
-            {item.id == 0? 
-                (<View style={[cardStyle.card, matchState.waiting? stylesheet.bgBlue : stylesheet.bgLight,]}>
+            {/* <Text>{ item.id }</Text> */}
+            {item.id == 0?
+                <View style={[cardStyle.card, matchState.waiting? stylesheet.bgBlue : stylesheet.bgLight,]}>
                     <Text style={cardStyle.text}>
                         <Text style={cardStyle.textL}>{'下次配對\n'}</Text>
                         <Text>{matchState.text + '\n' + (matchState.waiting? '等待配對中...' : '') }</Text>
@@ -246,14 +280,14 @@ export function Chatroom({item, size, navigation, matchState = {}, toggleWaiting
                     <Button style={cardStyle.button} title={(matchState.waiting? '關閉配對' : '開啟配對')} onPress={() => toggleWaiting()}/>
                     {/* <Text style={[stylesheet.textWhite, stylesheet.textCenter]}>{time().getNextDayofWeek(matchState.day, matchState.time).fromNow('倒數計時 %d %H %M')}</Text> */}
                     {/* <Text style={cardStyle.text}>{active ? 'Active' : 'Inactive'}</Text> */}
-                </View>) 
+                </View>
                 :
                 (<View style={[cardStyle.card, item.style]}>
                     <Text style={cardStyle.text}>
                         <Text style={cardStyle.textL}>{users.join('\n')}</Text>
                     </Text>
-                    <Button style={cardStyle.button} title={'繼續聊天'} onPress={() => navigation.navigate('Message', {chatroom: chatroom, messagesRef: messagesRef}) } />
-                    <Text style={[stylesheet.textWhite, stylesheet.textCenter]}>{time(item.startedAt).toNow('累計聊天 %d %H')}</Text>
+                    <Button style={cardStyle.button} title={(chatroom.active == true)? '繼續聊天' : '查看記錄'} onPress={() => navigation.navigate('Message', {chatroom: chatroom, messagesRef: messagesRef}) } />
+                    <Text style={[stylesheet.textWhite, stylesheet.textCenter]}>{(chatroom.active == true)? time(item.startedAt).toNow('累計聊天 %d %H') : time(item.startedAt).format('yyyy/M/D')}</Text>
                     {/* <Text style={cardStyle.text}>{item.active ? 'Active' : 'Inactive'}</Text> */}
                 </View>)
             } 

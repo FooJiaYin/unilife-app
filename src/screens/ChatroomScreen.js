@@ -15,12 +15,13 @@ export default function ChatroomScreen(props) {
     const storageRef = firebase.storage().ref()
     const chatroomsRef = props.user.ref.collection('chatHistory')
 
+    const [matchCard, setMatchCard] = useState([])
     const [chatrooms, setChatrooms] = useState([])
     const [matchState, setMatchState] = useState({
         day: 0,
         time: 20,
         waiting: false,
-        inChat: false,
+        inChat: true,
     })
     // carousel = React.createRef<typeof Carousel>();
     const window = useWindowDimensions()
@@ -49,7 +50,55 @@ export default function ChatroomScreen(props) {
                 inChat: (userData.settings && userData.settings.inChat) ? userData.settings.inChat : false,
                 verified: (userData.verification && userData.verification.status) ? userData.verification.status : false,
             })
+            if(userData.settings && userData.settings.inChat == false) {
+                let newChatrooms = chatrooms
+                setMatchCard([{
+                    active: true,
+                    userNames: [],
+                    id: '0',
+                    style: stylesheet.bgLight,
+                    startedAt: firebase.firestore.Timestamp.now()
+                }])
+            }
         })
+    }
+
+    async function loadChatrooms() {
+        await loadSetting()
+        chatroomsRef
+            .orderBy('startedAt')
+            .get()
+            .then(querySnapshot => {
+                const newChatrooms = []
+                let promises = []
+                // let get_user_promises = []
+                // if (querySnapshot.size === 0) {
+                //     displayChatrooms(newChatrooms)
+                // }
+                querySnapshot.forEach(async snapshot => {
+                    console.log(snapshot.data())
+                    // snapshot.data().then(data => {
+                    const id = newChatrooms.push(snapshot.data()) -1
+                    // console.log(id, querySnapshot.length)
+                    if(id == querySnapshot.size - 1) {
+                        // console.log(get_user_promises)
+                        // Promise.all(get_user_promises).finally(() => {
+                            // console.log('users', newChatrooms[0].userNames)
+                        // if (matchConfig.inChat == false) {
+                        //     newChatrooms.push({
+                        //         active: true,
+                        //         userNames: [],
+                        //         id: '0',
+                        //         style: stylesheet.bgLight,
+                        //         startedAt: firebase.firestore.Timestamp.now()
+                        //     }) 
+                        // }
+                        setChatrooms(newChatrooms.reverse())
+                        console.log('chatrooms', newChatrooms)
+                        // })
+                    }
+                })
+            })
     }
 
     function toggleWaiting() {
@@ -82,63 +131,8 @@ export default function ChatroomScreen(props) {
 
     useEffect(() => {
         // if(databaseSnapshot.exists) 
-        loadSetting()
-        chatroomsRef
-            .orderBy('startedAt')
-            .get()
-            .then(querySnapshot => {
-                const newChatrooms = []
-                let promises = []
-                // let get_user_promises = []
-                if (querySnapshot.size === 0) {
-                    displayChatrooms(newChatrooms)
-                }
-                querySnapshot.forEach(async snapshot => {
-                    console.log(snapshot.data())
-                    // snapshot.data().then(data => {
-                    const id = newChatrooms.push(snapshot.data()) -1
-                    // console.log(id, querySnapshot.length)
-                    if(id == querySnapshot.size - 1) {
-                        // console.log(get_user_promises)
-                        // Promise.all(get_user_promises).finally(() => {
-                            // console.log('users', newChatrooms[0].userNames)
-                        newChatrooms.push({
-                            active: true,
-                            userNames: [],
-                            id: '0',
-                            style: stylesheet.bgLight,
-                            startedAt: firebase.firestore.Timestamp.now()
-                        }) 
-                        setChatrooms(newChatrooms)
-                        console.log('chatrooms', newChatrooms)
-                        // })
-                    }
-                
-                /* const chatEntry = doc.data()
-                    console.log('chatEntry', newChatrooms[id])
-                    newChatrooms[id].chatroom = await firebase.firestore().doc('chatrooms/' + newChatrooms[id].chatroom)
-                    newChatrooms[id].messagesRef = newChatrooms[id].chatroom.collection('messages')
-                    newChatrooms[id].userNames = []
-                    // console.log('MessagesRef', newChatrooms[id].messagesRef)
-                    promises.push(
-                        newChatrooms[id].chatroom.get().then(async snapshot => {
-                        console.log('chatroom', snapshot.data())
-                        newChatrooms[id].chatroom = snapshot.data()
-                        newChatrooms[id].active = snapshot.data().active
-                        snapshot.data().users.forEach(user => {
-                            // console.log('add user')
-                            get_user_promises.push(
-                                firebase.firestore().doc('users/' + user).get()
-                                .then(userSnapshot => newChatrooms[id].userNames.push(userSnapshot.data().info.nickname))
-                                .finally(() => {
-                                    // console.log('userNames', newChatrooms[id].userNames)
-                                    setChatrooms(newChatrooms)
-                                    // console.log(get_user_promises)
-                                })
-                            )
-                    }) */
-                })
-            })
+        loadChatrooms()
+        console.log('chatrooms', chatrooms)
     }, [])
 
     return (
@@ -148,17 +142,17 @@ export default function ChatroomScreen(props) {
                     <Carousel
                         layout={'default'}
                         style={{ flex: 1 }}
-                        data={chatrooms}
+                        data={matchCard.concat(chatrooms)}
                         renderItem={({item}) => <Chatroom 
-                            item={item} size={window.height} 
+                            item={item} size={window.width * 1.5} 
                             navigation={props.navigation}
                             toggleWaiting={toggleWaiting} 
                             matchState={matchState}
                         />}
                         sliderWidth={window.width}
-                        itemWidth={window.height * 0.4 + 30}
-                        itemHeight={window.height * 0.6}
-                        sliderHeight={window.height * 0.6}
+                        itemWidth={window.width * 0.6 + 30}
+                        itemHeight={window.width * 0.8}
+                        sliderHeight={window.width * 0.8}
                         inactiveSlideScale={1}
                         // activeSlideOffset={60}
                         keyExtractor={(item) => item.id}
