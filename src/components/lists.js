@@ -6,6 +6,7 @@ import time from '../utils/time'
 import { Chip } from './chip'
 import { firebase } from '../firebase/config'
 import { tagNames } from '../firebase/functions'
+import * as copilot from '../components/guide'
 import { NavigationContainer, CommonActions } from '@react-navigation/native';
 
 export function ListItem({ item, onPress, style, onButtonPress, props, chipAction }) {
@@ -136,7 +137,15 @@ export function ListItem({ item, onPress, style, onButtonPress, props, chipActio
                     </Text>
                     <View style={style? [listItemStyle.bottom, style.bottom] : listItemStyle.bottom}>
                         {/* (for tags of item.tags) */}
+                        {/* <copilot.Step
+                            text="報你知與你有關的校園資訊，或是你可能會感興趣的資訊～"
+                            order={5}
+                            name="article"
+                            >
+                        <copilot.View> */}
                         { Chips }
+                        {/* </copilot.View>
+                        </copilot.Step> */}
                         <Text style={style? [listItemStyle.bottomText, style.bottomText] : listItemStyle.bottomText}>
                             {time(item.publishedAt).fromNow()}
                         </Text>

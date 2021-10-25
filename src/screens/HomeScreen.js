@@ -9,6 +9,7 @@ import { firebase } from '../firebase/config'
 import { useFocusEffect } from "@react-navigation/native";
 import { StickedBg, ExpandCard } from '../components/decorative'
 import { HomeShortcutItem } from '../components/shortcutItem'
+import * as copilot from '../components/guide'
 import * as WebBrowser from 'expo-web-browser';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { set } from 'react-native-reanimated'
@@ -276,6 +277,9 @@ export default function HomeScreen(props) {
         user = await snapshot.data()
         if (!user.interests || user.interests.length == 0) props.navigation.navigate('FillInfo', {user: snapshot})
         setNickname(user.info.nickname)
+        if(!user.guide || !(user.guide.home == true)) {
+            props.start();
+        }
         snapshot = await firebase.firestore().doc('communities/' + user.identity.community).get()
         let data = await snapshot.data()
         setMyShortcuts(data.shortcuts)
@@ -294,6 +298,13 @@ export default function HomeScreen(props) {
 
     useEffect(() => {
         loadArticles()
+        props.copilotEvents.on("stop", () => {
+            firebase.firestore().doc('users/' + user.id).update({
+                guide: {
+                    home: true
+                }
+            })
+          });
     }, [])
     
     const homeCardStyle = StyleSheet.create({
@@ -337,19 +348,39 @@ export default function HomeScreen(props) {
             <View style={homeCardStyle.container}>
                 <View style={stylesheet.row}>
                     <View style={{flex:1}}>
-                        <Text style={homeCardStyle.greeting}>{ nickname}{text.greeting}</Text>
+                        <copilot.Step
+                            text="這裡會顯示小攸想對你說的話唷～"
+                            order={0}
+                            name="greet"
+                            >
+                            <copilot.Text style={homeCardStyle.greeting}>{ nickname}{text.greeting}</copilot.Text>
+                        </copilot.Step>
                         <Text style={homeCardStyle.time}>{time().format('LLLL')}</Text>
                     </View>
                     {/* <TouchableOpacity>
                         <Image source={require('../../assets/icons/bookmark.png')} style={homeCardStyle.icon} tintColor='#fff'/>
                     </TouchableOpacity> */}
-                    <TouchableOpacity onPress={() => props.navigation.navigate('Filter', {type: 'saved'})}>
+                    {/* <TouchableOpacity onPress={() => props.navigation.navigate('Filter', {type: 'saved'})}> */}
+                    <copilot.Step
+                        text="這裡是收藏區，將喜歡的文章收藏後，就能隨時在這找到它囉～"
+                        order={1}
+                        name="save"
+                        >
+                    <copilot.TouchableOpacity onPress={() => props.navigation.navigate('Filter', {type: 'saved'})}>
                         <Image style={homeCardStyle.icon}  source={Asset('bookmark')} tintColor='#fff'/>
-                    </TouchableOpacity>
+                    </copilot.TouchableOpacity>
+                    </copilot.Step>
                 </View>
-                <View style={stylesheet.row}>
+                <copilot.Step
+                    text="這裡一鍵就能直達你的常用網站了，很方便對吧？"
+                    order={2}
+                    name="shortcut"
+                    >
+                <copilot.View style={stylesheet.row}>
                     {myShortcuts.map((item, index)=><HomeShortcutItem item={item} key={index}/>)}
-                </View>
+                </copilot.View>
+                </copilot.Step>
+            </View>
             </View>
             {/* <FlatList
                 data = {myShortcuts}
@@ -373,3 +404,14 @@ export default function HomeScreen(props) {
         </View>
     )
 }
+
+export default copilot.guide({
+    overlay: "svg", // or 'view'
+    animated: true, // or false
+    labels: {
+        previous: "上一步",
+        next: "下一步",
+        skip: "跳過導覽",
+        finish: "完成",
+      }
+})(HomeScreen)
