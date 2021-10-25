@@ -1,6 +1,7 @@
 export const Color = {
     blue: '#0f355c',
     green: '#00aebb',
+    red: '#cd6161',
     white: '#ffffff',
     grey0: '#4A4D57',
     grey1: '#c4c4c4',
@@ -14,6 +15,9 @@ export const color = {
     },
     textBlue: {
         color: Color.blue
+    },
+    textRed: {
+        color: Color.red
     },
     textWhite: {
         color: Color.white
@@ -34,6 +38,9 @@ export const color = {
     },
     bgBlue: {
         backgroundColor: Color.blue,
+    },
+    bgRed: {
+        backgroundColor: Color.red,
     },
     bgWhite: {
         backgroundColor: Color.white,
