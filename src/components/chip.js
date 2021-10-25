@@ -21,13 +21,13 @@ export function Chip({ label, type, focused = false, size = 'small', action }) {
         small: StyleSheet.create({
             container: {
                 height: 20,
-                paddingVertical: 4,
+                // paddingVertical: 3,
                 paddingHorizontal: 6,
                 marginRight: 6
             },
             text: {
                 ...styles.textS,
-                // lineHeight: 11,
+                // lineHeight: 12,
             }
         }),
         large: StyleSheet.create({
