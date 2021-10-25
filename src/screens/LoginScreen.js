@@ -15,6 +15,7 @@ export default function LoginScreen({navigation}) {
     
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [showPassword, setPasswordVisible] = useState(false)
 
     setHeaderOptions(navigation)
 
@@ -50,7 +51,9 @@ export default function LoginScreen({navigation}) {
                     })
             })
             .catch(error => {
-                alert(error)
+                if(error.code == 'auth/user-not-found' || error.code == 'auth/invalid-email') Alert.alert("該用戶不存在", "請檢查您輸入的信箱是否與註冊信箱相同。如需更改信箱，請洽客服協助。")
+                else if(error.code == 'auth/wrong-password') Alert.alert("密碼錯誤", "請檢查您輸入的密碼是否正確。")
+                else Alert.alert(error)
             })
     }
     React.useLayoutEffect(() => {
@@ -82,7 +85,7 @@ export default function LoginScreen({navigation}) {
                 <TextInput
                     style={styles.input}
                     placeholderTextColor="#aaaaaa"
-                    secureTextEntry
+                    secureTextEntry={!showPassword}
                     placeholder='密碼'
                     // defaultValue={'password'}
                     onChangeText={(text) => setPassword(text)}
