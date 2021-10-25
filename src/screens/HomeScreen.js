@@ -48,7 +48,7 @@ export function ArticleTabs({articles, ...props}) {
                 keyExtractor={(item) => item.id}
                 removeClippedSubExpandCards={true}
                 nestedScrollEnabled={true}
-                style={{marginBottom: 0, paddingBottom: 20}}
+                contentContainerStyle={{marginBottom: 0, paddingBottom: 56}}
             />,
         announcement: () => <FlatList
             data={articles.announcement}
@@ -56,7 +56,7 @@ export function ArticleTabs({articles, ...props}) {
             keyExtractor={(item) => item.id}
             removeClippedSubExpandCards={true}
             nestedScrollEnabled={true}
-            style={{marginBottom: 0, paddingBottom: 20}}
+            contentContainerStyle={{marginBottom: 0, paddingBottom: 56}}
         />,
         local: () => <FlatList
             data={articles.local}
@@ -64,7 +64,7 @@ export function ArticleTabs({articles, ...props}) {
             keyExtractor={(item) => item.id}
             removeClippedSubExpandCards={true}
             nestedScrollEnabled={true}
-            style={{marginBottom: 0, paddingBottom: 20}}
+            contentContainerStyle={{marginBottom: 0, paddingBottom: 56}}
         />,
         news: () => <FlatList
             data={articles.news}
@@ -72,7 +72,7 @@ export function ArticleTabs({articles, ...props}) {
             keyExtractor={(item) => item.id}
             removeClippedSubExpandCards={true}
             nestedScrollEnabled={true}
-            style={{marginBottom: 0, paddingBottom: 20}}
+            contentContainerStyle={{marginBottom: 56, paddingBottom: 56}}
         />,
       });
   
