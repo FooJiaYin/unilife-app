@@ -16,7 +16,6 @@ import { set } from 'react-native-reanimated'
 import { Chip } from '../components/chip'
 import { tagNames, featuredTags } from '../firebase/functions'
 
-
 export function ArticleTabs({articles, ...props}) {
     const layout = useWindowDimensions();
   
@@ -116,7 +115,7 @@ export function ArticleTabs({articles, ...props}) {
 }
 
 
-export default function HomeScreen(props) {
+export function HomeScreen(props) {
     // console.log(props)
     
     // console.log(props.user)
@@ -308,13 +307,13 @@ export default function HomeScreen(props) {
         greeting: {
             paddingHorizontal:16,
             marginBottom:16,
-            fontSize: 32,
+            fontSize: 24,
             color:'white',
         },
         time:{
             marginBottom:40,
             paddingHorizontal:16,
-            fontSize: 18,
+            fontSize: 16,
             color:'white',
         },
         icon:{
