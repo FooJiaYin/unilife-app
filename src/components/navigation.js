@@ -3,6 +3,7 @@ import { StyleSheet, Image, Text, TextInput, TouchableOpacity, View } from 'reac
 import { stylesheet, styles, Color } from '../styles'
 import  Asset from './assets'
 import { TransitionSpecs, CardStyleInterpolators } from '@react-navigation/stack';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const setHeaderOptions = (navigation, options = {}) => {
     if (options.headerLeft == 'back')  {
@@ -90,11 +91,13 @@ export function tabIcon(icon, focused) {
     )
 }
 
+// const insets = useSafeAreaInsets();
+
 export const tabBarOptions = {
     style: {
-        paddingBottom: 6,
-        paddingTop: 4,
-        height: 56
+        paddingBottom: 5,
+        paddingTop: 5,
+        height: 56,
     },
     activeTintColor: Color.blue,
     inactiveTintColor: Color.grey1,
@@ -103,7 +106,7 @@ export const tabBarOptions = {
 export function tabBarObject(title, icon) {
     return {
         title: title,
-        // tabBarLabel: ({focused}) => <Text style={tabBarStyle(focused).label}>{title}</Text>,
+        tabBarLabel: ({focused}) => <Text style={tabBarStyle(focused).label}>{title}</Text>,
         tabBarIcon: ({focused}) => tabIcon(icon, focused),
     }
 }

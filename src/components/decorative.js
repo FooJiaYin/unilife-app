@@ -1,6 +1,7 @@
 import React, { Children, useState, useRef } from 'react'
-import { Dimensions, StyleSheet, View, Image, ImageBackground, Text, ScrollView } from 'react-native'
+import { Dimensions, StyleSheet, View, Image, ImageBackground, Text, ScrollView, Animated } from 'react-native'
 import { Directions } from 'react-native-gesture-handler'
+import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { styles, Color, stylesheet} from '../styles'
 import Asset from './assets'
 import { useScrollToTop } from '@react-navigation/native';
@@ -133,23 +134,25 @@ export function StickedBg({pureColor=Color.green, image = null, height= 320, ...
     )
 }
 
-export function ExpandCard({height = 320, ...props}){
+export function ExpandCard({height = 300, ...props}){
     const vh = Dimensions.get('window').height
     const [fixHeader, setFixHeader] = useState(false)
     const [scrolling, setScrolling] = useState(false)
+    const insets = useSafeAreaInsets()
     const cardStyle = {
         scrollable:{
            width:'100%',
            flex:1,
-           height:vh,
+           height:vh,// - insets.top,
            position:'absolute',
+        //    bottom: 0
         },
         card:{
-            marginTop:height-20,
-            height: vh,
+            marginTop:height,// - insets.top,
+            height: vh,// - insets.top,
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
-            backgroundColor: '#fff'
+            backgroundColor: '#fff',
         },
         header:{
             width: '100%',
@@ -161,6 +164,7 @@ export function ExpandCard({height = 320, ...props}){
             alignItems: 'center',
             justifyContent: 'space-between',
             paddingVertical: 20,
+            // paddingTop: 20 + insets.top,
             zIndex: 2,
         },
         fixedHeader:{
@@ -177,15 +181,27 @@ export function ExpandCard({height = 320, ...props}){
         }
     }
     const curveStyles = StyleSheet.create(cardStyle)
+    const scrollY = useRef(new Animated.Value(0)).current
+
     return(
         <ScrollView
-        onScroll={({nativeEvent})=>{
-            if(scrolling==(nativeEvent.contentOffset.y==0)){
-                setScrolling(!scrolling)
-            }else if(fixHeader==(nativeEvent.contentOffset.y<height-20)){
-                setFixHeader(!fixHeader)
-            }
-        }}
+        onScroll={Animated.event(
+            // scrollX = e.nativeEvent.contentOffset.x
+            [{ nativeEvent: {
+                 contentOffset: {
+                   y: scrollY
+                 }
+               }
+            }], {
+                // useNativeDriver: true,
+                listener: event => {
+                    if (scrolling != (event.nativeEvent.contentOffset.y > 2)) {
+                        setScrolling(event.nativeEvent.contentOffset.y > 2)
+                    }
+                // do something special
+                },
+            },
+        )}
         scrollEventThrottle={16}
         style={[curveStyles.scrollable,{zIndex:(scrolling?3:1)}]}>
             <copilot.Step
@@ -208,7 +224,8 @@ export function ExpandCard({height = 320, ...props}){
                 </copilot.AnimatedView>
                 </copilot.Step>
                     {props.children}
-            </View>
+            </copilot.View>
+            </copilot.Step>
         </ScrollView>
     )
 

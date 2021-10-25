@@ -4,6 +4,7 @@ import { Platform } from 'react-native';
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import { firebase } from './src/firebase/config'
+import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs' 
@@ -181,9 +182,15 @@ export default function App() {
 
 	function Tabs(props) {
 		// console.log(props.user) 
+		const insets = useSafeAreaInsets();
 		return (
 			props.user ? (
-			<Tab.Navigator tabBarOptions={tabBarOptions}>
+			<Tab.Navigator lazy={false} tabBarOptions={{...tabBarOptions, style: {
+				paddingBottom: insets.bottom,
+				paddingTop: 10,
+				height: 60 + insets.bottom
+			}}} safeAreaInsets={{bottom: insets.bottom}}>
+				
 				<Tab.Screen name="HomeStack" options={tabBarObject('主頁', 'home')}>
 					{props => <HomeStackScreen {...props} user={user} />}
 				</Tab.Screen>
@@ -201,50 +208,52 @@ export default function App() {
 	}
 
 	return (
-		<NavigationContainer>
-			{ firebase.auth().currentUser ? (
-				<Stack.Navigator>	
-					{/* <Stack.Screen name="Chatroom">
-						{props => <ChatroomScreen {...props} user={user} />}
-					</Stack.Screen> */}
-					<Stack.Screen name="Tabs" options={{headerShown: false}}>
-						{props => <Tabs {...props} user={user} />}
-					</Stack.Screen>
-					<Stack.Screen name="Message">
-						{props => <MessageScreen {...props} user={user} />}
-					</Stack.Screen>
-					<Stack.Screen name="Comment">
-						{props => <CommentScreen {...props} user={user} />}
-					</Stack.Screen>
-					<Stack.Screen name="Login2" component={LoginScreen}/>
+		<SafeAreaProvider>
+			<NavigationContainer>
+				{ firebase.auth().currentUser ? (
+					<Stack.Navigator>	
+						{/* <Stack.Screen name="Chatroom">
+							{props => <ChatroomScreen {...props} user={user} />}
+						</Stack.Screen> */}
+						<Stack.Screen name="Tabs" options={{headerShown: false}}>
+							{props => <Tabs {...props} user={user} />}
+						</Stack.Screen>
+						<Stack.Screen name="Message">
+							{props => <MessageScreen {...props} user={user} />}
+						</Stack.Screen>
+						<Stack.Screen name="Comment">
+							{props => <CommentScreen {...props} user={user} />}
+						</Stack.Screen>
+						<Stack.Screen name="Login2" component={LoginScreen}/>
 						<Stack.Screen name="ResetPassword" component={ResetPasswordScreen}/>
-					<Stack.Screen name="Registration" component={RegistrationScreen} />
-					<Stack.Screen name="FillInfo" component={FillInfoScreen} user={user}/>
-					<Stack.Screen name="Topic" options={{title: "選擇興趣"}}>
-						{props => <TopicSelectScreen {...props} user={user} />}
-					</Stack.Screen>
-					<Stack.Screen name="Success" options={{title: ""}}>
-						{props => <SuccessScreen {...props} user={user} />}
-					</Stack.Screen>
-				</Stack.Navigator>
-			) :  
-			(
-				<Stack.Navigator>
-					<Stack.Screen name="Login" component={LoginScreen}/>
-					<Stack.Screen name="ResetPassword" component={ResetPasswordScreen}/>
-					<Stack.Screen name="Registration" component={RegistrationScreen} />
-					<Stack.Screen name="FillInfo" component={FillInfoScreen}/>
-					<Stack.Screen name="Topic" options={{title: "選擇興趣"}}>
-						{props => <TopicSelectScreen {...props} user={user} />}
-					</Stack.Screen>
-					<Stack.Screen name="Success" options={{title: ""}}>
-						{props => <SuccessScreen {...props} user={user} />}
-					</Stack.Screen>
-					<Stack.Screen name="Tabs" options={{headerShown: false}}>
-						{props => <Tabs {...props} user={user} />}
-					</Stack.Screen>
-				</Stack.Navigator>
-			)} 
-		</NavigationContainer>
+						<Stack.Screen name="Registration" component={RegistrationScreen} />
+						<Stack.Screen name="FillInfo" component={FillInfoScreen} user={user}/>
+						<Stack.Screen name="Topic" options={{title: "選擇興趣"}}>
+							{props => <TopicSelectScreen {...props} user={user} />}
+						</Stack.Screen>
+						<Stack.Screen name="Success" options={{title: ""}}>
+							{props => <SuccessScreen {...props} user={user} />}
+						</Stack.Screen>
+					</Stack.Navigator>
+				) :  
+				(
+					<Stack.Navigator>
+						<Stack.Screen name="Login" component={LoginScreen}/>
+						<Stack.Screen name="ResetPassword" component={ResetPasswordScreen}/>
+						<Stack.Screen name="Registration" component={RegistrationScreen} />
+						<Stack.Screen name="FillInfo" component={FillInfoScreen}/>
+						<Stack.Screen name="Topic" options={{title: "選擇興趣"}}>
+							{props => <TopicSelectScreen {...props} user={user} />}
+						</Stack.Screen>
+						<Stack.Screen name="Success" options={{title: ""}}>
+							{props => <SuccessScreen {...props} user={user} />}
+						</Stack.Screen>
+						<Stack.Screen name="Tabs" options={{headerShown: false}}>
+							{props => <Tabs {...props} user={user} />}
+						</Stack.Screen>
+					</Stack.Navigator>
+				)} 
+			</NavigationContainer>
+		</SafeAreaProvider>
 	)
 }
