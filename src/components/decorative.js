@@ -95,7 +95,7 @@ export function CurvedBg({pureColor = Color.green, image = Asset('topic-1'), hei
             </View>
             <View style={[curveStyles.childrenContainer]}>
                 {props.children}
-                {image&&<ImageBackground source={imageSource} imageStyle={curveStyles.image}/>}
+                {image&&<ImageBackground source={imageSource} style={curveStyles.image}/>}
             </View>
         </>
     )
@@ -116,15 +116,17 @@ export function StickedBg({pureColor=Color.green, image = null, height= 320, ...
             flex: 1,
             height: height,
             width: '100%',
+            right: 0,
             resizeMode:'cover',
             position:'absolute',
+            zIndex:10
         },
     }
     const curveStyles = StyleSheet.create(bgstyle)
     return(
         <>
             <View style={[curveStyles.bg]}>
-                {image&&<Image source={imageSource} imageStyle={[curveStyles.image,{ zIndex:10}]}/>}
+                {image&&<Image source={imageSource} style={[curveStyles.image]}/>}
             </View>
         </>
     )

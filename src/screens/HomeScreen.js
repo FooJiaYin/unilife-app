@@ -206,6 +206,10 @@ export default function HomeScreen(props) {
                         }
                     }
                     setArticles(newArticles)
+                    props.user.ref.update({
+                        recommendation: recommendations,
+                        lastActive: firebase.firestore.FieldValue.serverTimestamp()
+                    })
                 })
             }).finally(() => {
                 // console.log(newArticles.all)
