@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { ToastAndroid, StyleSheet, Image, Text, TouchableOpacity, View, FlatList, useWindowDimensions } from 'react-native'
 import { setHeaderOptions } from '../components/navigation'
 import Asset from '../components/assets'
+import { firebase } from '../firebase/config'
 import { stylesheet } from '../styles/styles'
 import { TopicItem } from '../components/topicItem'
 import { Button } from '../components/forms'
@@ -123,13 +124,133 @@ export default function TopicSelectScreen(props) {
         }
     }
 
+    function getScore(interests) {
+        var dictIntestMap = {
+            0: '影集戲劇', 
+            1: '國際政經', 
+            2: '時事評論', 
+            3: '娛樂八卦', 
+            4: '行銷/管理', 
+            5: '科技趨勢', 
+            6: '創新創業', 
+            7: '職場關係', 
+            8: '情感關係', 
+            9: '生活/人文', 
+            10: '表演展覽', 
+            11: '美妝穿搭', 
+            12: '手工藝', 
+            13: '神秘占卜', 
+            14: '法律', 
+            15: '寵物', 
+            16: '球類運動', 
+            17: '健身健康', 
+            18: '教育', 
+            19: '心靈成長', 
+            20: '音樂', 
+            21: '美食', 
+            22: '旅遊遊記', 
+            23: '電子遊戲', 
+            24: '桌上/實境遊戲', 
+            25: '動畫/漫畫/cosplay/二次元相關', 
+            26: 'Youtuber/網紅/實況主/Vtuber', 
+            27: '好書推薦', 
+            28: '理財投資', 
+            29: '電影'
+        }
+        var dictInterestCate = {
+            "寵物" : ["娛樂", "生活"],
+            "球類運動" : ["體育"],
+            "健身健康" : ["體育", "生活"],
+            "教育" : ["教育"],
+            "心靈成長" : ["教育", "情感"],
+            "音樂" : ["藝文", "娛樂"],
+            "美食" : ["生活"],
+            "旅遊遊記" : ["生活"],
+            "電子遊戲" : ["ACG"],
+            "桌上/實境遊戲" : ["ACG"],
+            "動畫/漫畫/cosplay/二次元相關" : ["ACG"],
+            "Youtuber/網紅/實況主/Vtuber" : ["娛樂"],
+            "好書推薦" : ["生活", "藝文"],
+            "理財投資" : ["財經"],
+            "電影" : ["娛樂"],
+            "影集戲劇" : ["娛樂"],
+            "國際政經" : ["財經", "時事"],
+            "時事評論" : ["議題", "時事"],
+            "娛樂八卦" : ["娛樂"],
+            "行銷/管理" : ["科技", "教育"],
+            "科技趨勢" : ["科技"],
+            "創新創業" : ["教育", "職場"],
+            "職場關係" : ["職場"],
+            "情感關係" : ["情感"],
+            "生活/人文" : ["生活", "藝文"],
+            "表演展覽" : ["生活", "藝文"],
+            "美妝穿搭" : ["娛樂"],
+            "手工藝" : ["藝文", "娛樂"],
+            "神秘占卜" : ["藝文"],
+            "法律" : ["時事"]
+        }
+        var dictTtlCateCount = {}
+        for(var interest in dictInterestCate) {
+            for (var cate of dictInterestCate[interest]) {
+                dictTtlCateCount[cate] = (cate in dictTtlCateCount)? dictTtlCateCount[cate]+1 : 1
+            }
+        }
+        // console.log(dictTtlCateCount)
+        let score = {'娛樂': 0, '生活': 0, '體育': 0, '教育': 0, '情感': 0, '藝文': 0, 'ACG': 0, '財經': 0, '時事': 0, '議題': 0, '科技': 0, '職場': 0}
+        for(var interest of interests) {
+            console.log(interest)
+            let relatedTopic = dictInterestCate[dictIntestMap[interest]]
+            console.log(relatedTopic)
+            for(var topic of relatedTopic) {
+                console.log(topic)
+                score[topic] += 1
+            }
+        }
+        for(var topic in score) {
+            score[topic] = score[topic]/dictTtlCateCount[topic]*7
+        }
+        console.log(score)
+        return score;
+    }
+
     const submit = () => {
         // TODO: submit user input here
+
+        // setInterest(selectedItems)
+        
         props.route.params.user.ref.update({
-            interests: selectedItems
+            interests: selectedItems,
+            score: getScore(selectedItems)
         })
+        props.route.params.user.ref.get().then(snapshot => {
+                const data = snapshot.data()
+                    // console.log(data.info.name, data.lastActive, data.score)
+                var recommendations = []
+                firebase.firestore().collection('articles')
+                .where('community', '==', data.identity.community)
+                .where('status', '==', 'published')
+                .where('pinned', '==', false)
+                // .where('publishedAt', '<', data.lastActive.toDate())
+                .orderBy('publishedAt', 'desc').get().then(article_querySnapshot => {
+                    article_querySnapshot.forEach(articleSnapshot => {
+                        const data = articleSnapshot.data()
+                        // console.log(data.title, data.publishedAt.toDate(), data.topic)
+                        recommendations.push(articleSnapshot.id)
+                    })
+                }).finally(() => {
+                    snapshot.ref.update({
+                        recommendation: recommendations.slice(0,200),
+                        lastActive: firebase.firestore.FieldValue.serverTimestamp()
+                    })
+                    return props.navigation.navigate('Success')
+                })
+            // else {
+            //     snapshot.ref.update({
+            //         lastActive: admin.firestore.Timestamp.fromMillis(1633977297000)
+            //     })
+            // }
+            })
         // return props.navigation.navigate('Tabs')
-        return props.navigation.navigate('Success')
     }
     return(
         <>
