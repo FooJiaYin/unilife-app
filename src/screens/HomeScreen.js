@@ -29,7 +29,7 @@ export function ArticleTabs({articles, ...props}) {
 
     const articleListItem = (itemProps) => 
         <ListItem {...itemProps} props={props}
-            onPress={() => props.navigation.navigate('Article', {article: itemProps.item}) } 
+            onPress={() => openArticle(itemProps.item) } 
             onButtonPress={() => toggleSaveArticle(itemProps.item)}
         />
 
