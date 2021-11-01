@@ -397,8 +397,8 @@ export function HomeScreen(props) {
             marginHorizontal:16,
             // boxSizing: 'paddingBox',
             marginVertical: 8,
-            height: 32,
-            width: 32,
+            height: 28,
+            width: 28,
             resizeMode:'contain',
         },
     })
