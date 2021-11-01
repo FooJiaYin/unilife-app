@@ -267,7 +267,7 @@ export function HomeScreen(props) {
                     for (const articleId of recommendations) {
                         const snapshot = await firebase.firestore().doc('articles/' + articleId).get()
                         const article = snapshot.data()
-                        // console.log(articleId, article)
+                        article.isSaved = savedArticles != undefined && savedArticles.includes(articleId)
                         newArticles['all'].push(article)
                         if (article.category && ['announcement', 'local', 'news'].includes(article.category)) {
                             newArticles[article.category].push(article)
