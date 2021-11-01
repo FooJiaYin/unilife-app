@@ -1,3 +1,5 @@
+import Asset from '../components/assets';
+
 export const tagNames = {
     operation: "小攸公告" ,
     newbie: "校園懶人包" ,
@@ -27,3 +29,11 @@ export const tagNames = {
 }
 
 export const featuredTags = ['operation', 'discussion', 'resource', 'scholarship', 'pandemic', 4]
+
+export const announcementTags = {
+    resource: "學習資源",
+    scholarship: "獎助學金",
+    activity: "學生活動",
+    job: "徵才招生",
+    important: "重要公告",
+}

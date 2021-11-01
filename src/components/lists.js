@@ -121,7 +121,8 @@ export function ListItem({ item, onPress, style, onButtonPress, props, chipActio
             /> */}
             
             <View style={style? [listItemStyle.container, style.container] : listItemStyle.container}>
-                <Image style={style? [listItemStyle.image, style.image] : listItemStyle.image} source={{uri: imageUrl}}/>
+                <Image style={style? [listItemStyle.image, style.image] : listItemStyle.image} source={(item.category=='announcement' && item.tags && imageUrl == '')? Asset(item.tags[0]) : {uri: imageUrl}}/>
+                {/* <Image style={style? [listItemStyle.image, style.image] : listItemStyle.image} source={ {uri: imageUrl}}/> */}
                 <View style={style? [listItemStyle.textContainer, style.textContainer] : listItemStyle.textContainer}>
                     <Text style={style? [listItemStyle.title, style.title] : listItemStyle.title}
                         onTextLayout={(e) => onTextLayout(e)}

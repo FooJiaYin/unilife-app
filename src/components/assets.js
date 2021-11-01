@@ -85,6 +85,15 @@ export default function Asset(name) {
     if (name == 'topic-30') return require('../../assets/topics/cover_30.jpg')
     if (name == 'overlay') return require('../../assets/topics/overlay.png')
     if (name == 'overlay_selected') return require('../../assets/topics/overlay_selected.png')
+
+    /* Announcement */
+    if (name == 'activity') return require('../../assets/announcement/activity.png')
+    if (name == 'announcement') return require('../../assets/announcement/announcement.png')
+    if (name == 'important') return require('../../assets/announcement/important.png')
+    if (name == 'job') return require('../../assets/announcement/job.png')
+    if (name == 'resource') return require('../../assets/announcement/resource.png')
+    if (name == 'scholarship') return require('../../assets/announcement/scholarship.png')
+
 }
 
 export function Icon({ name, size, color, style, onPress }) {
