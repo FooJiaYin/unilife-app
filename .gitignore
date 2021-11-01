@@ -189,3 +189,5 @@ buck-out/
 .expo/
 .expo/*
 web-build/
+
+src/drafts
