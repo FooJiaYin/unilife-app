@@ -82,16 +82,10 @@ export default function LoginScreen({navigation}) {
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
                 />
-                <TextInput
-                    style={styles.input}
-                    placeholderTextColor="#aaaaaa"
-                    secureTextEntry={!showPassword}
+                <PasswordInput
                     placeholder='密碼'
-                    // defaultValue={'password'}
                     onChangeText={(text) => setPassword(text)}
                     value={password}
-                    underlineColorAndroid="transparent"
-                    autoCapitalize="none"
                 />
                 <Text onPress={() => navigation.navigate('ResetPassword')} style={[stylesheet.textGrey, {alignSelf: 'flex-end', marginTop: 4, marginBottom: 20}]}>
                     忘記密碼？

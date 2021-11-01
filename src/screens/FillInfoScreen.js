@@ -4,7 +4,7 @@ import { setHeaderOptions } from '../components/navigation'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { stylesheet, htmlStyles } from '../styles/styles'
 import { firebase } from '../firebase/config'
-import { Button, Select } from '../components/forms'
+import { Button, Select, PasswordInput } from '../components/forms'
 import RenderHtml from 'react-native-render-html'
 import DateTimePickerModal from "react-native-modal-datetime-picker"
 import time from '../utils/time'
@@ -344,25 +344,15 @@ export default function FillInfoScreen(props) {
                             <Picker.Item label="7" value={7} />
                         </Picker> 
                     </View>  */}
-                    <TextInput
-                        style={stylesheet.input}
-                        placeholderTextColor="#aaaaaa"
-                        secureTextEntry
+                    <PasswordInput
                         placeholder='密碼（至少6字元）'
                         onChangeText={(text) => setPassword(text)}
                         value={password}
-                        underlineColorAndroid="transparent"
-                        autoCapitalize="none"
                     />
-                    <TextInput
-                        style={stylesheet.input}
-                        placeholderTextColor="#aaaaaa"
-                        secureTextEntry
+                    <PasswordInput
                         placeholder='再次輸入密碼'
                         onChangeText={(text) => setConfirmPassword(text)}
                         value={confirmPassword}
-                        underlineColorAndroid="transparent"
-                        autoCapitalize="none"
                     />
                     {/* <View style={{height:70}} /> */}
                     <View style={stylesheet.footerView}>

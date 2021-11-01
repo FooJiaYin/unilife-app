@@ -4,7 +4,7 @@ import { setHeaderOptions } from '../components/navigation'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { stylesheet, htmlStyles } from '../styles/styles'
 import { firebase } from '../firebase/config'
-import { Button, Select } from '../components/forms'
+import { Button, Select, PasswordInput } from '../components/forms'
 import RenderHtml from 'react-native-render-html'
 import DateTimePickerModal from "react-native-modal-datetime-picker"
 import time from '../utils/time'
@@ -329,74 +329,15 @@ export default function RegistrationScreen(props) {
                         onChange={(input) => setIdentity({ ...identity, grade: input })}
                         placeholder='請選擇年級...'
                     /> 
-                    {/* <View style={[stylesheet.input, {justifyContent: 'center'}]}>
-                        <Picker
-                            selectedValue={''}
-                            onValueChange={(itemValue, itemIndex) =>{
-                                setIdentity({ ...identity, department: itemValue })
-                            }}
-                            style={{padding: 0, margin: -10}}
-                            // mode="dropdown"
-                        >
-                            <Picker.Item label="請選擇系所..." value="" />
-                            {departments.map((department, i)=>
-                                <Picker.Item label={department.name} value={department.id} />
-                            )}
-                        </Picker> 
-                    </View>  
-                    <View style={[stylesheet.input, {justifyContent: 'center'}]}>
-                        <Picker
-                            selectedValue={''}
-                            onValueChange={(itemValue, itemIndex) =>{
-                                setIdentity({ ...identity, degree: itemValue })
-                            }}
-                            style={{padding: 0, margin: -10}}
-                            // mode="dropdown"
-                        >
-                            <Picker.Item label="請選擇學位..." value="" />
-                            <Picker.Item label="大學部" value="bachelor" />
-                            <Picker.Item label="碩士班" value="master" />
-                            <Picker.Item label="博士班" value="phd" />
-                        </Picker> 
-                    </View> 
-                    <View style={[stylesheet.input, {justifyContent: 'center'}]}>
-                        <Picker
-                            selectedValue={''}
-                            onValueChange={(itemValue, itemIndex) =>{
-                                setIdentity({ ...identity, grade: itemValue })
-                            }}
-                            style={{padding: 0, margin: -10}}
-                            // mode="dropdown"
-                        >
-                            <Picker.Item label="請選擇年級..." value="" />
-                            <Picker.Item label="1" value={1} />
-                            <Picker.Item label="2" value={2} />
-                            <Picker.Item label="3" value={3} />
-                            <Picker.Item label="4" value={4} />
-                            <Picker.Item label="5" value={5} />
-                            <Picker.Item label="6" value={6} />
-                            <Picker.Item label="7" value={7} />
-                        </Picker> 
-                    </View>  */}
-                    <TextInput
-                        style={stylesheet.input}
-                        placeholderTextColor="#aaaaaa"
-                        secureTextEntry
+                    <PasswordInput
                         placeholder='密碼（至少6字元）'
                         onChangeText={(text) => setPassword(text)}
                         value={password}
-                        underlineColorAndroid="transparent"
-                        autoCapitalize="none"
                     />
-                    <TextInput
-                        style={stylesheet.input}
-                        placeholderTextColor="#aaaaaa"
-                        secureTextEntry
+                    <PasswordInput
                         placeholder='再次輸入密碼'
                         onChangeText={(text) => setConfirmPassword(text)}
                         value={confirmPassword}
-                        underlineColorAndroid="transparent"
-                        autoCapitalize="none"
                     />
                     {/* <View style={{height:70}} /> */}
                     <View style={stylesheet.footerView}>
