@@ -75,24 +75,79 @@ export function ArticleTabs({articles, ...props}) {
             contentContainerStyle={{marginBottom: 56, paddingBottom: 56}}
         />,
       });
-  
-      function toggleSaveArticle(article) {
-        // console.log(article)
-           if (article.isSaved) {
-               props.user.ref.update({
-                   bookmarks: firebase.firestore.FieldValue.arrayRemove(article.id)
-               });
-           } else {
-               props.user.ref.update({
-                   bookmarks: firebase.firestore.FieldValue.arrayUnion(article.id)
-               });
-           }
-           article.isSaved = !article.isSaved
-       }
-   
-       async function openWeb(url) {
-           let result = await WebBrowser.openBrowserAsync(url);
-       };
+
+    async function setBehavior(article, action) {
+        let behaviorRef
+        let data
+        let querySnapshot = await firebase.firestore().collection('behavior').where('user','==', props.user.id).where('article', '==', article.id).get()
+        if (querySnapshot.size > 0) {
+            behaviorRef = querySnapshot.docs[0].ref
+            data = querySnapshot.docs[0].data()
+        } else {
+            data = {
+                user: props.user.id,
+                article: article.id,
+                stats: {
+                    unread: false,
+                    read: 0,
+                    readDuration: {
+                        total: 0.0,
+                        max: 0.0,
+                    },
+                    save: false,
+                    share: 0,
+                    comment: 0,
+                    report: 0
+                },
+                logs: []
+            }
+            behaviorRef = await firebase.firestore().collection('behavior').add(data)
+        }
+        behaviorRef.update({
+            stats: {
+                ...data.stats,
+                read: action == 'read'? data.stats.read + 1 : data.stats.read,
+                save: action == 'unsave'? false : action == 'save'? true : data.stats.save,
+            },
+            logs: firebase.firestore.FieldValue.arrayUnion({
+                action: action,
+                time: firebase.firestore.Timestamp.now()
+            })
+        })
+        firebase.firestore().doc('articles/' + article.id).update({
+            stats: {
+                ...article.stats,
+                read: action == 'read'? article.stats.read + 1 : article.stats.read,
+                save: action == 'unsave'? article.stats.save - 1 : action == 'save'? article.stats.save + 1 : article.stats.save,
+                comment: action == 'comment'? article.stats.comment + 1 : article.stats.comment,
+            }
+        })
+    }
+
+    function openArticle(article) {
+        setBehavior(article, 'read')
+        props.navigation.navigate('Article', {article: article})
+    }
+
+    function toggleSaveArticle(article) {
+    // console.log(article)
+        if (article.isSaved) {
+            setBehavior(article, 'unsave')
+            props.user.ref.update({
+                bookmarks: firebase.firestore.FieldValue.arrayRemove(article.id)
+            });
+        } else {
+            setBehavior(article, 'save')
+            props.user.ref.update({
+                bookmarks: firebase.firestore.FieldValue.arrayUnion(article.id)
+            });
+        }
+        article.isSaved = !article.isSaved
+    }
+
+    async function openWeb(url) {
+        let result = await WebBrowser.openBrowserAsync(url);
+    };
 
     return (
       <TabView
@@ -150,7 +205,7 @@ export function HomeScreen(props) {
         }
         const savedArticles = user.bookmarks || []
         let recommendations = []
-        // console.log(user.recommendation)
+        // console.log(savedArticles)
         // newArticles.all = user.recommendation.map(articleId => {id: articleId}) || []
         articlesRef
             .where("community", "in", ["all", user.identity.community])
@@ -178,6 +233,24 @@ export function HomeScreen(props) {
                         const data = articleSnapshot.data()
                         // console.log(data.title, data.publishedAt.toDate(), data.topic)
                         recommendations.push({id: articleSnapshot.id, score: user.score[data.topic]})
+                            firebase.firestore().collection('behavior').add({
+                                user: user.id,
+                                article: articleSnapshot.id,
+                                stats: {
+                                    unread: true,
+                                    read: 0,
+                                    readDuration: {
+                                        total: 0.0,
+                                        max: 0.0,
+                                    },
+                                    save: false,
+                                    share: 0,
+                                    comment: 0,
+                                    report: 0
+                                },
+                                logs: []
+                            })
+                        }
                         // console.log(score[data.topic],data.title, data.topic)
                     })
                 }).catch(err => {
