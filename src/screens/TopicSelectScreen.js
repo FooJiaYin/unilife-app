@@ -256,7 +256,7 @@ export default function TopicSelectScreen(props) {
         <>
             <View style={[topicStyle.container, {flex: 1}]}>
                 <View style={topicStyle.hintMessage}>
-                    <Text style={stylesheet.text}>{confirm?'興趣主題':'選擇你最感興趣的主題（至少5個）'}</Text>
+                    <Text style={stylesheet.text}>{confirm?'興趣主題':'選擇你最感興趣的5個主題'}</Text>
                     <Text style={stylesheet.text}>{selectedItems.length}{!confirm&&'/5'}</Text>
                 </View>
                 {!confirm
