@@ -106,7 +106,7 @@ export default function ChatroomScreen(props) {
             Alert.alert('', "您尚未完成身分驗證，請先完成學生身分驗證。",
                 [{
                     text: "前往驗證",
-                    onPress: () => Linking.openURL("https://supr.link/RWZbE")
+                    onPress: () => props.navigation.navigate('Verification', {user: props.user})
                 }, {
                     text: "取消",
                     // onPress: () => console.log("Cancel Pressed"),

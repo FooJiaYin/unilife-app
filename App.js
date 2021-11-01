@@ -8,7 +8,8 @@ import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs' 
-import { LoginScreen, ResetPasswordScreen, RegistrationScreen, FillInfoScreen, TopicSelectScreen, SuccessScreen } from './src/screens'
+import { LoginScreen, ResetPasswordScreen } from './src/screens'
+import { RegistrationScreen, FillInfoScreen, TopicSelectScreen, SuccessScreen, VerificationScreen } from './src/screens'
 import { HomeScreen, FilterScreen, ArticleScreen, CommentScreen } from './src/screens'
 import { ChatroomScreen, MessageScreen } from './src/screens'
 import { SettingScreen, ProfileScreen } from './src/screens'
@@ -148,7 +149,7 @@ export default function App() {
 
 	function HomeStackScreen(props) {
 		return (
-			<Stack.Navigator>		  
+			<Stack.Navigator>	
 				<Stack.Screen name="Home">
 					{props => <HomeScreen {...props} user={user} />}
 				</Stack.Screen>
@@ -234,6 +235,9 @@ export default function App() {
 						<Stack.Screen name="Success" options={{title: ""}}>
 							{props => <SuccessScreen {...props} user={user} />}
 						</Stack.Screen>
+						<Stack.Screen name="Verification" options={{title: "驗證方式"}}>
+							{props => <VerificationScreen {...props} user={user} />}
+						</Stack.Screen>
 					</Stack.Navigator>
 				) :  
 				(
@@ -247,6 +251,9 @@ export default function App() {
 						</Stack.Screen>
 						<Stack.Screen name="Success" options={{title: ""}}>
 							{props => <SuccessScreen {...props} user={user} />}
+						</Stack.Screen>
+						<Stack.Screen name="Verification" options={{title: "驗證方式"}}>
+							{props => <VerificationScreen {...props} user={user} />}
 						</Stack.Screen>
 						<Stack.Screen name="Tabs" options={{headerShown: false}}>
 							{props => <Tabs {...props} user={user} />}

@@ -9,7 +9,7 @@ import { CurveMaskedTop, ProfilePicture, CurvedBg } from '../components/decorati
 import { Color, stylesheet } from '../styles'
 
 
-export default function Test(props) {
+export default function SuccessScreen(props) {
 
     const options = {
         title: '',
@@ -94,8 +94,10 @@ export default function Test(props) {
     }
 
     async function onVerifyPress() {
-        Linking.openURL("https://supr.link/RWZbE")
-        props.navigation.navigate('Tabs')
+        await updateUserData()
+        props.navigation.navigate('Verification', {user: user})
+        // Linking.openURL("https://supr.link/RWZbE")
+        // props.navigation.navigate('Tabs')
     }
 
     return (

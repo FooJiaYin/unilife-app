@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList, Alert, Text, SafeAreaView, ScrollView, View, TextInput, Linking, useWindowDimensions } from 'react-native'
+import { FlatList, Alert, Text, SafeAreaView, TouchableOpacity, ScrollView, View, TextInput, Linking, useWindowDimensions } from 'react-native'
 import { setHeaderOptions } from '../components/navigation'
 import { stylesheet, htmlStyles } from '../styles/styles'
 import { firebase } from '../firebase/config'
@@ -31,12 +31,14 @@ export default function ArticleScreen(props) {
             icon: 'chat',
             size: 18,
             onPress: () => {
-                if (user.verification && user.verification.status == true) {
-                    props.navigation.navigate('Comment', {article: article, commentsRef: commentsRef})
-                } else {
-                    Alert.alert('', "您尚未完成身分驗證，請先完成學生身分驗證。",
-                        [{
-                            text: "前往驗證",
+                firebase.firestore().doc('users/' + user.id).get().then(snapshot => {
+                    const verification = snapshot.data().verification
+                    if (verification && verification.status == true) {
+                        props.navigation.navigate('Comment', {article: article, commentsRef: commentsRef})
+                    } else {
+                        Alert.alert('', "您尚未完成身分驗證，請先完成學生身分驗證。",
+                            [{
+                                text: "前往驗證",
                             onPress: () => Linking.openURL("https://supr.link/RWZbE")
                         }, {
                             text: "取消",
@@ -45,6 +47,7 @@ export default function ArticleScreen(props) {
                         }]
                     )
                 }
+                })
             }
         }
     }

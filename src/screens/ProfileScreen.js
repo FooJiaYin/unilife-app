@@ -325,6 +325,14 @@ export default function ProfileScreen(props) {
                         autoCapitalize="none"
                         onChangeText={(input) => setInfo({ ...info, email: input })}
                     /> */}
+                    {
+                        user.verification && user.verification.status == true ? null :
+                        <Button
+                            titleStyle={[stylesheet.textBlue, {fontWeight: 'bold'}]}
+                            onPress={() => props.navigation.navigate('Verification', {user: props.user})} 
+                            title='驗證身份'
+                        />
+                    }
                     <Button
                         style={stylesheet.bgGreen}
                         onPress={() => onSavePress()} 
