@@ -223,16 +223,19 @@ export function HomeScreen(props) {
             }).then(async () => {
                 // console.log("finally", newArticles)
                 setArticles(newArticles)
+                var lastRenewed = new Date((new Date()).valueOf() - 7000*60*60*24);
+                lastRenewed = (lastRenewed < user.lastActive.toDate()) ? lastRenewed : user.lastActive.toDate()
                 firebase.firestore().collection('articles')
                 .where("community", "in", ["all", user.identity.community])
                 .where('status', '==', 'published')
                 .where('pinned', '==', false)
-                .where('publishedAt', '>=', user.lastActive.toDate())
+                .where('publishedAt', '>=', lastRenewed)
                 .orderBy('publishedAt', 'desc').get().then(article_querySnapshot => {
                     article_querySnapshot.forEach(articleSnapshot => {
-                        const data = articleSnapshot.data()
-                        // console.log(data.title, data.publishedAt.toDate(), data.topic)
-                        recommendations.push({id: articleSnapshot.id, score: user.score[data.topic]})
+                        if(!user.recommendation.includes(articleSnapshot.id)) {
+                            const data = articleSnapshot.data()
+                            // console.log(data.title, data.publishedAt.toDate(), data.topic)
+                            recommendations.push({id: articleSnapshot.id, score: user.score[data.topic]})
                             firebase.firestore().collection('behavior').add({
                                 user: user.id,
                                 article: articleSnapshot.id,
