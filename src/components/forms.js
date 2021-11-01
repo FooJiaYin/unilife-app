@@ -7,21 +7,21 @@ import { styles, stylesheet, Color } from '../styles'
 
 // export const Checkbox = RNUI_Checkbox
 
-const formStyles = StyleSheet.create({
+export const formStyles = StyleSheet.create({
     button: {
         marginTop: 8,
-        // height: 40,
+        height: 44,
         borderRadius: 24,
         // flex: 1,            // 宽度和高度自适应                                                                                                                                             
         alignItems: 'center',
         justifyContent: 'center',
         // alignSelf: 'center',
-        paddingVertical: 12,
+        // paddingVertical: 12,
     },
     buttonTitle: {
         ...styles.textWhite,
         fontSize: 16,
-        height: 18,
+        // height: 18,
         fontWeight: "bold"
     },
     label: {
