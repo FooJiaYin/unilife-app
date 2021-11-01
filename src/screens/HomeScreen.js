@@ -338,15 +338,18 @@ export function HomeScreen(props) {
     //     }
     // }
 
-    // setHeaderOptions(props.navigation, options)
+    setHeaderOptions(props.navigation, {headerShown: false})
 
     async function loadShortcuts() {
         let snapshot = await props.user.ref.get()
         user = await snapshot.data()
         if (!user.interests || user.interests.length == 0) props.navigation.navigate('FillInfo', {user: snapshot})
         setNickname(user.info.nickname)
-        if(!user.guide || !(user.guide.home == true)) {
-            props.start();
+        if(!user.guide || !user.guide.intro || user.guide.intro == false) {
+            props.navigation.navigate('Intro', {user: props.user})
+        }
+        else if(user.guide.home == false) {
+            props.start()
         }
         snapshot = await firebase.firestore().doc('communities/' + user.identity.community).get()
         let data = await snapshot.data()
@@ -369,6 +372,7 @@ export function HomeScreen(props) {
         props.copilotEvents.on("stop", () => {
             firebase.firestore().doc('users/' + user.id).update({
                 guide: {
+                    intro: true,
                     home: true
                 }
             })
@@ -429,15 +433,20 @@ export function HomeScreen(props) {
                         <Image source={require('../../assets/icons/bookmark.png')} style={homeCardStyle.icon} tintColor='#fff'/>
                     </TouchableOpacity> */}
                     {/* <TouchableOpacity onPress={() => props.navigation.navigate('Filter', {type: 'saved'})}> */}
-                    <copilot.Step
-                        text="這裡是收藏區，將喜歡的文章收藏後，就能隨時在這找到它囉～"
-                        order={1}
-                        name="save"
-                        >
-                    <copilot.TouchableOpacity onPress={() => props.navigation.navigate('Filter', {type: 'saved'})}>
-                        <Image style={homeCardStyle.icon}  source={Asset('bookmark')} tintColor='#fff'/>
-                    </copilot.TouchableOpacity>
-                    </copilot.Step>
+                    <View>
+                        <copilot.Step
+                            text="這裡是收藏區，將喜歡的文章收藏後，就能隨時在這找到它囉～"
+                            order={1}
+                            name="save"
+                            >
+                        <copilot.TouchableOpacity onPress={() => props.navigation.navigate('Filter', {type: 'saved'})}>
+                            <Image style={homeCardStyle.icon}  source={Asset('bookmark')} />
+                        </copilot.TouchableOpacity>
+                        </copilot.Step>
+                        <copilot.TouchableOpacity onPress={() => props.navigation.navigate('Intro', {user: props.user})}>
+                            <Image style={homeCardStyle.icon}  source={Asset('guide')} />
+                        </copilot.TouchableOpacity>
+                    </View>
                 </View>
                 <copilot.Step
                     text="這裡一鍵就能直達你的常用網站了，很方便對吧？"

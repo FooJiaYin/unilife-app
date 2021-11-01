@@ -17,7 +17,8 @@ export const setHeaderOptions = (navigation, options = {}) => {
         options.cardStyleInterpolator = CardStyleInterpolators.forFadeFromBottomAndroid
     }
     React.useLayoutEffect(() => {
-        navigation.setOptions({
+        navigation.setOptions(
+            options.headerShown == false? options : {
             // ...navigation.getOptions(),
             ...headerStyle,
             ...options.style,

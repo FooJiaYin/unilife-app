@@ -10,7 +10,7 @@ import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs' 
 import { LoginScreen, ResetPasswordScreen } from './src/screens'
 import { RegistrationScreen, FillInfoScreen, TopicSelectScreen, SuccessScreen, VerificationScreen } from './src/screens'
-import { HomeScreen, FilterScreen, ArticleScreen, CommentScreen } from './src/screens'
+import { HomeScreen, IntroScreen, FilterScreen, ArticleScreen, CommentScreen } from './src/screens'
 import { ChatroomScreen, MessageScreen } from './src/screens'
 import { SettingScreen, ProfileScreen } from './src/screens'
 import { tabBarObject, tabBarOptions } from './src/components/navigation'
@@ -218,6 +218,9 @@ export default function App() {
 						</Stack.Screen> */}
 						<Stack.Screen name="Tabs" options={{headerShown: false}}>
 							{props => <Tabs {...props} user={user} />}
+						</Stack.Screen>
+						<Stack.Screen name="Intro">
+							{props => <IntroScreen {...props} user={user} />}
 						</Stack.Screen>
 						<Stack.Screen name="Message">
 							{props => <MessageScreen {...props} user={user} />}
