@@ -39,14 +39,14 @@ export default function ArticleScreen(props) {
                         Alert.alert('', "您尚未完成身分驗證，請先完成學生身分驗證。",
                             [{
                                 text: "前往驗證",
-                            onPress: () => Linking.openURL("https://supr.link/RWZbE")
-                        }, {
-                            text: "取消",
-                            // onPress: () => console.log("Cancel Pressed"),
-                            style: "cancel"
-                        }]
-                    )
-                }
+                                onPress: () =>props.navigation.navigate('Verification', {user: props.user})
+                            }, {
+                                text: "取消",
+                                // onPress: () => console.log("Cancel Pressed"),
+                                style: "cancel"
+                            }]
+                        )
+                    }
                 })
             }
         }
@@ -196,7 +196,7 @@ export default function ArticleScreen(props) {
                         // alignTop={true}
                         user={{_id: ''}}
                     /> */}
-                <FlatList
+                {/*<FlatList
                     data={messages}
                     renderItem={Message}
                     keyExtractor={(item, index) => index.toString()}
@@ -215,7 +215,7 @@ export default function ArticleScreen(props) {
                     <TouchableOpacity style={stylesheet.button} onPress={addComment}>
                         <Text style={stylesheet.buttonText}>送出</Text>
                     </TouchableOpacity>
-                </View>
+                </View> */}
                 </ScrollView>
             }
         </SafeAreaView>
