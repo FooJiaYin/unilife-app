@@ -212,11 +212,12 @@ export function HomeScreen(props) {
             .where("status", "==", "published")
             .where("pinned", "==", true)
             .get().then(querySnapshot => {
-                let promises = []
+                // let promises = []
                 querySnapshot.forEach(async snapshot => {
                     const article = snapshot.data()
                     newArticles.all.push(article)
                     if (article.category && ['announcement', 'local', 'news'].includes(article.category)) {
+                        article.isSaved = savedArticles != undefined && savedArticles.includes(snapshot.id)
                         newArticles[article.category].push(article)
                     }
                 })
@@ -359,7 +360,7 @@ export function HomeScreen(props) {
         React.useCallback(() => {
             // console.log("Hello")
             loadShortcuts()
-            loadArticles()
+            // loadArticles()
         }, [])
     );
 
@@ -402,11 +403,11 @@ export function HomeScreen(props) {
         },
     })
  
-    React.useLayoutEffect(() => {
-        props.navigation.setOptions({
-            headerShown: false
-        })
-      }, [props.navigation])
+    // React.useLayoutEffect(() => {
+    //     props.navigation.setOptions({
+    //         headerShown: false
+    //     })
+    //   }, [props.navigation])
 
     return (
         <View style={stylesheet.container}>
@@ -448,7 +449,7 @@ export function HomeScreen(props) {
                 </copilot.View>
                 </copilot.Step>
             </View>
-            <ExpandCard>
+            <ExpandCard refresh={()=> loadArticles()} >
                 <ArticleTabs articles={articles} {...props} />
             </ExpandCard>
         </View>

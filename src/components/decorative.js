@@ -1,5 +1,5 @@
 import React, { Children, useState, useRef } from 'react'
-import { Dimensions, StyleSheet, View, Image, ImageBackground, Text, ScrollView, Animated } from 'react-native'
+import { Dimensions, StyleSheet, View, Image, ImageBackground, Text, ScrollView, Animated, TouchableOpacity } from 'react-native'
 import { Directions } from 'react-native-gesture-handler'
 import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { styles, Color, stylesheet} from '../styles'
@@ -178,7 +178,16 @@ export function ExpandCard({height = 300, ...props}){
             justifyContent: 'space-between',
             paddingVertical: 20,
             zIndex: 2,
-        }
+        },
+        icon:{
+            marginHorizontal:16,
+            // boxSizing: 'paddingBox',
+            // marginVertical: 8,
+            height: 20,
+            width: 20,
+            resizeMode:'contain',
+            tintColor: Color.grey0,
+        },
     }
     const curveStyles = StyleSheet.create(cardStyle)
     const scrollY = useRef(new Animated.Value(0)).current
@@ -216,11 +225,17 @@ export function ExpandCard({height = 300, ...props}){
                     order={4}
                     name="articletab"
                     >
-                <copilot.AnimatedView style={[curveStyles.header, {paddingTop: scrollY.interpolate({
+                <copilot.AnimatedView style={[curveStyles.header, {marginTop: scrollY.interpolate({
                     inputRange: [0, height - 80, height],
-                    outputRange: [20, 20, insets.top + 20],
+                    outputRange: [0, 0, insets.top],
                 }) }]}>
+                    <TouchableOpacity onPress={() => {}}>
+                        <Image style={cardStyle.icon}  source={Asset('blank')} />
+                    </TouchableOpacity>
                     <Text style={[stylesheet.headerText]}>Uni資訊</Text>
+                    <TouchableOpacity onPress={()=> props.refresh()}>
+                        <Image style={cardStyle.icon}  source={Asset('refresh')} />
+                    </TouchableOpacity>
                 </copilot.AnimatedView>
                 </copilot.Step>
                     {props.children}

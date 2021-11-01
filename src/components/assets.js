@@ -50,6 +50,7 @@ export default function Asset(name) {
     if (name == 'ic-class') return require('../../assets/icons/ic-class.png')
     if (name == 'star') return require('../../assets/icons/star.png')
     if (name == 'tick') return require('../../assets/icons/tick.png')
+    if (name == 'refresh') return require('../../assets/icons/refresh.png')
 
     /* Topics */
     if (name == 'topic-1') return require('../../assets/topics/cover_1.jpg')
