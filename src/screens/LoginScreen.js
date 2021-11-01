@@ -3,7 +3,7 @@ import { Dimension, ImageBackground, Image, Text, TextInput, Alert, View } from 
 import { setHeaderOptions } from '../components/navigation'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Asset from '../components/assets'
-import { Button } from '../components/forms'
+import { Button, PasswordInput } from '../components/forms'
 import { styles } from './LoginScreen/styles'
 import { stylesheet } from '../styles'
 import { firebase } from '../firebase/config'
@@ -15,7 +15,6 @@ export default function LoginScreen({navigation}) {
     
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [showPassword, setPasswordVisible] = useState(false)
 
     setHeaderOptions(navigation)
 
