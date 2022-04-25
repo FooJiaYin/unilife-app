@@ -351,7 +351,7 @@ export function HomeScreen(props) {
             props.navigation.navigate('Intro', {user: props.user})
         }
         else if(user.guide.home == false) {
-            props.start()
+            // props.start()
         }
         if (!user.shortcuts) {
         snapshot = await firebase.firestore().doc('communities/' + user.identity.community).get()
