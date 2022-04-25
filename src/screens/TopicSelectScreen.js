@@ -21,7 +21,7 @@ export default function TopicSelectScreen(props) {
     }
     setHeaderOptions(props.navigation, options)
 
-    const topics=[
+    const topics = [
         '影集戲劇', '國際政經', '時事評論',
         '娛樂八卦', '行銷/管理', '科技趨勢',
         '創新創業', '職場關係', '情感關係',
@@ -71,6 +71,7 @@ export default function TopicSelectScreen(props) {
             if(array.length<5){
                 array.push(index)
                 setSelectedItems(array)
+                // console.log(array)
                 onSelected(true)
                 if(array.length==5){
                     setProceed(true)
@@ -84,7 +85,7 @@ export default function TopicSelectScreen(props) {
             for(var i=0; i<l&&l==array.length; i++){
                 if (array[i]==index){
                     // console.log(array)
-                    array.splice(i)
+                    array.splice(i, 1)
                     // console.log(array)
                     setSelectedItems(array)
                     onSelected(false)
@@ -224,7 +225,7 @@ export default function TopicSelectScreen(props) {
         })
         props.route.params.user.ref.get().then(snapshot => {
                 const data = snapshot.data()
-                    // console.log(data.info.name, data.lastActive, data.score)
+                // console.log(data.info.name, data.lastActive, data.score)
                 var recommendations = []
                 firebase.firestore().collection('articles')
                 .where('community', '==', data.identity.community)
@@ -239,7 +240,7 @@ export default function TopicSelectScreen(props) {
                     })
                 }).finally(() => {
                     snapshot.ref.update({
-                        recommendation: recommendations.slice(0,200),
+                        recommendation: recommendations.slice(0,500),
                         lastActive: firebase.firestore.FieldValue.serverTimestamp()
                     })
                     return props.navigation.navigate('Success')
@@ -276,8 +277,7 @@ export default function TopicSelectScreen(props) {
                         keyExtractor={(item, index)=>'d'+selectedItems.index}
                      />
                 }
-                {confirm
-                ?
+                {confirm?
                 <View style={[topicStyle.nextButtonContainer, {height: 60}]}>
                     <Button onPress={submit} title="完成"  style={[topicStyle.nextButton, {backgroundColor:Color.blue}]}></Button>
                     <Button onPress={() => {setConfirm(false); setProceed(false); setSelectedItems([])}} title="重新選擇"  style={[topicStyle.nextButton, {backgroundColor:'transparent'}]} titleStyle={{ color: Color.blue}}></Button>
