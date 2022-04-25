@@ -8,7 +8,7 @@ import time from '../utils/time'
 import { firebase } from '../firebase/config'
 import { useFocusEffect } from "@react-navigation/native";
 import { StickedBg, ExpandCard } from '../components/decorative'
-import { HomeShortcutItem } from '../components/shortcutItem'
+import { HomeShortcutItem, ShortcutEditModal } from '../components/shortcutItem'
 import * as copilot from '../components/guide'
 import * as WebBrowser from 'expo-web-browser';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
@@ -191,6 +191,8 @@ export function HomeScreen(props) {
         local: [],
         news: []
     })
+    const [isModalVisible, setModalVisibility] = useState(false)
+    const [currentShortcut, setCurrentShortcut] = useState({})
     
     async function loadArticles() {
         // console.log("community", user.community)
@@ -351,12 +353,32 @@ export function HomeScreen(props) {
         else if(user.guide.home == false) {
             props.start()
         }
+        if (!user.shortcuts) {
         snapshot = await firebase.firestore().doc('communities/' + user.identity.community).get()
         let data = await snapshot.data()
         setMyShortcuts(data.shortcuts)
+        } else {
+            setMyShortcuts(user.shortcuts)
+        }
         snapshot = await firebase.firestore().doc('config/text').get()
-        data = await snapshot.data()
+        let data = await snapshot.data()
         setText(data.home)
+    }
+
+    function changeIcon(index) {
+        setModalVisibility(true)
+        setCurrentShortcut({index: index, ...myShortcuts[index]})
+        console.log('long press')
+    }
+
+    function closeShortcutEditModal(update) {
+        setModalVisibility(false)
+        if (!update) return
+        myShortcuts[currentShortcut.index] = currentShortcut
+        console.log(props.user.id)
+        firebase.firestore().doc('users/' + props.user.id).update({
+            shortcuts: myShortcuts
+        })
     }
 
     function newArticle() {
@@ -389,6 +411,8 @@ export function HomeScreen(props) {
 
     useEffect(() => {
         loadArticles()
+        loadShortcuts()
+        // loadCategories()
         props.copilotEvents.on("stop", () => {
             firebase.firestore().doc('users/' + user.id).update({
                 guide: {
@@ -435,6 +459,7 @@ export function HomeScreen(props) {
 
     return (
         <View style={stylesheet.container}>
+            <ShortcutEditModal visible={isModalVisible} onClose={closeShortcutEditModal} shortcut={currentShortcut} setShortcut={setCurrentShortcut} />
             <StickedBg image={Asset('home.jpg')}>
             </StickedBg>
             <View style={homeCardStyle.container}>
@@ -474,7 +499,7 @@ export function HomeScreen(props) {
                     name="shortcut"
                     >
                 <copilot.View style={stylesheet.row}>
-                    {myShortcuts.map((item, index)=><HomeShortcutItem item={item} key={index}/>)}
+                    {myShortcuts.map((item, index)=><HomeShortcutItem item={item} key={index} onLongPress={() => changeIcon(index)} />)}
                 </copilot.View>
                 </copilot.Step>
             </View>
