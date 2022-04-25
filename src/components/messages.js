@@ -214,6 +214,9 @@ export function InputBar({sendMessage, like, setLike}, ...props) {
      //   <TextInput style={{ height: 100, backgroundColor: 'blue' }}/>
     // </View>
         <View style={messageStyle.inputBar}>
+            <TouchableOpacity onPress={() => setLike(!like)}>
+                <Image source={like? Asset('like-active') : Asset('like')} style={[stylesheet.iconColor, {width: 36, height: 36, marginRight: 14}]} />
+            </TouchableOpacity>
             <TextInput
                 style={{...stylesheet.input, flex: 1}}
                 placeholder='留言...'

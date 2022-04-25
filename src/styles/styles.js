@@ -48,8 +48,13 @@ export const styles = {
         alignSelf: 'center',
         tintColor: Color.grey0
     },
+    iconColor: {
+        aspectRatio: 1,
+        resizeMode: 'contain',
+        alignSelf: 'center',
+    },
     footerView: {
-        flex: 1,
+        // flex: 1,
         alignItems: "center",
         marginVertical: 20
     },
@@ -81,6 +86,14 @@ export const styles = {
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5
+    },
+    borderBottom: {
+        borderBottomWidth: 1, 
+        borderBottomColor: Color.grey2
+    },
+    borderTop: {
+        borderTopWidth: 1, 
+        borderTopColor: Color.grey2
     },
     bg: {
         justifyContent: "center",
@@ -123,29 +136,38 @@ export const styles = {
         flexWrap: 'wrap',
         overflow: 'hidden',
     },
-    formContainer: {
-        flexDirection: 'row',
-        position: 'absolute',
-        height: 80,
-        marginTop: 40,
-        marginBottom: 20,
-        flex: 1,
-        paddingTop: 10,
-        paddingBottom: 10,
-        paddingLeft: 30,
-        paddingRight: 30,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
     input: {
         height: 40,
         borderRadius: 20,
         overflow: 'hidden',
         backgroundColor: '#f2f3f3',
+        // flex: 1,
         marginTop: 8,
         marginBottom: 8,
-        paddingLeft: 16,
+        paddingHorizontal: 16,
+        paddingVertical: 8,
         fontSize: 14,
+    },
+    inputText: {
+        overflow: 'scroll',
+        flexShrink: 1,
+        flexGrow: 1,
+    },
+    inputRow: {
+        height: 40,
+        borderRadius: 20,
+        overflow: 'hidden',
+        backgroundColor: '#f2f3f3',
+        flex: 1,
+        marginTop: 8,
+        marginBottom: 8,
+        paddingHorizontal: 16,
+        fontSize: 14,
+        display: 'flex', 
+        flexDirection: 'row',  
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 10
     },
     disabledButton: {
         backgroundColor: "#e2e3e4",
@@ -173,6 +195,12 @@ export const styles = {
         color: 'white',
         fontSize: 16
     },
+    centerSelf: {
+        marginTop: 'auto',
+        marginBottom: 'auto',
+        // marginLeft: 'auto',
+        // marginRight: 'auto',
+    },
     row:{
         paddingHorizontal: 16,
         flexDirection: 'row',
@@ -182,7 +210,7 @@ export const styles = {
         // boxSizing: 'paddingBox',
     },
     headerText:{
-        color: Color.grey0,
+        ...color.textDark,
         fontWeight: '700',
         fontSize: 20,
         lineHeight: 30,

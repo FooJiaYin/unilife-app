@@ -54,6 +54,9 @@ export default function Asset(name) {
     if (name == 'info') return require('../../assets/icons/info.png')
     if (name == 'question') return require('../../assets/icons/question.png')
     if (name == 'guide') return require('../../assets/icons/guide.png')
+    if (name == 'like') return require('../../assets/icons/like.png')
+    if (name == 'like-active') return require('../../assets/icons/like-active.png')
+    if (name == 'edit') return require('../../assets/icons/edit.png')
 
     /* Topics */
     if (name == 'topic-1') return require('../../assets/topics/cover_1.jpg')
