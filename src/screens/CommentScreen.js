@@ -108,6 +108,7 @@ export default function MessageScreen(props) {
 
     const renderBubble = ({user, currentMessage}) => {
         const message = {
+            currentMessage: currentMessage,
             user: currentMessage.user.name,
             timestamp: currentMessage.createdAt,
             content: currentMessage.text,

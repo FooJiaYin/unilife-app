@@ -13,7 +13,6 @@ const messageStyle = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         marginHorizontal: 20,
-        marginVertical: 8,
         justifyContent: 'flex-start'
     },
     profileImage: {
@@ -50,11 +49,12 @@ const messageStyle = StyleSheet.create({
     },
     messageText: {
         ...styles.text,
+        ...styles.textDark,
         // ...styles.textBubble,
         // borderRadius: 40,
         // overflow: 'wrap',
         // backgroundColor: '#f2f3f3',
-        fontSize: 15,
+        fontSize: 14,
         flexShrink: 1,
         // flexGrow: 1,
     },
@@ -69,7 +69,23 @@ const messageStyle = StyleSheet.create({
         flexDirection: 'row-reverse',
         textAlign: 'right',
         marginRight: 8,
-    }
+    },
+    inputBar: {
+        ...styles.borderTop,
+        backgroundColor: 'white',
+        flexDirection: 'row',
+        // position: 'absolute',
+        zIndex: 1,
+        // height: 80,
+        // marginTop: 40,
+        // bottom: 0,
+        // flex: 1,
+        paddingTop: 2,
+        paddingBottom: 4,
+        paddingLeft: 16,
+        // justifyContent: 'center',
+        alignItems: 'center'
+    },
 })
 
 export function MessageBubble(message) {
@@ -115,17 +131,58 @@ export function MessageBubble(message) {
 export function CommentBubble(message) {
     // moment.locale('zh-tw')
     // console.log(message.position)
+    const width = useWindowDimensions().width
+    
     return (
-        <View style={[messageStyle.messageRight]}>
-            <Text style={[stylesheet.textXS, stylesheet.textGrey, (message.position=='right') ?messageStyle.right:{}]}>
+        <View style={[messageStyle.messageRight, {marginVertical: 6}]}>
+            <Text style={[stylesheet.textXS, stylesheet.textGrey]}>
                 {message.user} • {time(message.timestamp).calendar()}
             </Text>
-            <View style={[messageStyle.messageRow, (message.position=='right') ?messageStyle.right:{}]}>
-                <Text style={messageStyle.messageText}>
+            <View style={messageStyle.messageRow}>
+                {/* <Text style={messageStyle.messageText}>
                     {message.content}
-                </Text>
+                </Text> */}
+                <View style={{flexShrink: 1}}>
+                    <GiftedChat.Bubble 
+                        currentMessage={message.currentMessage}
+                        renderUsernameOnMessage={false}
+                        renderMessageText={()=><GiftedChat.MessageText {...message} />}
+                        renderTime={()=>{<></>}}
+                        textStyle={{left: messageStyle.messageText}}
+                        wrapperStyle={{left: messageStyle.wrapper}}
+                        // containerStyle={{left: styles.textBubble}}
+                    />
+                </View>
             </View>
         </View>
+    )
+}
+
+// export function CommentBubble(message) {
+//     // moment.locale('zh-tw')
+//     console.log(message.content)
+//     return (
+//         <View style={{...messageStyle.messageRight, marginVertical: 6}}>
+//             <Text style={[stylesheet.textXS, stylesheet.textGrey]}>
+//                 {message.user} • {time(message.timestamp).calendar()}
+//             </Text>
+//             <View style={[{backgroundColor: '#f2f3f3',  alignSelf: 'flex-start', marginVertical: 4}, styles.textBubble]}>
+//                 <Text style={messageStyle.messageText}>
+//                     {message.content}
+//                 </Text>
+//             </View>
+//         </View>
+//     )
+// }
+
+export function Comment(message) {
+    // moment.locale('zh-tw')
+    // console.log(message.content)
+    return (
+        <View style={messageStyle.message}>
+             <ProfileImage url={message.profileImage} />
+             <CommentBubble {...message} />
+         </View>
     )
 }
 
@@ -149,34 +206,24 @@ export function Message ({props}) {
 //     )
 // }
 
-export function InputBar({onSend}, ...props) {
+export function InputBar({sendMessage, like, setLike}, ...props) {
     const [inputText, setInputText] = useState('')
     return (
-        <View>
-            {/* <InputToolbar style={stylesheet.input} /> */}
+        
+    //   <View style={{ height: 80}}>
+     //   <TextInput style={{ height: 100, backgroundColor: 'blue' }}/>
+    // </View>
+        <View style={messageStyle.inputBar}>
             <TextInput
-                style={stylesheet.input}
+                style={{...stylesheet.input, flex: 1}}
                 placeholder='留言...'
                 placeholderTextColor="#aaaaaa"
                 onChangeText={(text) => setInputText(text)}
                 value={inputText}
-                multiline={true}
                 underlineColorAndroid="transparent"
                 autoCapitalize="none"
             />
-            <TouchableOpacity style={stylesheet.button} onPress={onSend(inputText)}>
-                <Text style={stylesheet.buttonText}>送出</Text>
-            </TouchableOpacity>
-            {/* <View style={styles.messageText}>
-                <TextInput
-                    style={styles.messageTextInput}
-                    multiline={true}
-                    placeholder="Type a message"
-                    onChangeText={(text) => {
-                     // console.log(text)
-                    }}
-                />
-            </View> */}
+            <SendButton input={inputText} onSend={() => sendMessage(inputText, (a,b) => setInputText(''))} />
         </View>
     )
 }
@@ -261,8 +308,10 @@ export function Chatroom({item, size, navigation, matchState = {}, toggleWaiting
             borderWidth: 1.5,
             // flex: 1,
             // marginTop: 64,
+            alignItems: 'center',
+            justifyContent: 'center',
             marginBottom: 8,
-            paddingVertical: 15
+            // paddingVertical: 15
         }
     }) 
     // console.log('item', item)

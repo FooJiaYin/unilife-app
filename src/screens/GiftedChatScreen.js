@@ -5,7 +5,7 @@ import { setHeaderOptions } from '../components/navigation'
 import { stylesheet } from '../styles/styles'
 import { firebase } from '../firebase/config'
 import RenderHtml from 'react-native-render-html'
-import { MessageBubble, ProfileImage, SendButton, Message } from '../components/messages'
+import { MessageBubble, ProfileImage, SendButton } from '../components/messages'
 import Asset from '../components/assets'
 
 export default function MessageScreen(props) {
