@@ -7,7 +7,7 @@ import RenderHtml from 'react-native-render-html'
 import { WebView } from 'react-native-webview';
 import { GiftedChat } from 'react-native-gifted-chat'
 import { Chip } from '../components/chip'
-import { CommentBubble, ProfileImage, SendButton, Message } from '../components/messages'
+import { Comment } from '../components/messages'
 // import HTMLView from 'react-native-htmlview';
 // import CommentScreen from './CommentScreen'
 import time from '../utils/time'
@@ -80,90 +80,61 @@ export default function ArticleScreen(props) {
         }
     }
 
-        function loadMessages() {
-            commentsRef.orderBy('timestamp', 'desc')//.limit(20)
-                .onSnapshot(querySnapshot => {
-                    const messageList = []
-                    let promises = []
-                    querySnapshot.forEach(async doc => {
-                        const id = messageList.push(doc.data()) -1
-                        // console.log(messageList)
-                        const message = doc.data()
-                        messageList[id].id = doc.id
-                        promises.push(
-                            firebase.firestore().doc('users/' + message.user).get()
-                                .then(snapshot => {
-                                    messageList[id].user = snapshot.data().info.nickname
-                                    messageList[id].position = 'left'
-                                    messageList[id].replies = commentsRef.doc(doc.id).collection('replies')
-                                    if (messageList[id].timestamp == null) {
-                                        messageList[id].timestamp = firebase.firestore.Timestamp.now()
-                                    }
-                                    messageList[id].position = 'left'
-                                    // messageList[id].replies = commentsRef.doc(doc.id).collection('replies')
-                                    messageList[id].timestamp = messageList[id].timestamp.toDate()
-                                    messageList[id]._id = id
-                                    messageList[id].createdAt = messageList[id].timestamp
-                                    messageList[id].text = messageList[id].content
-                                    messageList[id].user = {
-                                        _id: snapshot.data().id,
-                                        name: snapshot.data().info.nickname,
-                                        avatar: snapshot.data().info.profileImage
-                                    }
-                                    // console.log(messageList[id].user._id, user.id)
-                                })
-                        )
-                        // const snapshot = await message.user.get()
-                        // messageList[id].user = snapshot.data().info.nickname
-                        // messageList[id].replies = commentsRef.doc(doc.id).collection('replies')
-                        // if (messageList[id].timestamp == null) {
-                        //     messageList[id].timestamp = firebase.firestore.Timestamp.now();
-                        // }
-                    })
-                    Promise.all(promises).then(() => {setMessages(messageList)})
-                })
-        }
-    
-        function sendMessage(inputText, clearInput) {
-            if (inputText && inputText.length > 0) {
-                const data = {
-                    user: user.id,
-                    content: inputText,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                }
-                commentsRef.add(data)
-                    .then(_doc => {
-                        Keyboard.dismiss()
-                    })
-                    .catch((error) => {
-                        alert(error)
-                    })
-            }
-            clearInput({}, true)
-        }
-    
-        useEffect(() => {
-            loadMessages()
-        }, [])
-    
-        const renderBubble = ({user, currentMessage}) => {
-            const message = {
-                user: currentMessage.user.name,
-                timestamp: currentMessage.createdAt,
-                content: currentMessage.text,
-                position: currentMessage.position
-            }
-            return (
-                <CommentBubble {...message} />
-            )
-        }
-    
-      const renderAvatar = ({currentMessage}) => {
-        //   console.log(currentMessage)
-            return <ProfileImage url={currentMessage.user.avatar} />
-      }
-    
+    function loadMessages() {
+        firebase.firestore().collection('behavior').where('user','==', user.id).where('article', '==', article.id).get().then(querySnapshot => {
+            let data = querySnapshot.docs[0].data()
+            console.log(data.stats.like)
+            setLiked(data.stats.like)
+        })
+        commentsRef.orderBy('timestamp').onSnapshot(querySnapshot => {
+        // commentsRef.orderBy('timestamp').get().then(querySnapshot => {
+            const messageList = []
+            let promises = []
+            querySnapshot.forEach(async doc => {
+                const id = messageList.push(doc.data()) -1
+                // console.log(messageList)
+                const message = doc.data()
+                messageList[id].id = doc.id
+                promises.push(
+                    firebase.firestore().doc('users/' + message.user).get()
+                        .then(snapshot => {
+                            messageList[id].user = snapshot.data().info.nickname
+                            messageList[id].position = 'left'
+                            messageList[id].replies = commentsRef.doc(doc.id).collection('replies')
+                            if (messageList[id].timestamp == null) {
+                                messageList[id].timestamp = firebase.firestore.Timestamp.now()
+                            }
+                            messageList[id].position = 'left'
+                            // messageList[id].replies = commentsRef.doc(doc.id).collection('replies')
+                            messageList[id].timestamp = messageList[id].timestamp.toDate()
+                            messageList[id]._id = id
+                            messageList[id].createdAt = messageList[id].timestamp
+                            messageList[id].text = messageList[id].content
+                            messageList[id].user = {
+                                _id: snapshot.data().id,
+                                name: snapshot.data().info.nickname,
+                                avatar: snapshot.data().info.profileImage
+                            }
+                            // setMessages(messageList)
+                            // console.log(messageList[id].user._id, user.id, messageList[id].text)
+                        })
+                )
+                // const snapshot = await message.user.get()
+                // messageList[id].user = snapshot.data().info.nickname
+                // messageList[id].replies = commentsRef.doc(doc.id).collection('replies')
+                // if (messageList[id].timestamp == null) {
+                //     messageList[id].timestamp = firebase.firestore.Timestamp.now();
+                // }
+            })
+            Promise.all(promises).then(() => {
+                setMessages(messageList)
+                // console.log('complete')
+            })
+        })
+    }
+
     useEffect(() => {
+        loadMessages()
         loadSource()
     }, [])
 
@@ -174,6 +145,52 @@ export default function ArticleScreen(props) {
 
     return (
         <SafeAreaView style={stylesheet.container}>
+            <View style={{ flex: 1, }}>{(article.meta.url && article.meta.url != '') ? 
+                <WebView source={{ uri: article.meta.url }} />
+                :
+                <ScrollView style={stylesheet.scrollView}>
+                    <View style={stylesheet.articleContainer}>
+                        <Text style={stylesheet.articleTitle}>
+                            {article.title}
+                        </Text>
+                        <View style={{flexDirection: 'row'}}>
+                            <Text style={[stylesheet.textS, {marginRight: 6}]}>
+                                {source + ' @ '}
+                                {time(article.publishedAt).format('YYYY/M/D h:mm a')}
+                            </Text>
+                            { Chips }
+                        </View>
+                        <RenderHtml
+                            source={{html: content}}
+                            tagsStyles={htmlStyles}
+                            contentWidth={useWindowDimensions().width - 40}
+                        />
+                    </View>
+                    {user.verification && user.verification.status == true ?
+                    <View>
+                        <View style={stylesheet.borderBottom}></View>
+                        <Text style={{...stylesheet.headerText, marginVertical: 12}}>留言區</Text>
+                        <FlatList
+                            data={messages}
+                            renderItem={({item}) => {
+                                const message = {
+                                    currentMessage: item,
+                                    user: item.user.name,
+                                    profileImage: item.user.avatar,
+                                    timestamp: item.createdAt,
+                                    content: item.text,
+                                    position: item.position
+                                }
+                                return <Comment {...message} />
+                            }}
+                            keyExtractor={(item, index) => index.toString()}
+                        />
+                    </View>
+                    : null}
+                </ScrollView>
+            }
+       
+            </View>
             {(article.meta.url && article.meta.url != '') ? 
                 <WebView source={{ uri: article.meta.url }} />
             :
