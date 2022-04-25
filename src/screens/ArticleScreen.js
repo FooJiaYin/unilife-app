@@ -16,22 +16,23 @@ import { tagNames } from '../firebase/functions'
 export default function ArticleScreen(props) {
 
     const article = props.route.params.article
-    const user = props.user.data()
+    let user = props.user.data()
     const storageRef = firebase.storage().ref()
     const commentsRef = firebase.firestore().collection('articles').doc(article.id).collection('comments')
 
     const [content, setContent] = useState(article.content)
     const [messages, setMessages] = useState([])
-    const [inputText, setInputText] = useState([])
+    const [source, setSource] = useState(article.meta.source)
 
     const options = {
-        title: article.meta.source,
+        title: source,
         headerLeft: 'back',
         headerRight: {
             icon: 'chat',
             size: 18,
             onPress: () => {
                 firebase.firestore().doc('users/' + user.id).get().then(snapshot => {
+                    user = snapshot.data()
                     const verification = snapshot.data().verification
                     if (verification && verification.status == true) {
                         props.navigation.navigate('Comment', {article: article, commentsRef: commentsRef})
@@ -69,6 +70,15 @@ export default function ArticleScreen(props) {
             }
             setContent(newContent)
         })
+    
+    function loadSource() {
+        if (source == '社群貼文') {
+            firebase.firestore().doc('users/' + article.publishedBy).get().then(snapshot => {
+                setSource(snapshot.data().info.nickname)
+                setHeaderOptions(props.navigation, options)
+            })
+        }
+    }
 
         function loadMessages() {
             commentsRef.orderBy('timestamp', 'desc')//.limit(20)
@@ -153,8 +163,9 @@ export default function ArticleScreen(props) {
             return <ProfileImage url={currentMessage.user.avatar} />
       }
     
-    //   const renderSend = ({text}) => <SendButton input={text} onSend={sendMessage}/>
-      const renderSend = ({text, onSend}) => <SendButton input={text} onSend={() => sendMessage(text, onSend)} />
+    useEffect(() => {
+        loadSource()
+    }, [])
 
       const Chips = []
       for (const tag of (article.tags || [])) {
