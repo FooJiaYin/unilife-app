@@ -51,7 +51,7 @@ export default function VerificationScreen(props) {
                     uid: user.id,
                     code: code
                 })
-                Alert.alert('驗證連結已發送',  `請到 ${verification.email} 收取驗證信，並點擊信内的連接進行驗證。\r\n如未收到信件，請至垃圾郵件檢查。`)
+                Alert.alert('感謝您提供驗證信箱',  `您可以開始使用UniLife！\r\n驗證信將於5-10分鐘内發送至 ${verification.email}，請點擊信内的連接進行驗證。如未收到信件，請至垃圾郵件檢查。`)
             }
         } else {
             Linking.openURL("https://supr.link/RWZbE")
@@ -62,7 +62,7 @@ export default function VerificationScreen(props) {
         if(verification.type == 'file') {
             props.navigation.navigate('Tabs', {user: user})
         } else if(verification.type == '') {
-            Alert.alert('未完成身份驗證', "您將無法使用留言及聊天功能。確定要先跳過驗證步驟嗎？", [
+            Alert.alert('未完成身份驗證', "您將無法使用聊天、發文及留言功能。確定要先跳過驗證步驟嗎？\r\n如果已經提供驗證信箱或是上傳證明文件，請直接點選「跳過驗證」開始使用。", [
                 {
                     text: "跳過驗證",
                     onPress: () => props.navigation.navigate('Tabs', {user: user}),
@@ -77,7 +77,7 @@ export default function VerificationScreen(props) {
                 if (status == true) {
                     props.navigation.navigate('Tabs', {user: user})
                 } else {
-                    Alert.alert('未完成身份驗證', "您將無法使用留言及聊天功能。確定要先跳過驗證步驟嗎？", [
+                    Alert.alert('未完成身份驗證', "您將無法使用聊天、發文及留言功能。確定要先跳過驗證步驟嗎？\r\n如果已經提供驗證信箱或是上傳證明文件，請直接點選「跳過驗證」開始使用。", [
                         {
                             text: "跳過驗證",
                             onPress: () => props.navigation.navigate('Tabs', {user: user}),
