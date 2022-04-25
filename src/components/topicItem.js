@@ -31,7 +31,7 @@ export function TopicItem ({item, index, onPress=()=>null, initSelected=false}){
     // console.log(topicItemStyle)
     return(
         <TouchableOpacity style={topicItemStyle.topicItem} onPress={()=>{
-            onPress(index,setSelected)
+            onPress(index, setSelected)
         }}
         >
             <Image style={[topicItemStyle.cover, {zIndex:1}]} source={Asset(`topic-${index+1}`)}/>

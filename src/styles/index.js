@@ -1,2 +1,2 @@
-export { styles, stylesheet } from './styles'
+export { styles, stylesheet, htmlStyles } from './styles'
 export { Color } from './color'

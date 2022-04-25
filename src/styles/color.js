@@ -26,8 +26,9 @@ export const color = {
         color: Color.grey0
     },
     textGrey: {
-        color: Color.grey0,
-        opacity: 0.5
+        color: "#aaa",
+        // color: Color.grey0,
+        // opacity: 0.5
     },
     textGrey2: {
         color: Color.grey0,

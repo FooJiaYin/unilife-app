@@ -10,8 +10,8 @@ import { useFocusEffect } from "@react-navigation/native";
 import { StickedBg, ExpandCard } from '../components/decorative'
 import { HomeShortcutItem, ShortcutEditModal } from '../components/shortcutItem'
 import * as copilot from '../components/guide'
-import * as WebBrowser from 'expo-web-browser';
-import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+import * as WebBrowser from 'expo-web-browser'
+import { TabView, SceneMap, TabBar } from 'react-native-tab-view'
 import { set } from 'react-native-reanimated'
 import { Chip } from '../components/chip'
 import { tagNames, featuredTags } from '../firebase/functions'
@@ -27,9 +27,10 @@ export function ArticleTabs({articles, ...props}) {
       { key: 'news', title: '精選内容' },
     ]);
 
-    const articleListItem = (itemProps) => 
-        <ListItem {...itemProps} props={props}
-            onPress={() => openArticle(itemProps.item) } 
+    const articleListItem = (itemProps) => {
+        // console.log('uid', props.user.id)
+        return <ListItem {...itemProps} props={props}
+            onPress={openArticle} 
             onButtonPress={() => toggleSaveArticle(itemProps.item)}
         />
     }
@@ -139,7 +140,7 @@ export function ArticleTabs({articles, ...props}) {
         firebase.firestore().doc('articles/' + article.id).update({
             stats: {
                 ...article.stats,
-                read: action == 'read'? article.stats.read + 1 : article.stats.read,
+                readTimes: action == 'read'? article.stats.readTimes + 1 : article.stats.readTimes,
                 save: action == 'unsave'? article.stats.save - 1 : action == 'save'? article.stats.save + 1 : article.stats.save,
                 comment: action == 'comment'? article.stats.comment + 1 : article.stats.comment,
             }
@@ -148,6 +149,7 @@ export function ArticleTabs({articles, ...props}) {
 
     function openArticle(article) {
         setBehavior(article, 'read')
+        // if (article.type=='banner') WebBrowser.openBrowserAsync(article.meta.url)
         props.navigation.navigate('Article', {article: article})
     }
 
@@ -224,7 +226,6 @@ export function HomeScreen(props) {
     // }
     
     async function loadArticles() {
-        // console.log("community", user.community)
         // console.log("identity", user.identity.community)
         let snapshot = await props.user.ref.get()
         user = await snapshot.data()
@@ -390,7 +391,7 @@ export function HomeScreen(props) {
                         if(!user.recommendation.includes(articleId)) {
                             firebase.firestore().collection('behavior').add({
                                 user: user.id,
-                                article: articleSnapshot.id,
+                                article: articleId,
                                 stats: {
                                     unread: true,
                                     read: 0,
@@ -482,9 +483,9 @@ export function HomeScreen(props) {
             // props.start()
         }
         if (!user.shortcuts) {
-        snapshot = await firebase.firestore().doc('communities/' + user.identity.community).get()
-        let data = await snapshot.data()
-        setMyShortcuts(data.shortcuts)
+            snapshot = await firebase.firestore().doc('communities/' + user.identity.community).get()
+            let data = await snapshot.data()
+            setMyShortcuts(data.shortcuts)
         } else {
             setMyShortcuts(user.shortcuts)
         }

@@ -46,10 +46,8 @@ export const formStyles = StyleSheet.create({
 
 export function Button({ title, onPress, style, titleStyle }) {
     return (
-        <TouchableOpacity onPress={onPress}>
-            <View style={[formStyles.button, style]}>
-                <Text style={[formStyles.buttonTitle, titleStyle]}>{title}</Text>
-            </View>
+        <TouchableOpacity onPress={onPress} style={[formStyles.button, style]}>
+            <Text style={[formStyles.buttonTitle, titleStyle]}>{title}</Text>
         </TouchableOpacity>
     )
 }
@@ -58,7 +56,7 @@ export function Input({right, ...props}) {
     return (
         <View style={formStyles.inputRow}>
             <TextInput 
-                style={formStyles.inputText} 
+                style={formStyles.inputText}
                 placeholderTextColor="#aaaaaa" 
                 underlineColorAndroid="transparent"
                 autoCapitalize="none"
@@ -74,7 +72,7 @@ export function PasswordInput(props) {
     const [showPassword, setPasswordVisible] = useState(false)
 
     return (
-        <View style={[formStyles.inputRow, {paddingHorizontal: 0}]}>
+        <View style={[formStyles.inputRow, {paddingRight: 0, paddingLeft: 16}]}>
             <TextInput 
                 style={formStyles.inputText} 
                 secureTextEntry={!showPassword}
