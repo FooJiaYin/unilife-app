@@ -22,8 +22,8 @@ export function ArticleTabs({articles, ...props}) {
     const [index, setIndex] = React.useState(0);
     const [routes] = React.useState([
       { key: 'all', title: '所有文章' },
-      { key: 'announcement', title: '最新公告' },
-      { key: 'local', title: '社群資訊' },
+      { key: 'announcement', title: '社群公告' },
+      { key: 'local', title: '在地生活' },
       { key: 'news', title: '精選内容' },
     ]);
 
