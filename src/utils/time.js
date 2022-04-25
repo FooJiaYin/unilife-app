@@ -36,6 +36,7 @@ class Time {
     }
     from = (date, string = '') => {
         if(string == '') return this.now.from(date.now)
+        if(string == 'en') return this.now.from(date.now).replace(' 秒前', 's').replace(' 分鐘前', 'm').replace(' 小時前', 'h').replace(' 天前', 'd').replace(' 週前', 'w').replace(' 個月前', 'mo').replace(' 年前', 'y')
         let duration = {
             days: this.now.diff(date.now, 'days'),
             hours: this.now.diff(date.now, 'hours'),

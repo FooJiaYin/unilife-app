@@ -11,20 +11,71 @@ import { NavigationContainer, CommonActions } from '@react-navigation/native';
 
 export function ListItem({ item, onPress, style, onButtonPress, props, chipAction }) {
     const [ isSaved, setIsSaved ] = useState(item.isSaved)
-    const [ imageUrl, setImageUrl ] = useState('')
+    const [ isLiked, setIsLiked ] = useState(false)
+    const [ imageUrl, setImageUrl ] = useState(item.images && item.images.src ? item.images.src : '')
+    const [ stats, setStats ] = useState(item.stats)
+    const [ data, setData ] = useState({
+        meta: {},
+        tags: [],
+        ...item
+    })
  // console.log(item.id, isSaved)
     const storageRef = firebase.storage().ref()
 
     useEffect(() => {
+        // loadArticle_old()
+        console.log(item.id)
+        loadArticle_new(item.id)
+    }, [])
+
+    function loadArticle_old() {
         if(item.images && item.images.src && item.images.src!='') {
             // console.log(item.images.src)    
             setImageUrl(item.images.src) 
         } else {
-            storageRef.child('articles/' + item.id + '/images/' + item.meta.coverImage).getDownloadURL().then((url) => {
+            if(item.meta.coverImage) storageRef.child('articles/' + item.id + '/images/' + item.meta.coverImage).getDownloadURL().then((url) => {
                 setImageUrl(url)
             })
         }
-    }, [])
+        firebase.firestore().doc('articles/' + item.id).get().then(snapshot => {
+            const stats = snapshot.data().stats
+            setStats(stats)
+        })
+        if (props.user.id && item.id) {
+            // setIsLiked(true)
+            firebase.firestore().collection('behavior').where('user', '==', props.user.id).where('article', '==', item.id).where('stats.like', '==', true).get().then(querySnapshot => {
+                if(querySnapshot.docs.length > 0) {
+                    setIsLiked(true)
+                }
+            })
+        }
+    }
+
+    function loadArticle_new(articleId) {
+        firebase.firestore().doc('articles/' + articleId).get().then(snapshot => {
+            const data = snapshot.data()
+            const stats = snapshot.data().stats
+            setStats(stats)
+            setData(data)
+            
+            if(data.images && data.images.src && data.images.src!='') {
+                // console.log(item.images.src)    
+                setImageUrl(data.images.src) 
+            } else {
+                if(data.meta.coverImage) storageRef.child('articles/' + data.id + '/images/' + data.meta.coverImage).getDownloadURL().then((url) => {
+                    setImageUrl(url)
+                })
+            }
+            if (props.user.id && articleId) {
+                // setIsLiked(true)
+                firebase.firestore().collection('behavior').where('user', '==', props.user.id).where('article', '==', articleId).where('stats.like', '==', true).get().then(querySnapshot => {
+                    if(querySnapshot.docs.length > 0) {
+                        setIsLiked(true)
+                    }
+                })
+            }
+        })
+    }
 
     const listItemStyle = StyleSheet.create({
         container: {
@@ -41,11 +92,16 @@ export function ListItem({ item, onPress, style, onButtonPress, props, chipActio
             height: 100,
             borderRadius: 6,
         },
+        imageFull: {
+            flex: 1,
+            height: 100,
+            borderRadius: 6,
+        },
         textContainer: {
             flexDirection: 'column',
             flexShrink: 1,
             flexGrow: 1,
-            paddingLeft: 16,
+            paddingLeft: 2,
             height: 100,
         },
         title: {
@@ -107,13 +163,17 @@ export function ListItem({ item, onPress, style, onButtonPress, props, chipActio
         // setDescriptionLines(4 - e.nativeEvent.lines.length)
     }
 
-    const Chips = []
-    for (const tag of (item.tags || [])) {
-          Chips.push(<Chip label={tagNames[tag]} type={'tag'} action={chipAction? ()=> chipAction('tag', tag) : ()=>props.navigation.navigate('Filter', {type: 'tag', data: tag}) } />)
-    }
+    const Chips = ({tags}) => <View
+        style={{flexDirection: 'row'}}>
+        {tags.map(tag => <Chip 
+            label={tagNames[tag]} 
+            type={'tag'} 
+            action={chipAction? ()=> chipAction('tag', tag) : ()=>props.navigation.navigate('Filter', {type: 'tag', data: tag}) }
+        />)}
+    </View>
 
     return (
-        <TouchableOpacity onPress={onPress} >
+        <TouchableOpacity onPress={()=>onPress(data)} >
             {/* <OptionOverlay
                 visible={showOption}
                 options={optionItems}
@@ -121,44 +181,55 @@ export function ListItem({ item, onPress, style, onButtonPress, props, chipActio
             /> */}
             
             <View style={style? [listItemStyle.container, style.container] : listItemStyle.container}>
-                <Image style={style? [listItemStyle.image, style.image] : listItemStyle.image} source={(item.category=='announcement' && item.tags && imageUrl == '')? Asset(item.tags[0]) : {uri: imageUrl}}/>
+                { data.category=='announcement' || imageUrl != '' ? 
+                    <Image 
+                        style={data.type == 'banner'? listItemStyle.imageFull : listItemStyle.image} 
+                        source={(data.category=='announcement' && data.tags && imageUrl == '')? Asset(data.tags[0]) : {uri: imageUrl}}
+                    /> : null 
+                }
                 {/* <Image style={style? [listItemStyle.image, style.image] : listItemStyle.image} source={ {uri: imageUrl}}/> */}
-                <View style={style? [listItemStyle.textContainer, style.textContainer] : listItemStyle.textContainer}>
-                    <Text style={style? [listItemStyle.title, style.title] : listItemStyle.title}
-                        onTextLayout={(e) => onTextLayout(e)}
-                        numberOfLines={2}
-                        ellipsizeMode={"tail"}>
-                        {item.title}
-                    </Text>
-                    <Text style={style? [listItemStyle.description, style.description] : listItemStyle.description}
-                        numberOfLines={2}
-                        // onLayout={(e) => setDescriptionLines(e.nativeEvent.layout.height > 34 ? 2 : 1)}
-                        ellipsizeMode={"tail"}>
-                        {item.meta.abstract}
-                    </Text>
-                    <View style={style? [listItemStyle.bottom, style.bottom] : listItemStyle.bottom}>
-                        {/* (for tags of item.tags) */}
-                        {/* <copilot.Step
-                            text="報你知與你有關的校園資訊，或是你可能會感興趣的資訊～"
-                            order={5}
-                            name="article"
-                            >
-                        <copilot.View> */}
-                        { Chips }
-                        {/* </copilot.View>
-                        </copilot.Step> */}
-                        <Text style={style? [listItemStyle.bottomText, style.bottomText] : listItemStyle.bottomText}>
-                            {time(item.publishedAt).fromNow()}
+                { data.type=='banner' && data.title == '' ? null : 
+                    <View style={[listItemStyle.textContainer, style? style.textContainer : null, (data.category=='announcement' || imageUrl != '')? { paddingLeft: 16 } : null ]}>
+                        <Text style={style? [listItemStyle.title, style.title] : listItemStyle.title}
+                            onTextLayout={(e) => onTextLayout(e)}
+                            numberOfLines={2}
+                            ellipsizeMode={"tail"}>
+                            {data.title}
                         </Text>
-                        {/* <Icon size={14} name="bookmark" style={style? style.bottomIcon : {}}/> */}
-                        <TouchableOpacity onPress={() => handleButtonPress()} style={listItemStyle.bottomIcon}>
-                            <Image source={Asset(isSaved? `bookmark-active` : `bookmark`)} style={[iconStyle]} />
-                        </TouchableOpacity>
-                        {/* <TouchableOpacity onPress={() => setShowOption(true)} style={listItemStyle.bottomIcon}>
-                            <Image source={Asset('option')} style={[iconStyle]} />
-                        </TouchableOpacity> */}
+                        <Text style={style? [listItemStyle.description, style.description] : listItemStyle.description}
+                            numberOfLines={2}
+                            // onLayout={(e) => setDescriptionLines(e.nativeEvent.layout.height > 34 ? 2 : 1)}
+                            ellipsizeMode={"tail"}>
+                            {data.meta.abstract}
+                        </Text>
+                        <View style={[style? style.bottom : null, listItemStyle.bottom]}>
+                            {/* (for tags of data.tags) */}
+                            {/* <copilot.Step
+                                text="報你知與你有關的校園資訊，或是你可能會感興趣的資訊～"
+                                order={5}
+                                name="article"
+                                >
+                            <copilot.View> */}
+                            <Chips tags={data.tags} />
+                            {/* </copilot.View>
+                            </copilot.Step> */}
+                            <Text style={style? [listItemStyle.bottomText, style.bottomText] : listItemStyle.bottomText}>
+                                {time(data.publishedAt).fromNow('en')}
+                            </Text>
+                            {/* <Icon size={14} name="bookmark" style={style? style.bottomIcon : {}}/> */}
+                            <TouchableOpacity onPress={() => {}} style={{...listItemStyle.bottomIcon, flexDirection: 'row'}}>
+                                <Image source={Asset(isLiked? `love-active` : `love`)} style={[iconStyle]} />
+                                <Text style={[style? style.bottomText: null, listItemStyle.bottomText, {flex: 0, marginLeft: 4}]}>{stats && stats.like? stats.like : 0 }</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => handleButtonPress()} style={listItemStyle.bottomIcon}>
+                                <Image source={Asset(isSaved? `bookmark-active` : `bookmark`)} style={[iconStyle]} />
+                            </TouchableOpacity>
+                            {/* <TouchableOpacity onPress={() => setShowOption(true)} style={listItemStyle.bottomIcon}>
+                                <Image source={Asset('option')} style={[iconStyle]} />
+                            </TouchableOpacity> */}
+                        </View> 
                     </View>
-                </View>
+                }
             </View>
         </TouchableOpacity>
     )

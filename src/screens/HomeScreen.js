@@ -250,6 +250,7 @@ export function HomeScreen(props) {
                                         max: 0.0,
                                     },
                                     save: false,
+                                    like: false,
                                     share: 0,
                                     comment: 0,
                                     report: 0
