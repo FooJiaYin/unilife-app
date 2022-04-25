@@ -6,7 +6,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 // import { DateTimePicker } from 'react-native-ui-lib/DateTimePicker'
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Button, Select } from '../components/forms'
-
+import * as WebBrowser from 'expo-web-browser';
 import styles from '../styles/profileStyles'
 import { firebase } from '../firebase/config'
 import Asset from '../components/assets'
@@ -344,6 +344,9 @@ export default function ProfileScreen(props) {
                         onPress={() => signOut()} 
                         title='登出'
                     />
+                    <View style={stylesheet.footerView}>
+                            <Text onPress={()=>WebBrowser.openBrowserAsync('https://supr.link/znUbr')} style={stylesheet.footerLink}>聯繫客服</Text>
+                    </View>
                     
                 </View>
                 <DateTimePickerModal
