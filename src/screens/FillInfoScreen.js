@@ -69,7 +69,7 @@ export default function FillInfoScreen(props) {
             })
         })
         setOptions({...options, departments: newDepartments})
-        console.log(newDepartments)
+        // console.log(newDepartments)
         // console.log(departments)
     }
 
@@ -135,30 +135,30 @@ export default function FillInfoScreen(props) {
             Alert.alert('', "請設定姓名")
             return
         }
-        if (!info.nickname || info.nickname == '') {
-            Alert.alert('', "請設定暱稱")
-            return
-        }
-        if (!info.birthday) {
-            Alert.alert('', "請設定生日日期")
-            return
-        }
-        if (!info.gender || info.gender == '') {
-            Alert.alert('', "請選擇性別")
-            return
-        }
-        if (!identity.department || identity.department == '') {
-            Alert.alert('', "請選擇系所")
-            return
-        }
-        if (!identity.degree || identity.degree == '') {
-            Alert.alert('', "請選擇學位")
-            return
-        }
-        if (!identity.grade || identity.grade == '') {
-            Alert.alert('', "請選擇年級")
-            return
-        }
+        // if (!info.nickname || info.nickname == '') {
+        //     Alert.alert('', "請設定暱稱")
+        //     return
+        // }
+        // if (!info.birthday) {
+        //     Alert.alert('', "請設定生日日期")
+        //     return
+        // }
+        // if (!info.gender || info.gender == '') {
+        //     Alert.alert('', "請選擇性別")
+        //     return
+        // }
+        // if (!identity.department || identity.department == '') {
+        //     Alert.alert('', "請選擇系所")
+        //     return
+        // }
+        // if (!identity.degree || identity.degree == '') {
+        //     Alert.alert('', "請選擇學位")
+        //     return
+        // }
+        // if (!identity.grade || identity.grade == '') {
+        //     Alert.alert('', "請選擇年級")
+        //     return
+        // }
         if (password.length < 6) {
             Alert.alert('', "密碼長度不足")
             return
@@ -247,7 +247,7 @@ export default function FillInfoScreen(props) {
                         autoCapitalize="none"
                         onChangeText={(input) => setInfo({ ...info, name: input })}
                     />
-                    <TextInput
+                    {/* <TextInput
                         style={stylesheet.input}
                         defaultValue={info.nickname}
                         placeholder='暱稱'
@@ -294,7 +294,7 @@ export default function FillInfoScreen(props) {
                         items={options.grade}
                         onChange={(input) => setIdentity({ ...identity, grade: input })}
                         placeholder='請選擇年級...'
-                    /> 
+                    />  */}
                     {/* <View style={[stylesheet.input, {justifyContent: 'center'}]}>
                         <Picker
                             selectedValue={''}

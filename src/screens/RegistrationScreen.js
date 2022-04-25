@@ -61,7 +61,7 @@ export default function RegistrationScreen(props) {
         let querySnapshot = await firebase.firestore().collection('communities').get()
         let newCommunities = await[]
         querySnapshot.forEach(snapshot => {
-			if (snapshot.id != 'test' && snapshot.id != 'all') {
+			if (snapshot.id != 'test' && snapshot.id != 'all' && snapshot.id != 'demo') {
 				newCommunities.push({
 					value: snapshot.id,
 					label: snapshot.data().name
@@ -69,7 +69,7 @@ export default function RegistrationScreen(props) {
 			}
         })
         setOptions({...options, communities: newCommunities})
-        console.log(newCommunities)
+        // console.log(newCommunities)
         // console.log(departments)
     }
 
@@ -83,7 +83,7 @@ export default function RegistrationScreen(props) {
             })
         })
         setOptions({...options, departments: newDepartments})
-        console.log(newDepartments)
+        // console.log(newDepartments)
         // console.log(departments)
     }
 
@@ -158,34 +158,34 @@ export default function RegistrationScreen(props) {
             Alert.alert('', "請設定姓名")
             return
         }
-        if (!info.nickname || info.nickname == '') {
-            Alert.alert('', "請設定暱稱")
-            return
-        }
-        if (!info.birthday) {
-            Alert.alert('', "請設定生日日期")
-            return
-        }
-        if (!info.gender || info.gender == '') {
-            Alert.alert('', "請選擇性別")
-            return
-        }
+        // if (!info.nickname || info.nickname == '') {
+        //     Alert.alert('', "請設定暱稱")
+        //     return
+        // }
+        // if (!info.birthday) {
+        //     Alert.alert('', "請設定生日日期")
+        //     return
+        // }
+        // if (!info.gender || info.gender == '') {
+        //     Alert.alert('', "請選擇性別")
+        //     return
+        // }
         if (!identity.community || identity.community == '') {
             Alert.alert('', "請選擇學校")
             return
         }
-        if (!identity.department || identity.department == '') {
-            Alert.alert('', "請選擇系所")
-            return
-        }
-        if (!identity.degree || identity.degree == '') {
-            Alert.alert('', "請選擇學位")
-            return
-        }
-        if (!identity.grade || identity.grade == '') {
-            Alert.alert('', "請選擇年級")
-            return
-        }
+        // if (!identity.department || identity.department == '') {
+        //     Alert.alert('', "請選擇系所")
+        //     return
+        // }
+        // if (!identity.degree || identity.degree == '') {
+        //     Alert.alert('', "請選擇學位")
+        //     return
+        // }
+        // if (!identity.grade || identity.grade == '') {
+        //     Alert.alert('', "請選擇年級")
+        //     return
+        // }
         if (password.length < 6) {
             Alert.alert('', "密碼長度不足")
             return
@@ -271,16 +271,16 @@ export default function RegistrationScreen(props) {
                         placeholderTextColor="#aaaaaa"
                         underlineColorAndroid="transparent"
                         autoCapitalize="none"
-                        onChangeText={(input) => setInfo({ ...info, name: input })}
+                        onChangeText={(input) => setInfo({ ...info, name: input, nickname: input })}
                     />
-                    <TextInput
+                    {/* <TextInput
                         style={stylesheet.input}
                         placeholder='暱稱'
                         placeholderTextColor="#aaaaaa"
                         underlineColorAndroid="transparent"
                         autoCapitalize="none"
                         onChangeText={(input) => setInfo({ ...info, nickname: input })}
-					/>
+					/> 
                     <TextInput
                         style={stylesheet.input}
                         // defaultValue={time(info.birthday).format('YYYY-MM-DD') || ''}
@@ -301,7 +301,7 @@ export default function RegistrationScreen(props) {
                         items={options.gender}
                         onChange={(input) => setInfo({ ...info, gender: input })}
                         placeholder='請選擇生理性別...'
-                    />
+                    /> */}
                     <Select 
                         // value={identity.department} 
                         items={options.communities}
@@ -311,7 +311,7 @@ export default function RegistrationScreen(props) {
 						}}
                         placeholder='請選擇學校...'
                     />
-                    <Select 
+                    {/* <Select 
                         // value={identity.department} 
                         items={options.departments}
                         onChange={(input) => setIdentity({ ...identity, department: input })}
@@ -328,7 +328,7 @@ export default function RegistrationScreen(props) {
                         items={options.grade}
                         onChange={(input) => setIdentity({ ...identity, grade: input })}
                         placeholder='請選擇年級...'
-                    /> 
+                    />  */}
                     <PasswordInput
                         placeholder='密碼（至少6字元）'
                         onChangeText={(text) => setPassword(text)}

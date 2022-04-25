@@ -61,7 +61,7 @@ export default function ProfileScreen(props) {
         const snapshot = await firebase.firestore().doc('config/options').get()
         const newOptions = await snapshot.data()
         setOptions(newOptions)
-        console.log(newOptions)
+        // console.log(newOptions)
     }
 
     async function loadDepartments(community) {
@@ -74,7 +74,7 @@ export default function ProfileScreen(props) {
             })
         })
         setOptions({...options, departments: newDepartments})
-        console.log(newDepartments)
+        // console.log(newDepartments)
         // console.log(departments)
     }
 
@@ -92,17 +92,12 @@ export default function ProfileScreen(props) {
 
     const updateUserData = async () => {
         // console.log(identity)
-        if (!identity.grade || isNaN(identity.grade)) {
-            // console.log(identity.grade)
-            Alert.alert('', "請設定年級為數字（例：1）")
-            return
-        }
         await props.user.ref.update({
             info: info,
-            identity: {
+            identity: identity.grade? {
                 ...identity,
                 grade: Number(identity.grade),
-            }
+            } : identity,
         })
     }
 
@@ -115,26 +110,26 @@ export default function ProfileScreen(props) {
             Alert.alert('', "請設定暱稱")
             return
         }
-        if (!info.birthday) {
-            Alert.alert('', "請設定生日日期")
-            return
-        }
-        if (!info.gender || info.gender == '') {
-            Alert.alert('', "請選擇性別")
-            return
-        }
-        if (!identity.degree || identity.degree == '') {
-            Alert.alert('', "請選擇學位")
-            return
-        }
-        if (!identity.department || identity.department == '') {
-            Alert.alert('', "請選擇系所")
-            return
-        }
-        if (!identity.grade || identity.grade == '') {
-            Alert.alert('', "請選擇年級")
-            return
-        }
+        // if (!info.birthday) {
+        //     Alert.alert('', "請設定生日日期")
+        //     return
+        // }
+        // if (!info.gender || info.gender == '') {
+        //     Alert.alert('', "請選擇性別")
+        //     return
+        // }
+        // if (!identity.degree || identity.degree == '') {
+        //     Alert.alert('', "請選擇學位")
+        //     return
+        // }
+        // if (!identity.department || identity.department == '') {
+        //     Alert.alert('', "請選擇系所")
+        //     return
+        // }
+        // if (!identity.grade || identity.grade == '') {
+        //     Alert.alert('', "請選擇年級")
+        //     return
+        // }
         updateUserData()
     }
 
@@ -267,64 +262,6 @@ export default function ProfileScreen(props) {
                         onChange={(input) => setIdentity({ ...identity, grade: input })}
                         placeholder='請選擇年級...'
                     />
-                    {/* <View style={[stylesheet.input, {justifyContent: 'center'}]}>
-                        <Picker
-                            selectedValue={identity.department}
-                            onValueChange={(itemValue, itemIndex) =>{
-                                setIdentity({ ...identity, department: itemValue })
-                            }}
-                            style={{padding: 0, margin: -10}}
-                            // mode="dropdown"
-                        >
-                            <Picker.Item label="請選擇系所..." value="" />
-                            {options.departments && options.departments.map((department, i)=>
-                                <Picker.Item label={department.label} value={department.value} />
-                            )}
-                        </Picker> 
-                    </View>  
-                    <View style={[stylesheet.input, {justifyContent: 'center'}]}>
-                        <Picker
-                            selectedValue={identity.degree}
-                            onValueChange={(itemValue, itemIndex) =>{
-                                setIdentity({ ...identity, degree: itemValue })
-                            }}
-                            style={{padding: 0, margin: -10}}
-                            // mode="dropdown"
-                        >
-                            <Picker.Item label="請選擇學位..." value="" />
-                            <Picker.Item label="大學部" value="bachelor" />
-                            <Picker.Item label="碩士班" value="master" />
-                            <Picker.Item label="博士班" value="phd" />
-                        </Picker> 
-                    </View> 
-                    <View style={[stylesheet.input, {justifyContent: 'center'}]}>
-                        <Picker
-                            selectedValue={identity.grade}
-                            onValueChange={(itemValue, itemIndex) =>{
-                                setIdentity({ ...identity, grade: itemValue })
-                            }}
-                            style={{padding: 0, margin: -10}}
-                            // mode="dropdown"
-                        >
-                            <Picker.Item label="請選擇年級..." value="" />
-                            <Picker.Item label="1" value={1} />
-                            <Picker.Item label="2" value={2} />
-                            <Picker.Item label="3" value={3} />
-                            <Picker.Item label="4" value={4} />
-                            <Picker.Item label="5" value={5} />
-                            <Picker.Item label="6" value={6} />
-                            <Picker.Item label="7" value={7} />
-                        </Picker>
-                        </View> */}
-                    {/* <TextInput
-                        style={styles.input}
-                        defaultValue={info.email}
-                        placeholder='Email'
-                        placeholderTextColor="#aaaaaa"
-                        underlineColorAndroid="transparent"
-                        autoCapitalize="none"
-                        onChangeText={(input) => setInfo({ ...info, email: input })}
-                    /> */}
                     {
                         user.verification && user.verification.status == true ? null :
                         <Button
