@@ -32,48 +32,70 @@ export function ArticleTabs({articles, ...props}) {
             onPress={() => openArticle(itemProps.item) } 
             onButtonPress={() => toggleSaveArticle(itemProps.item)}
         />
-
-    let Chips = []
-    for (const tag of (featuredTags || [])) {
-        Chips.push(<Chip label={'#' + tagNames[tag]} type={'tag'} size={'large'} focused action={()=>props.navigation.navigate('Filter', {type: 'tag', data: tag}) } />)
     }
+    
+    const Chips = ({tags}) => <ScrollView horizontal showsHorizontalScrollIndicator={false} 
+        style={{flexDirection: 'row', paddingHorizontal: 10, paddingVertical: 5, height: 56}}>
+        {tags.map(tag => <Chip 
+            label={'#' + tagNames[tag]} 
+            color={Color.green} 
+            size={'large'} focused 
+            action={()=>props.navigation.navigate('Filter', {type: 'tag', data: tag}) }
+        />)}
+    </ScrollView>
         
     const renderScene = SceneMap({
         
         // first: () =>　<View style={{ flex: 1, backgroundColor: '#ff4081' }} />,
         // second: () =>　<View style={{ flex: 1, backgroundColor: '#673ab7' }} />
-        all: () => <FlatList
-                data={articles.all}
-                renderItem={articleListItem}
-                keyExtractor={(item) => item.id}
-                removeClippedSubExpandCards={true}
-                nestedScrollEnabled={true}
-                contentContainerStyle={{marginBottom: 0, paddingBottom: 56}}
-            />,
-        announcement: () => <FlatList
-            data={articles.announcement}
-            renderItem={articleListItem}
-            keyExtractor={(item) => item.id}
-            removeClippedSubExpandCards={true}
-            nestedScrollEnabled={true}
-            contentContainerStyle={{marginBottom: 0, paddingBottom: 56}}
-        />,
-        local: () => <FlatList
-            data={articles.local}
-            renderItem={articleListItem}
-            keyExtractor={(item) => item.id}
-            removeClippedSubExpandCards={true}
-            nestedScrollEnabled={true}
-            contentContainerStyle={{marginBottom: 0, paddingBottom: 56}}
-        />,
-        news: () => <FlatList
-            data={articles.news}
-            renderItem={articleListItem}
-            keyExtractor={(item) => item.id}
-            removeClippedSubExpandCards={true}
-            nestedScrollEnabled={true}
-            contentContainerStyle={{marginBottom: 56, paddingBottom: 56}}
-        />,
+        all: () => 
+        <View>
+            <Chips tags={featuredTags.all} />
+            <FlatList
+                    data={articles.all}
+                    renderItem={articleListItem}
+                    keyExtractor={(item) => item.id}
+                    removeClippedSubExpandCards={true}
+                    nestedScrollEnabled={true}
+                    contentContainerStyle={{marginBottom: 0, paddingBottom: 150}}
+                />
+        </View>,
+        announcement: () =>  
+        <View>
+            <Chips tags={featuredTags.announcement} />
+            <FlatList
+                    data={articles.announcement}
+                    renderItem={articleListItem}
+                    keyExtractor={(item) => item.id}
+                    removeClippedSubExpandCards={true}
+                    nestedScrollEnabled={true}
+                    contentContainerStyle={{marginBottom: 0, paddingBottom: 150}}
+                />
+        </View>,
+        local: () =>  
+        <View>
+            <Chips tags={featuredTags.local} />
+            <FlatList
+                    data={articles.local}
+                    renderItem={articleListItem}
+                    keyExtractor={(item) => item.id}
+                    removeClippedSubExpandCards={true}
+                    nestedScrollEnabled={true}
+                    contentContainerStyle={{marginBottom: 0, paddingBottom: 150}}
+                />
+        </View>,
+        news: () =>  
+        <View>
+            <Chips tags={featuredTags.news} />
+            <FlatList
+                    data={articles.news}
+                    renderItem={articleListItem}
+                    keyExtractor={(item) => item.id}
+                    removeClippedSubExpandCards={true}
+                    nestedScrollEnabled={true}
+                    contentContainerStyle={{marginBottom: 0, paddingBottom: 150}}
+                />
+        </View>,
       });
 
     async function setBehavior(article, action) {
@@ -153,16 +175,10 @@ export function ArticleTabs({articles, ...props}) {
       <TabView
         navigationState={{ index, routes }}
         renderScene={renderScene}
-        renderTabBar={(props) => <View>
-            <TabBar {...props} routes={routes} 
+        renderTabBar={(props) => <TabBar {...props} routes={routes} 
                 activeColor={Color.blue} inactiveColor={Color.grey1} labelStyle={{fontWeight: 'bold'}}
                 indicatorStyle={stylesheet.bgBlue} style={stylesheet.bgWhite} 
-            />
-            
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{flexDirection: 'row', paddingHorizontal: 10, paddingTop: 14, paddingBottom: 5}}>
-                { Chips }
-            </ScrollView>
-            </View>}
+            />}
         onIndexChange={setIndex}
         initialLayout={{ width: layout.width }}
       />
