@@ -2,18 +2,19 @@ import React, { useState, useCallback, useEffect } from 'react'
 import { Text, TouchableOpacity, View, StyleSheet} from 'react-native'
 import { styles, Color } from '../styles'
 
-export function Chip({ label, type, focused = false, size = 'small', action }) {
+export function Chip({ label, type, focused = false, size = 'small', action, style, color }) {
+    if (!color) color = style && style.color? style.color : (type == 'tag')? Color.green : Color.blue
     const chipStyle = StyleSheet.create({
         container: {
-            backgroundColor: !focused? 'transparent' : (type == 'tag')? Color.green : Color.blue,
-            borderColor: (type == 'tag')? Color.green : Color.blue,
+            backgroundColor: !focused? 'transparent' : color,
+            borderColor: color,
             borderWidth: 1,
             borderRadius: 20,
             justifyContent: 'center',
             alignSelf: 'flex-end',
         },
         text: {
-            color: focused ? Color.white : (type == 'tag')? Color.green : Color.blue,
+            color: focused ? Color.white : color,
             margin: 0,
         }
     })
@@ -32,7 +33,7 @@ export function Chip({ label, type, focused = false, size = 'small', action }) {
         }),
         large: StyleSheet.create({
             container: {
-                height: 36,
+                height: 37,
                 paddingVertical: 9,
                 paddingHorizontal: 10,
                 marginRight: 8
@@ -44,7 +45,7 @@ export function Chip({ label, type, focused = false, size = 'small', action }) {
         })
     }
     return (
-        <TouchableOpacity onPress={() => action()} style={[sizeStyle[size].container, chipStyle.container]}>
+        <TouchableOpacity onPress={() => action()} style={[sizeStyle[size].container, chipStyle.container, style]}>
             <Text style={[sizeStyle[size].text, chipStyle.text]}>{label}</Text>
         </TouchableOpacity>
     )
