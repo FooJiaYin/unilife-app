@@ -58,62 +58,62 @@ export default function IntroScreen(props) {
         </View>
 
     return (
-                <View style={{ flex: 1 }}>
-                    <Carousel
-                        layout={'default'}
-                        style={{ position: 'absolute', flex: 1 }}
-                        data={images}
-                        renderItem={carouselItem} 
-                        sliderWidth={window.width}
-                        itemWidth={window.width}
-                        itemHeight={window.height}
-                        sliderHeight={window.height}
-                        inactiveSlideScale={1}
-                        onSnapToItem={(index) => setActiveSlide(index)}
-                        keyExtractor={item => item}
-                        enableSnap={true}
-                    />
-                    <View style={guideStyles.pagination}>
-                        <TouchableOpacity style={{ flexShrink: 1, opacity: 0 }} onPress={()=>{}}>
-                            <Text style={guideStyles.buttonText}>結束</Text>
-                        </TouchableOpacity>
-                        <Pagination
-                            containerStyle={{
-                                flexShrink: 1, 
-                                flexGrow: 1,
-                            }}
-                            dotsLength={images.length}
-                            activeDotIndex={activeSlide}
-                            // containerStyle={{ backgroundColor: 'rgba(0, 0, 0, 0)' }}
-                            dotStyle={{
-                                width: 8,
-                                height: 8,
-                                borderRadius: 5,
-                                marginHorizontal: 0,
-                                backgroundColor: 'rgba(255, 255, 255, 0.92)'
-                            }}
-                            inactiveDotStyle={{
-                                // Define styles for inactive dots here
-                            }}
-                            inactiveDotOpacity={0.4}
-                            inactiveDotScale={0.6}
-                        />
-                        <TouchableOpacity style={{ flexShrink: 0 }} onPress={ () => props.navigation.navigate('Tabs', {user: props.user}) }>
-                            <Text style={guideStyles.buttonText}>結束</Text>
-                        </TouchableOpacity>
-                    </View>
-                    {/* <FlatList
-                        style={{ flex: 1 }}
-                        data={chatrooms}
-                        renderItem={chatroomItem}
-                        keyExtractor={(item) => item.id}
-                        removeClippedSubviews={true}
-                        horizontal={true}
-                        inverted={true}
-                        getItemLayout={(data, index) => (
-                            {length: 300, offset: 300 * index, index}
-                        )}
-                    /> */}
-                </View>
+        <View style={{ flex: 1 }}>
+            <Carousel
+                layout={'default'}
+                style={{ position: 'absolute', flex: 1 }}
+                data={images}
+                renderItem={carouselItem} 
+                sliderWidth={window.width}
+                itemWidth={window.width}
+                itemHeight={window.height}
+                sliderHeight={window.height}
+                inactiveSlideScale={1}
+                onSnapToItem={(index) => setActiveSlide(index)}
+                keyExtractor={item => item}
+                enableSnap={true}
+            />
+            <View style={guideStyles.pagination}>
+                <TouchableOpacity style={{ flexShrink: 1, opacity: 0 }} onPress={()=>{}}>
+                    <Text style={guideStyles.buttonText}>結束</Text>
+                </TouchableOpacity>
+                <Pagination
+                    containerStyle={{
+                        flexShrink: 1, 
+                        flexGrow: 1,
+                    }}
+                    dotsLength={images.length}
+                    activeDotIndex={activeSlide}
+                    // containerStyle={{ backgroundColor: 'rgba(0, 0, 0, 0)' }}
+                    dotStyle={{
+                        width: 8,
+                        height: 8,
+                        borderRadius: 5,
+                        marginHorizontal: 0,
+                        backgroundColor: 'rgba(255, 255, 255, 0.92)'
+                    }}
+                    inactiveDotStyle={{
+                        // Define styles for inactive dots here
+                    }}
+                    inactiveDotOpacity={0.4}
+                    inactiveDotScale={0.6}
+                />
+                <TouchableOpacity style={{ flexShrink: 0 }} onPress={ () => props.navigation.navigate('Tabs', {user: props.user}) }>
+                    <Text style={guideStyles.buttonText}>結束</Text>
+                </TouchableOpacity>
+            </View>
+            {/* <FlatList
+                style={{ flex: 1 }}
+                data={chatrooms}
+                renderItem={chatroomItem}
+                keyExtractor={(item) => item.id}
+                removeClippedSubviews={true}
+                horizontal={true}
+                inverted={true}
+                getItemLayout={(data, index) => (
+                    {length: 300, offset: 300 * index, index}
+                )}
+            /> */}
+        </View>
     )
 }

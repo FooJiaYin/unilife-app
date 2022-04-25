@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList, Text, TouchableOpacity, ScrollView, View, StyleSheet,Image, useWindowDimensions } from 'react-native'
+import { FlatList, Text, Alert, ScrollView, View, StyleSheet,Image, useWindowDimensions } from 'react-native'
 import { setHeaderOptions } from '../components/navigation'
 import Asset from '../components/assets'
 import { stylesheet, Color } from '../styles'
@@ -359,6 +359,26 @@ export function HomeScreen(props) {
         setText(data.home)
     }
 
+    function newArticle() {
+        firebase.firestore().doc('users/' + props.user.id).get().then(snapshot => {
+            const verification = snapshot.data().verification
+            if (verification && verification.status == true) {
+                props.navigation.navigate('NewArticle')
+            } else {
+                Alert.alert('', "您尚未完成身分驗證，請先完成學生身分驗證。",
+                    [{
+                        text: "前往驗證",
+                        onPress: () =>props.navigation.navigate('Verification', {user: props.user})
+                    }, {
+                        text: "取消",
+                        // onPress: () => console.log("Cancel Pressed"),
+                        style: "cancel"
+                    }]
+                )
+            }
+        })
+    }
+
     useFocusEffect(
         React.useCallback(() => {
             // console.log("Hello")
@@ -458,7 +478,7 @@ export function HomeScreen(props) {
                 </copilot.View>
                 </copilot.Step>
             </View>
-            <ExpandCard refresh={()=> loadArticles()} >
+            <ExpandCard refresh={()=> loadArticles()} add={()=>newArticle()} >
                 <ArticleTabs articles={articles} {...props} />
             </ExpandCard>
         </View>

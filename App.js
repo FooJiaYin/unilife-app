@@ -10,7 +10,7 @@ import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs' 
 import { LoginScreen, ResetPasswordScreen } from './src/screens'
 import { RegistrationScreen, FillInfoScreen, TopicSelectScreen, SuccessScreen, VerificationScreen } from './src/screens'
-import { HomeScreen, IntroScreen, FilterScreen, ArticleScreen, CommentScreen } from './src/screens'
+import { HomeScreen, IntroScreen, FilterScreen, ArticleScreen, CommentScreen, NewArticleScreen } from './src/screens'
 import { ChatroomScreen, MessageScreen } from './src/screens'
 import { SettingScreen, ProfileScreen } from './src/screens'
 import { tabBarObject, tabBarOptions } from './src/components/navigation'
@@ -159,6 +159,9 @@ export default function App() {
 				<Stack.Screen name="Article">
 					{props => <ArticleScreen {...props} user={user} />}
 				</Stack.Screen>
+				<Stack.Screen name="NewArticle">
+					{props => <NewArticleScreen {...props} user={user} />}
+				</Stack.Screen>
 			</Stack.Navigator>
 		)
 	}
@@ -186,12 +189,14 @@ export default function App() {
 		const insets = useSafeAreaInsets();
 		return (
 			props.user ? (
-			<Tab.Navigator lazy={false} tabBarOptions={{...tabBarOptions, style: {
-				paddingBottom: insets.bottom,
-				paddingTop: 10,
-				height: 60 + insets.bottom
-			}}} safeAreaInsets={{bottom: insets.bottom}}>
-				
+			<Tab.Navigator lazy={false} tabBarOptions={{...tabBarOptions, 
+				keyboardHidesTabBar: Platform.OS === "android",
+				style: {
+					paddingBottom: insets.bottom,
+					paddingTop: 10,
+					height: 60 + insets.bottom
+				}
+			}} safeAreaInsets={{bottom: insets.bottom}}>
 				<Tab.Screen name="HomeStack" options={tabBarObject('主頁', 'home')}>
 					{props => <HomeStackScreen {...props} user={user} />}
 				</Tab.Screen>

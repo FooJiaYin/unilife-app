@@ -229,12 +229,12 @@ export function ExpandCard({height = 300, ...props}){
                     inputRange: [0, height - 80, height],
                     outputRange: [0, 0, insets.top],
                 }) }]}>
-                    <TouchableOpacity onPress={() => {}}>
-                        <Image style={cardStyle.icon}  source={Asset('blank')} />
-                    </TouchableOpacity>
-                    <Text style={[stylesheet.headerText]}>Uni資訊</Text>
                     <TouchableOpacity onPress={()=> props.refresh()}>
                         <Image style={cardStyle.icon}  source={Asset('refresh')} />
+                    </TouchableOpacity>
+                    <Text style={[stylesheet.headerText]}>Uni資訊</Text>
+                    <TouchableOpacity onPress={() => props.add()}>
+                        <Image style={cardStyle.icon}  source={Asset('edit')} />
                     </TouchableOpacity>
                 </copilot.AnimatedView>
                 </copilot.Step>

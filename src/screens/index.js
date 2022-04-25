@@ -1,4 +1,5 @@
 export { default as ArticleScreen } from './ArticleScreen'
+export { default as NewArticleScreen } from './NewArticleScreen'
 export { default as ChatroomScreen } from './ChatroomScreen'
 export { default as CommentScreen } from './CommentScreen'
 export { default as FillInfoScreen } from './FillInfoScreen'
