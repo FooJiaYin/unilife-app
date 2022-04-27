@@ -3,10 +3,9 @@ import { StyleSheet, View, TouchableOpacity, Text, Image, Modal } from 'react-na
 import { styles, Color } from '../styles'
 import Asset, { Icon } from './assets'
 import time from '../utils/time'
-import { Chip } from './chip'
+import { SmallTags } from './articles/tags'
 import { firebase } from '../firebase/config'
 import { tagNames } from '../firebase/functions'
-import * as copilot from '../components/guide'
 import { NavigationContainer, CommonActions } from '@react-navigation/native';
 
 export function ListItem({ item, onPress, style, onButtonPress, props, chipAction }) {
@@ -25,36 +24,13 @@ export function ListItem({ item, onPress, style, onButtonPress, props, chipActio
     useEffect(() => {
         // loadArticle_old()
         console.log(item.id)
-        loadArticle_new(item.id)
+        loadArticle(item.id)
     }, [])
 
-    function loadArticle_old() {
-        if(item.images && item.images.src && item.images.src!='') {
-            // console.log(item.images.src)    
-            setImageUrl(item.images.src) 
-        } else {
-            if(item.meta.coverImage) storageRef.child('articles/' + item.id + '/images/' + item.meta.coverImage).getDownloadURL().then((url) => {
-                setImageUrl(url)
-            })
-        }
-        firebase.firestore().doc('articles/' + item.id).get().then(snapshot => {
-            const stats = snapshot.data().stats
-            setStats(stats)
-        })
-        if (props.user.id && item.id) {
-            // setIsLiked(true)
-            firebase.firestore().collection('behavior').where('user', '==', props.user.id).where('article', '==', item.id).where('stats.like', '==', true).get().then(querySnapshot => {
-                if(querySnapshot.docs.length > 0) {
-                    setIsLiked(true)
-                }
-            })
-        }
-    }
-
-    function loadArticle_new(articleId) {
-        firebase.firestore().doc('articles/' + articleId).get().then(snapshot => {
-            const data = snapshot.data()
-            const stats = snapshot.data().stats
+    function loadArticle(articleId) {
+        firebase.firestore().doc('articles/' + articleId).get().then(async snapshot => {
+            const data = await snapshot.data()
+            const stats = data.stats
             setStats(stats)
             setData(data)
             
@@ -163,15 +139,6 @@ export function ListItem({ item, onPress, style, onButtonPress, props, chipActio
         // setDescriptionLines(4 - e.nativeEvent.lines.length)
     }
 
-    const Chips = ({tags}) => <View
-        style={{flexDirection: 'row'}}>
-        {tags.map(tag => <Chip 
-            label={tagNames[tag]} 
-            type={'tag'} 
-            action={chipAction? ()=> chipAction('tag', tag) : ()=>props.navigation.navigate('Filter', {type: 'tag', data: tag}) }
-        />)}
-    </View>
-
     return (
         <TouchableOpacity onPress={()=>onPress(data)} >
             {/* <OptionOverlay
@@ -210,7 +177,12 @@ export function ListItem({ item, onPress, style, onButtonPress, props, chipActio
                                 name="article"
                                 >
                             <copilot.View> */}
-                            <Chips tags={data.tags} />
+                            {data.tags? 
+                                <SmallTags 
+                                    tags={data.tags} 
+                                    action={chipAction? ()=> action('tag', tag) : ()=>props.navigation.navigate('Filter', {type: 'tag', data: tag}) }
+                                /> 
+                            : null}
                             {/* </copilot.View>
                             </copilot.Step> */}
                             <Text style={style? [listItemStyle.bottomText, style.bottomText] : listItemStyle.bottomText}>
