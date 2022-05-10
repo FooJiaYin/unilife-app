@@ -70,22 +70,6 @@ const messageStyle = StyleSheet.create({
         textAlign: 'right',
         marginRight: 8,
     },
-    inputBar: {
-        ...styles.borderTop,
-        backgroundColor: 'white',
-        flexDirection: 'row',
-        // position: 'absolute',
-        zIndex: 1,
-        // height: 80,
-        // marginTop: 40,
-        // bottom: 0,
-        // flex: 1,
-        paddingTop: 2,
-        paddingBottom: 4,
-        paddingLeft: 16,
-        // justifyContent: 'center',
-        alignItems: 'center'
-    },
 })
 
 export function MessageBubble(message) {
@@ -213,7 +197,7 @@ export function InputBar({sendMessage, like, setLike}, ...props) {
     //   <View style={{ height: 80}}>
      //   <TextInput style={{ height: 100, backgroundColor: 'blue' }}/>
     // </View>
-        <View style={messageStyle.inputBar}>
+        <View style={[stylesheet.borderTop, stylesheet.inputBar]}>
             <TouchableOpacity onPress={() => setLike(!like)}>
                 <Image source={like? Asset('like-active') : Asset('like')} style={[stylesheet.iconColor, {width: 36, height: 36, marginRight: 14}]} />
             </TouchableOpacity>

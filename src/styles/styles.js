@@ -169,6 +169,21 @@ export const styles = {
         alignItems: 'center',
         paddingHorizontal: 10
     },
+    inputBar: {
+        backgroundColor: 'white',
+        flexDirection: 'row',
+        // position: 'absolute',
+        zIndex: 1,
+        // height: 80,
+        // marginTop: 40,
+        // bottom: 0,
+        // flex: 1,
+        paddingTop: 2,
+        paddingBottom: 4,
+        paddingLeft: 16,
+        // justifyContent: 'center',
+        alignItems: 'center'
+    },
     disabledButton: {
         backgroundColor: "#e2e3e4",
         height: 40,
