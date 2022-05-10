@@ -5,7 +5,8 @@ import { setHeaderOptions } from '../components/navigation'
 import { Button } from '../components/forms'
 import Asset from '../components/assets'
 import { firebase } from '../firebase/config'
-import { CurveMaskedTop, ProfilePicture, CurvedBg } from '../components/decorative'
+import { CurveMaskedTop, CurvedBg } from '../components/decorative'
+import { DecoratedProfileImage } from '../components/profileImage'
 import { Color, stylesheet } from '../styles'
 
 
@@ -107,7 +108,7 @@ export default function SuccessScreen(props) {
                 style={{ flex: 1, width: '100%', height:'100%'}}
                 keyboardShouldPersistTaps="always">
             <View style={stylesheet.bgGreen}>
-                <ProfilePicture image={info.profileImage} diameter={160}/>
+                <DecoratedProfileImage image={info.profileImage} diameter={160}/>
             </View>
             <ImageBackground source={Asset('bg-profile.jpg')} resizeMode="cover" style={[stylesheet.bg]}>
                 <Button 

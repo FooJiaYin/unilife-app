@@ -6,6 +6,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 // import { DateTimePicker } from 'react-native-ui-lib/DateTimePicker'
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Button, Select } from '../components/forms'
+import { ProfileImage } from '../components/profileImage'
 import * as WebBrowser from 'expo-web-browser';
 import styles from '../styles/profileStyles'
 import { firebase } from '../firebase/config'
@@ -191,9 +192,7 @@ export default function ProfileScreen(props) {
                 style={{ flex: 1, width: '100%' ,backgroundColor: 'white'}}
                 keyboardShouldPersistTaps="always">
                 <View style={styles.green}>
-                    <Image
-                        style={styles.propic}
-                        source={info.profileImage? Asset(info.profileImage) : Asset('profile-image-0.png')}/>
+                    <ProfileImage style={styles.propic} source={info.profileImage} />
                 </View>
                 <View>
                     <ImageBackground source={Asset('bg-profile.jpg')} resizeMode="cover" style={styles.bg}>

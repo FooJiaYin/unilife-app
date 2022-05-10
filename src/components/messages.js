@@ -6,6 +6,7 @@ import * as WebBrowser from 'expo-web-browser';
 import { styles, stylesheet } from '../styles'
 import Asset from './assets'
 import { Button } from './forms'
+import { ProfileImage } from './profileImage'
 import time from '../utils/time'
 import { firebase } from '../firebase/config'
 
@@ -22,7 +23,8 @@ const messageStyle = StyleSheet.create({
         marginBottom: 0,
         marginTop: 6,
         marginLeft: 0,
-        marginRight: 0
+        marginRight: 0,
+        borderRadius: 50,
     },
     messageRight: {
         flexDirection: 'column',
@@ -165,15 +167,9 @@ export function Comment(message) {
     // console.log(message.content)
     return (
         <View style={messageStyle.message}>
-             <ProfileImage url={message.profileImage} />
+             <ProfileImage source={message.profileImage} style={messageStyle.profileImage} />
              <CommentBubble {...message} />
          </View>
-    )
-}
-
-export function ProfileImage({url}) {
-    return (
-        <Image source={Asset(url)} style={messageStyle.profileImage} />
     )
 }
 

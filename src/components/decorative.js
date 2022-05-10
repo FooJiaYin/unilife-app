@@ -11,54 +11,6 @@ import * as copilot from '../components/guide'
 //   PanningProvider,
 //   PanResponderView } from 'react-native-ui-lib'
 
-export function ProfilePicture({user, icon, image, diameter}){
-    
-    // const userImage = () => {
-    //     // TODO: get user profile image here
-    //     return Asset('profile-image-0.png')
-    // }
-    
-    const defaultImage = Asset('profile-image-0.png')
-    
-    // const imageSource = icon?Asset(`${icon}`):user?userImage:defaultImage
-    const imageSource = image ? Asset(image) : defaultImage
-    
-    const profilePictureStyles = StyleSheet.create({
-        border:{
-            borderWidth: 1,
-            borderColor: '#fff',
-            borderRadius: 1000,
-            position: 'relative',
-            padding: 10,
-            marginTop: 40,
-            margin: 8,
-            alignSelf: 'center'
-        },
-        secondBorder:{
-            //position: 'absolute',
-            width: '100%',
-            height: '100%',
-            borderWidth: 4,
-            borderColor: '#fff',
-            borderRadius: 1000,
-            // boxSizing: 'padding-box'
-        },
-        image:{
-            height: '100%',
-            width: '100%',
-            resizeMode:'contain',
-            borderRadius:1000
-        },
-    })
-    return(
-        <View style={[profilePictureStyles.border, {height: diameter, width: diameter}]}>
-            <View style={[profilePictureStyles.secondBorder]}>
-                <Image source={imageSource} style={profilePictureStyles.image}/>
-            </View>
-        </View>
-
-)}
-
 export function CurvedBg({pureColor = Color.green, image = Asset('topic-1'), height= 300, diameter=400, ...props}){
 
     const imageSource = image
