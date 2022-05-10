@@ -9,13 +9,13 @@ export const styles = StyleSheet.create({
 
     },
     logo: {
-        flex: 1,
-        minHeight: 300,
+        // flex: 1,
+        height: 200,
         width: 200,
         alignSelf: "center",
-        marginTop: 30,
+        // marginTop: 30,
         resizeMode:'contain',
-        marginVertical: 48
+        // marginBottom: 0
     },
     input: {
         height: 40,
