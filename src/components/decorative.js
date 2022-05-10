@@ -109,7 +109,7 @@ export function StickedBg({pureColor=Color.green, image = null, height= 320, ...
     const bgstyle = {
         bg:{
             position:'absolute',
-            // height: height,
+            height: height,
             right: 0,
             width: '100%',
             backgroundColor: pureColor,
@@ -117,7 +117,7 @@ export function StickedBg({pureColor=Color.green, image = null, height= 320, ...
         },
         image:{
             flex: 1,
-            // height: height,
+            height: height,
             width: '100%',
             right: 0,
             resizeMode:'cover',

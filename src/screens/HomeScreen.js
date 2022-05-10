@@ -133,7 +133,7 @@ export function HomeScreen(props) {
     return (
         <View style={stylesheet.container}>
             <ShortcutEditModal visible={isModalVisible} onClose={closeShortcutEditModal} shortcut={currentShortcut} setShortcut={setCurrentShortcut} />
-            <StickedBg image={Asset('home.jpg')}>
+            <StickedBg height={useWindowDimensions().height} image={Asset('home.jpg')}>
             </StickedBg>
             <View style={homeCardStyle.container}>
                 <View style={stylesheet.row}>
