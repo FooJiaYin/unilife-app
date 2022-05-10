@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { FlatList, View, useWindowDimensions } from 'react-native'
 import { stylesheet, Color } from '../../styles'
-import { ListItem } from '../lists'
-import { firebase } from '../../firebase/config'
+import { ArticleListItem } from '../lists'
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view'
-import { ScrollTags } from '../chip'
+import { ScrollTags } from './tags'
 import { featuredTags } from '../../firebase/functions'
 
 export function ArticleTabs({titles, articles, ...props}) {
@@ -18,13 +17,6 @@ export function ArticleTabs({titles, articles, ...props}) {
         { key: 'tab4', title: titles? titles[3] : "" },
     ]);
 
-    const articleListItem = (itemProps) => {
-        return <ListItem {...itemProps} props={props}
-            onPress={openArticle} 
-            onButtonPress={() => toggleSaveArticle(itemProps.item)}
-        />
-    }
-
     const categories = Object.keys(articles)
         
     const renderScene = SceneMap({
@@ -36,8 +28,8 @@ export function ArticleTabs({titles, articles, ...props}) {
             <ScrollTags tags={featuredTags[categories[0]]} />
             <FlatList
                     data={articles[categories[0]]}
-                    renderItem={articleListItem}
-                    keyExtractor={(item) => item.title}
+                    renderItem={({item}) => <ArticleListItem item={item} {...props} />}
+                    keyExtractor={(item) => item.id}
                     removeClippedSubExpandCards={true}
                     nestedScrollEnabled={true}
                     contentContainerStyle={{marginBottom: 0, paddingBottom: 150}}
@@ -48,8 +40,8 @@ export function ArticleTabs({titles, articles, ...props}) {
             <ScrollTags tags={featuredTags[categories[1]]} />
             <FlatList
                     data={articles[categories[1]]}
-                    renderItem={articleListItem}
-                    keyExtractor={(item) => item.title}
+                    renderItem={({item}) => <ArticleListItem item={item} {...props} />}
+                    keyExtractor={(item) => item.id}
                     removeClippedSubExpandCards={true}
                     nestedScrollEnabled={true}
                     contentContainerStyle={{marginBottom: 0, paddingBottom: 150}}
@@ -60,7 +52,7 @@ export function ArticleTabs({titles, articles, ...props}) {
             <ScrollTags tags={featuredTags[categories[2]]} />
             <FlatList
                     data={articles[categories[2]]}
-                    renderItem={articleListItem}
+                    renderItem={({item}) => <ArticleListItem item={item} {...props} />}
                     keyExtractor={(item) => item.id}
                     removeClippedSubExpandCards={true}
                     nestedScrollEnabled={true}
@@ -72,7 +64,7 @@ export function ArticleTabs({titles, articles, ...props}) {
             <ScrollTags tags={featuredTags[categories[3]]} />
             <FlatList
                     data={articles[categories[3]]}
-                    renderItem={articleListItem}
+                    renderItem={({item}) => <ArticleListItem item={item} {...props} />}
                     keyExtractor={(item) => item.id}
                     removeClippedSubExpandCards={true}
                     nestedScrollEnabled={true}
@@ -80,80 +72,6 @@ export function ArticleTabs({titles, articles, ...props}) {
                 />
         </View>,
       });
-
-    async function setBehavior(article, action) {
-        let behaviorRef
-        let data
-        let querySnapshot = await firebase.firestore().collection('behavior').where('user','==', props.user.id).where('article', '==', article.id).get()
-        if (querySnapshot.size > 0) {
-            behaviorRef = querySnapshot.docs[0].ref
-            data = querySnapshot.docs[0].data()
-        } else {
-            data = {
-                user: props.user.id,
-                article: article.id,
-                stats: {
-                    unread: false,
-                    read: 0,
-                    readDuration: {
-                        total: 0.0,
-                        max: 0.0,
-                    },
-                    save: false,
-                    share: 0,
-                    comment: 0,
-                    report: 0
-                },
-                logs: []
-            }
-            behaviorRef = await firebase.firestore().collection('behavior').add(data)
-        }
-        behaviorRef.update({
-            stats: {
-                ...data.stats,
-                read: action == 'read'? data.stats.read + 1 : data.stats.read,
-                save: action == 'unsave'? false : action == 'save'? true : data.stats.save,
-            },
-            logs: firebase.firestore.FieldValue.arrayUnion({
-                action: action,
-                time: firebase.firestore.Timestamp.now()
-            })
-        })
-        firebase.firestore().doc('articles/' + article.id).update({
-            stats: {
-                ...article.stats,
-                readTimes: action == 'read'? article.stats.readTimes + 1 : article.stats.readTimes,
-                save: action == 'unsave'? article.stats.save - 1 : action == 'save'? article.stats.save + 1 : article.stats.save,
-                comment: action == 'comment'? article.stats.comment + 1 : article.stats.comment,
-            }
-        })
-    }
-
-    function openArticle(article) {
-        setBehavior(article, 'read')
-        // if (article.type=='banner') WebBrowser.openBrowserAsync(article.meta.url)
-        props.navigation.navigate('Article', {article: article})
-    }
-
-    function toggleSaveArticle(article) {
-    // console.log(article)
-        if (article.isSaved) {
-            setBehavior(article, 'unsave')
-            props.user.ref.update({
-                bookmarks: firebase.firestore.FieldValue.arrayRemove(article.id)
-            });
-        } else {
-            setBehavior(article, 'save')
-            props.user.ref.update({
-                bookmarks: firebase.firestore.FieldValue.arrayUnion(article.id)
-            });
-        }
-        article.isSaved = !article.isSaved
-    }
-
-    async function openWeb(url) {
-        let result = await WebBrowser.openBrowserAsync(url);
-    };
 
     return (
       <TabView

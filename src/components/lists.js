@@ -5,10 +5,9 @@ import Asset, { Icon } from './assets'
 import time from '../utils/time'
 import { SmallTags } from './articles/tags'
 import { firebase } from '../firebase/config'
-import { tagNames } from '../firebase/functions'
 import { NavigationContainer, CommonActions } from '@react-navigation/native';
 
-export function ListItem({ item, onPress, style, onButtonPress, props, chipAction }) {
+export function ListItem({ item, onPress, style, onButtonPress, chipAction, ...props }) {
     const [ isSaved, setIsSaved ] = useState(item.isSaved)
     const [ isLiked, setIsLiked ] = useState(false)
     const [ imageUrl, setImageUrl ] = useState(item.images && item.images.src ? item.images.src : '')
@@ -23,7 +22,7 @@ export function ListItem({ item, onPress, style, onButtonPress, props, chipActio
 
     useEffect(() => {
         // loadArticle_old()
-        console.log(item.id)
+        // console.log(item.id)
         loadArticle(item.id)
     }, [])
 
@@ -126,6 +125,7 @@ export function ListItem({ item, onPress, style, onButtonPress, props, chipActio
         onButtonPress();
         setIsSaved(!isSaved)
     }
+
     const [ showOption, setShowOption ] = useState(false)
     const [ descriptionLines, setDescriptionLines ] = useState(2)
 
@@ -205,4 +205,82 @@ export function ListItem({ item, onPress, style, onButtonPress, props, chipActio
             </View>
         </TouchableOpacity>
     )
+}
+
+export function ArticleListItem(props) {
+        
+    async function setBehavior(article, action) {
+        let behaviorRef
+        let data
+        let querySnapshot = await firebase.firestore().collection('behavior').where('user','==', props.user.id).where('article', '==', article.id).get()
+        if (querySnapshot.size > 0) {
+            behaviorRef = querySnapshot.docs[0].ref
+            data = querySnapshot.docs[0].data()
+        } else {
+            data = {
+                user: props.user.id,
+                article: article.id,
+                stats: {
+                    unread: false,
+                    read: 0,
+                    readDuration: {
+                        total: 0.0,
+                        max: 0.0,
+                    },
+                    save: false,
+                    share: 0,
+                    comment: 0,
+                    report: 0
+                },
+                logs: []
+            }
+            behaviorRef = await firebase.firestore().collection('behavior').add(data)
+        }
+        behaviorRef.update({
+            stats: {
+                ...data.stats,
+                read: action == 'read'? data.stats.read + 1 : data.stats.read,
+                save: action == 'unsave'? false : action == 'save'? true : data.stats.save,
+            },
+            logs: firebase.firestore.FieldValue.arrayUnion({
+                action: action,
+                time: firebase.firestore.Timestamp.now()
+            })
+        })
+        firebase.firestore().doc('articles/' + article.id).update({
+            stats: {
+                ...article.stats,
+                readTimes: action == 'read'? article.stats.readTimes + 1 : article.stats.readTimes,
+                save: action == 'unsave'? article.stats.save - 1 : action == 'save'? article.stats.save + 1 : article.stats.save,
+                comment: action == 'comment'? article.stats.comment + 1 : article.stats.comment,
+            }
+        })
+    }
+
+    function openArticle(article) {
+        setBehavior(article, 'read')
+        // if (article.type=='banner') WebBrowser.openBrowserAsync(article.meta.url)
+        props.navigation.navigate('Article', {article: article})
+    }
+
+    function toggleSaveArticle(article) {
+    // console.log(article)
+        if (article.isSaved) {
+            setBehavior(article, 'unsave')
+            props.user.ref.update({
+                bookmarks: firebase.firestore.FieldValue.arrayRemove(article.id)
+            });
+        } else {
+            setBehavior(article, 'save')
+            props.user.ref.update({
+                bookmarks: firebase.firestore.FieldValue.arrayUnion(article.id)
+            });
+        }
+        article.isSaved = !article.isSaved
+    }
+
+    return <ListItem {...props} 
+        onPress={openArticle} 
+        onButtonPress={() => toggleSaveArticle(props.item)}
+    />
 }
