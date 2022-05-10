@@ -168,7 +168,7 @@ export function HomeScreen(props) {
                     name="shortcut"
                     >
                 <copilot.View style={stylesheet.row}>
-                    {myShortcuts.map((item, index)=><HomeShortcutItem item={item} key={index} onLongPress={() => changeIcon(index)} />)}
+                    {myShortcuts && myShortcuts.map((item, index)=><HomeShortcutItem item={item} key={index} onLongPress={() => changeIcon(index)} />)}
                 </copilot.View>
                 </copilot.Step>
 
