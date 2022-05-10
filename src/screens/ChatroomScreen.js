@@ -41,6 +41,7 @@ export default function ChatroomScreen(props) {
     async function loadSetting() {
         let snapshot = await props.user.ref.get()
         let userData = snapshot.data()
+
         firebase.firestore().doc('config/matching').onSnapshot(snapshot => {
             // console.log('onSnapshot', snapshot)
             let matchConfig = snapshot.data()
@@ -49,17 +50,21 @@ export default function ChatroomScreen(props) {
                 waiting: (userData.settings && userData.settings.chat) ? userData.settings.chat : false,
                 inChat: (userData.settings && userData.settings.inChat) ? userData.settings.inChat : false,
                 verified: (userData.verification && userData.verification.status) ? userData.verification.status : false,
+            });
+            firebase.firestore().doc(`communities/${user.identity.community}`).onSnapshot(snapshot => {
+                let community = snapshot.data()
+                if(userData.settings && userData.settings.inChat == false) {
+                    let newChatrooms = chatrooms
+                    setMatchCard([{
+                        link: community.lineChat,
+                        active: true,
+                        userNames: [],
+                        id: '0',
+                        style: stylesheet.bgLight,
+                        startedAt: firebase.firestore.Timestamp.now()
+                    }])
+                }
             })
-            if(userData.settings && userData.settings.inChat == false) {
-                let newChatrooms = chatrooms
-                setMatchCard([{
-                    active: true,
-                    userNames: [],
-                    id: '0',
-                    style: stylesheet.bgLight,
-                    startedAt: firebase.firestore.Timestamp.now()
-                }])
-            }
         })
     }
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { StyleSheet, View, Image, TouchableOpacity, Text, TextInput, useWindowDimensions } from 'react-native'
 // import { InputToolbar } from 'react-native-gifted-chat'
 import * as GiftedChat from 'react-native-gifted-chat'
+import * as WebBrowser from 'expo-web-browser';
 import { styles, stylesheet } from '../styles'
 import Asset from './assets'
 import { Button } from './forms'
@@ -303,29 +304,35 @@ export function Chatroom({item, size, navigation, matchState = {}, toggleWaiting
     }) 
     // console.log('item', item)
     // console.log('matchConfig', matchState)
+    const openUrl = (url) => {
+        if (url && url != '') {
+            WebBrowser.openBrowserAsync(url);
+            // Linking.openURL(item.url)
+        }
+    }
+    
     return (
-        item.id == 0 && matchState.inChat == true? <></> :
         <View style={cardStyle.fullHeight}>
             {/* <Text>{ item.id }</Text> */}
             {item.id == 0?
-                <View style={[cardStyle.card, matchState.waiting? stylesheet.bgBlue : stylesheet.bgLight,]}>
-                    <Text style={cardStyle.text}>
-                        <Text style={cardStyle.textL}>{'下次配對\n'}</Text>
-                        <Text>{matchState.text + '\n' + (matchState.waiting? '等待配對中...' : '') }</Text>
-                    </Text>
-                    <Button style={cardStyle.button} title={(matchState.waiting? '關閉配對' : '開啟配對')} onPress={() => toggleWaiting()}/>
+                <View style={[cardStyle.card, stylesheet.bgBlue]}>
+                    <View style={cardStyle.text}>
+                        <Text style={[cardStyle.text, cardStyle.textL]}>{"在地聊天室"}</Text>
+                        <Text style={[cardStyle.text]}>{matchState.text}</Text>
+                    </View>
+                    <Button style={cardStyle.button} title={'開啟LINE'} onPress={() => openUrl(item.link)}/>
                     {/* <Text style={[stylesheet.textWhite, stylesheet.textCenter]}>{time().getNextDayofWeek(matchState.day, matchState.time).fromNow('倒數計時 %d %H %M')}</Text> */}
                     {/* <Text style={cardStyle.text}>{active ? 'Active' : 'Inactive'}</Text> */}
                 </View>
                 :
-                (<View style={[cardStyle.card, item.style]}>
+                <View style={[cardStyle.card, item.style]}>
                     <Text style={cardStyle.text}>
                         <Text style={cardStyle.textL}>{users.join('\n')}</Text>
                     </Text>
                     <Button style={cardStyle.button} title={(chatroom.active == true)? '繼續聊天' : '查看記錄'} onPress={() => navigation.navigate('Message', {chatroom: chatroom, messagesRef: messagesRef}) } />
                     <Text style={[stylesheet.textWhite, stylesheet.textCenter]}>{(chatroom.active == true)? time(item.startedAt).toNow('累計聊天 %d %H') : time(item.startedAt).format('yyyy/M/D')}</Text>
                     {/* <Text style={cardStyle.text}>{item.active ? 'Active' : 'Inactive'}</Text> */}
-                </View>)
+                </View>
             } 
         </View>
     )
