@@ -10,7 +10,8 @@ import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs' 
 import { LoginScreen, ResetPasswordScreen } from './src/screens'
 import { RegistrationScreen, FillInfoScreen, TopicSelectScreen, SuccessScreen, VerificationScreen } from './src/screens'
-import { HomeScreen, IntroScreen, FilterScreen, ArticleScreen, CommentScreen, NewArticleScreen } from './src/screens'
+import { HomeScreen, IntroScreen } from './src/screens'
+import { ArticleListScreen, CommunityScreen, FilterScreen, ArticleScreen, CommentScreen, NewArticleScreen } from './src/screens'
 import { ChatroomScreen, MessageScreen } from './src/screens'
 import { SettingScreen, ProfileScreen } from './src/screens'
 import { tabBarObject, tabBarOptions } from './src/components/navigation'
@@ -156,6 +157,35 @@ export default function App() {
 				<Stack.Screen name="Filter">
 					{props => <FilterScreen {...props} user={user} />}
 				</Stack.Screen>
+			</Stack.Navigator>
+		)
+	}
+
+	function ArticleStackScreen(props) {
+		return (
+			<Stack.Navigator>		
+				<Stack.Screen name="Articles">
+					{props => <ArticleListScreen {...props} user={user} />}
+				</Stack.Screen>
+				<Stack.Screen name="Filter">
+					{props => <FilterScreen {...props} user={user} />}
+				</Stack.Screen>
+				<Stack.Screen name="Article">
+					{props => <ArticleScreen {...props} user={user} />}
+				</Stack.Screen>
+			</Stack.Navigator>
+		)
+	}
+
+	function CommunityStackScreen(props) {
+		return (
+			<Stack.Navigator>	
+				<Stack.Screen name="Community">
+					{props => <CommunityScreen {...props} user={user} />}
+				</Stack.Screen>
+				<Stack.Screen name="Filter">
+					{props => <FilterScreen {...props} user={user} />}
+				</Stack.Screen>
 				<Stack.Screen name="Article">
 					{props => <ArticleScreen {...props} user={user} />}
 				</Stack.Screen>
@@ -189,7 +219,7 @@ export default function App() {
 		const insets = useSafeAreaInsets();
 		return (
 			props.user ? (
-			<Tab.Navigator lazy={false} tabBarOptions={{...tabBarOptions, 
+			<Tab.Navigator lazy={true} tabBarOptions={{...tabBarOptions, 
 				keyboardHidesTabBar: Platform.OS === "android",
 				style: {
 					paddingBottom: insets.bottom,
@@ -199,6 +229,12 @@ export default function App() {
 			}} safeAreaInsets={{bottom: insets.bottom}}>
 				<Tab.Screen name="HomeStack" options={tabBarObject('主頁', 'home')}>
 					{props => <HomeStackScreen {...props} user={user} />}
+				</Tab.Screen>
+				<Tab.Screen name="ArticleStack" options={tabBarObject('資訊', 'news')}>
+					{props => <ArticleStackScreen {...props} user={user} />}
+				</Tab.Screen>
+				<Tab.Screen name="CommunityStack" options={tabBarObject('社群', 'community')}>
+					{props => <CommunityStackScreen {...props} user={user} />}
 				</Tab.Screen>
 				<Tab.Screen name="ChatStack" options={tabBarObject('聊天室', 'chat')}>
 					{props => <ChatStackScreen {...props} user={user} />}
