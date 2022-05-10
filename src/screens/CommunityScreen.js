@@ -29,7 +29,7 @@ function PostBar (props) {
                 <TextInput
                     style={{...stylesheet.input, flex: 1, marginHorizontal: 12}}
                     editable={false}
-                    placeholder='分享您的想法..'
+                    placeholder='發布貼文；提出問題...'
                     placeholderTextColor="#aaaaaa"
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
