@@ -26,7 +26,7 @@ export default function LoginScreen({navigation, ...props}) {
     const login = (token) => {
         firebase
             .auth()
-            .signInWithEmailAndPassword(email, password)
+            .signInWithCustomToken(token)
             .then((response) => {
                 const uid = response.user.uid
                 usersRef
@@ -39,7 +39,7 @@ export default function LoginScreen({navigation, ...props}) {
                         }
                         const user = snapshot.data()
                         if(user.interests && user.interests.length == 5) {
-                            navigation.navigate('Home')
+                            navigation.navigate('Tabs')
                         } else {
                             navigation.navigate('FillInfo', {user: snapshot})
                         }
@@ -60,6 +60,11 @@ export default function LoginScreen({navigation, ...props}) {
             headerShown: false
         })
       }, [navigation])
+
+    useEffect(() => {
+        if(authToken) login(authToken)
+    }, [])
+
     return (
         <View style={{ flex: 1, width: '100%', justifyContent: 'center' }}>
             <ImageBackground source={Asset('bg-login.jpg')} resizeMode="cover" style={styles.bg}>
