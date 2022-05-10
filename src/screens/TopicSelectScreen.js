@@ -8,6 +8,7 @@ import { TopicItem } from '../components/topicItem'
 import { Button } from '../components/forms'
 import { Color } from '../styles'
 import { color } from '../styles/color'
+import { remove } from '../utils/array'
 
 export default function TopicSelectScreen(props) {
     const [selectedItems, setSelectedItems] = useState([])
@@ -81,21 +82,14 @@ export default function TopicSelectScreen(props) {
                 // TODO: show overlay hint   
             }
         }else{
-            var l=array.length
-            for(var i=0; i<l&&l==array.length; i++){
-                if (array[i]==index){
-                    // console.log(array)
-                    array.splice(i, 1)
-                    // console.log(array)
-                    setSelectedItems(array)
-                    onSelected(false)
-                    if(array.length<5){
-                        setProceed(false)
-                    }             
-                }
+            array = remove(array, index)
+            setSelectedItems(array)
+            onSelected(false)
+            if(array.length < 5){
+                setProceed(false)
             }
         }
-        // console.log(array)
+        console.log(array)
     }
     
     const topicItem = ({item, index}) => {
