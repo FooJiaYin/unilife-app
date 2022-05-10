@@ -19,7 +19,7 @@ export default function NewArticleScreen(props) {
     let user = props.user
     let userData = user.data()
     const [article, setArticle] = useState({
-        category: 'local',
+        category: 'posts',
         community: userData.identity.community,
         title: '',
         content: '',
@@ -49,7 +49,7 @@ export default function NewArticleScreen(props) {
         topic: '',
         tags: [],
         type: 'article',
-        status: 'submitted'
+        status: 'published'
     })
     const [images, setImages] = useState([])
     const [termsAndConditions, setTermsAndConditions] = useState(false)
@@ -140,7 +140,7 @@ export default function NewArticleScreen(props) {
             console.log(error)
         }
         setUploading(false)
-        props.navigation.navigate('Home')
+        props.navigation.navigate('Community')
     }
 
     const updateTags = (tags) => {

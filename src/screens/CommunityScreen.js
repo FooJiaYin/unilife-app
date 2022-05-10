@@ -7,6 +7,33 @@ import { ArticleListItem } from '../components/lists'
 import { ScrollTags } from '../components/articles/tags'
 import { firebase } from '../firebase/config'
 import { featuredTags } from '../firebase/functions'
+import Asset from '../components/assets'
+
+const PostBar = (props) =>
+        <TouchableOpacity 
+            onPress={() => props.navigation.navigate('NewArticle')} 
+            style={[stylesheet.inputBar, {
+                paddingTop: 0,
+                paddingBottom: 4,
+                marginBottom: 0,
+                paddingHorizontal: 12,
+            }]}
+        >
+            <Image source={Asset('edit')} style={[stylesheet.iconColor, {tintColor: Color.grey0, width: 28, height: 28}]} />
+            <TextInput
+                style={{...stylesheet.input, flex: 1, marginHorizontal: 12}}
+                editable={false}
+                placeholder='分享您的想法..'
+                placeholderTextColor="#aaaaaa"
+                underlineColorAndroid="transparent"
+                autoCapitalize="none"
+                />
+            
+            <TouchableOpacity onPress={() => props.navigation.navigate('Filter', {type: 'saved'})}>
+                <Image source={Asset('history')} style={[stylesheet.iconColor, {tintColor: Color.grey0, width: 32, height: 32}]} />
+            </TouchableOpacity>
+    </TouchableOpacity>
+
 
 export default function CommunityScreen(props) {
     
@@ -138,6 +165,7 @@ export default function CommunityScreen(props) {
                 /> 
             </View>
             {/* <ArticleTabs titles={['所有貼文', ...communitiesName, '我的貼文']} articles={articles} {...props} /> */}
+            <PostBar {...props} />
         </View>
     )
 }
