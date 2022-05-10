@@ -58,6 +58,7 @@ export default function SuccessScreen(props) {
 
     const [info, setInfo] = useState({})
     const [verification, setVerification] = useState({})
+    const [lineImage, setLineImage] = useState(undefined)
     const user = props.user || props.route.params.user
 
     async function loadUserData() {
@@ -67,6 +68,9 @@ export default function SuccessScreen(props) {
         let data = await snapshot.data()
      // console.log(user)
         setInfo(data.info)
+        if(data.info.profileImage && data.info.profileImage.startsWith("https://")) {
+            setLineImage(data.info.profileImage)
+        }
         setVerification(data.verification)
     }
 
@@ -77,12 +81,17 @@ export default function SuccessScreen(props) {
         })
     }, [info])
 
+    
     function changeProfileImage() {
+        console.log(info.profileImage)
+        console.log(lineImage)
         let currentId = (info.profileImage == "profile-image-0.png")? 0 : 
-        (info.profileImage == "profile-image-1.png")? 1 : 2
-        currentId = (currentId + 1) % 3
-        let image = "profile-image-" + currentId + ".png"
+                        (info.profileImage == "profile-image-1.png")? 1 : 
+                        (info.profileImage == "profile-image-2.png")? 2 : 3
+        currentId = (currentId + 1) % (lineImage? 4 : 3)
+        let image = currentId < 3? "profile-image-" + currentId + ".png" : lineImage
         setInfo({ ...info, profileImage: image })
+        // updateUserData()
     }
     
     useEffect(() => {

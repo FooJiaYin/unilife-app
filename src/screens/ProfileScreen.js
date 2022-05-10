@@ -18,6 +18,7 @@ export default function ProfileScreen(props) {
     const [info, setInfo] = useState({})
     const [identity, setIdentity] = useState({})
     const [user, setUser] = useState({})
+    const [lineImage, setLineImage] = useState(undefined)
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false)
     const [options, setOptions] = useState({
         counties: [
@@ -95,6 +96,9 @@ export default function ProfileScreen(props) {
         // console.log(user)
         if(user.info) {
             setInfo(user.info)
+            if(user.info.profileImage && user.info.profileImage.startsWith("https://")) {
+                setLineImage(user.info.profileImage)
+            }
         }
         setUser(user)
         setIdentity(user.identity)
@@ -150,11 +154,12 @@ export default function ProfileScreen(props) {
     }
 
     function changeProfileImage() {
-     // console.log(info.profileImage)
+        // console.log(info.profileImage)
         let currentId = (info.profileImage == "profile-image-0.png")? 0 : 
-                        (info.profileImage == "profile-image-1.png")? 1 : 2
-        currentId = (currentId + 1) % 3
-        let image = "profile-image-" + currentId + ".png"
+                        (info.profileImage == "profile-image-1.png")? 1 : 
+                        (info.profileImage == "profile-image-2.png")? 2 : 3
+        currentId = (currentId + 1) % (lineImage? 4 : 3)
+        let image = currentId < 3? "profile-image-" + currentId + ".png" : lineImage
         setInfo({ ...info, profileImage: image })
         // updateUserData()
     }
