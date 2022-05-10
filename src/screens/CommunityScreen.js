@@ -9,30 +9,45 @@ import { firebase } from '../firebase/config'
 import { featuredTags } from '../firebase/functions'
 import Asset from '../components/assets'
 
-const PostBar = (props) =>
-        <TouchableOpacity 
-            onPress={() => props.navigation.navigate('NewArticle')} 
-            style={[stylesheet.inputBar, {
+function PostBar (props) {
+    const [editIconColor, setEditIconColor] = useState(Color.grey1);
+    const [historyIconColor, setHistoryIconColor] = useState(Color.grey1);
+    return (
+        <TouchableHighlight 
+            onPress={() => props.navigation.navigate('NewArticle')}
+            onShowUnderlay={() => setEditIconColor(Color.blue)}
+            onHideUnderlay={() => setEditIconColor(Color.grey1)}
+            underlayColor={'#0000'}
+        >
+            <View style={[stylesheet.inputBar, {
                 paddingTop: 0,
                 paddingBottom: 4,
                 marginBottom: 0,
                 paddingHorizontal: 12,
-            }]}
-        >
-            <Image source={Asset('edit')} style={[stylesheet.iconColor, {tintColor: Color.grey0, width: 28, height: 28}]} />
-            <TextInput
-                style={{...stylesheet.input, flex: 1, marginHorizontal: 12}}
-                editable={false}
-                placeholder='分享您的想法..'
-                placeholderTextColor="#aaaaaa"
-                underlineColorAndroid="transparent"
-                autoCapitalize="none"
-                />
-            
-            <TouchableOpacity onPress={() => props.navigation.navigate('Filter', {type: 'history'})}>
-                <Image source={Asset('history')} style={[stylesheet.iconColor, {tintColor: Color.grey0, width: 32, height: 32}]} />
-            </TouchableOpacity>
-    </TouchableOpacity>
+            }]}>
+                <Image source={Asset('edit')} style={[stylesheet.iconColor, {tintColor: editIconColor, width: 28, height: 28}]} />
+                <TextInput
+                    style={{...stylesheet.input, flex: 1, marginHorizontal: 12}}
+                    editable={false}
+                    placeholder='分享您的想法..'
+                    placeholderTextColor="#aaaaaa"
+                    underlineColorAndroid="transparent"
+                    autoCapitalize="none"
+                    />
+                {/* <Button  style={{...stylesheet.bgLight, flex: 1}} title="分享您的想法..."  /> */}
+                
+                <TouchableHighlight 
+                    onPress={() => props.navigation.navigate('Filter', {type: 'history'})}
+                    onShowUnderlay={() => setHistoryIconColor(Color.blue)}
+                    onHideUnderlay={() => setHistoryIconColor(Color.grey1)}
+                    underlayColor={'#0000'}
+                >
+                    <Image source={Asset('history')} style={[stylesheet.iconColor, {tintColor: historyIconColor, width: 32, height: 32}]} />
+                </TouchableHighlight>
+            </View>
+        </TouchableHighlight>
+    )
+}
 
 
 export default function CommunityScreen(props) {
