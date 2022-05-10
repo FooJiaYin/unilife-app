@@ -6,17 +6,20 @@ import { ListItem } from '../components/lists'
 import { firebase } from '../firebase/config'
 import { tagNames } from '../firebase/functions'
 
-export default function FilterScreen(props) {
+export default function FilterScreen({type, ...props}) {
     // console.log(props)
     
     let user
     const [filter, setFilter] = useState(props.route.params)
-    const articlesRef = firebase.firestore().collection('articles')
+    // const collection = props.route.params.collection || 'articles'
+    let articlesRef = firebase.firestore().collection('articles')
     const [articles, setArticles] = useState([])
     // console.log("Ref", firebase.firestore().doc('articles/9qAFUBpb7n0U1bzylreO'))
 
     const options = {
-        title: (filter.type == 'saved')? '收藏' : '#' + tagNames[filter.data],
+        title: (filter.type == 'saved')? '收藏' : 
+                (filter.type == 'history')? '我的貼文' : 
+                '#' + tagNames[filter.data],
         headerLeft: 'back'
     }
 
@@ -62,20 +65,24 @@ export default function FilterScreen(props) {
         if (filter.type == 'saved') {
             loadSavedArticles()
             // return
-        } else {
-        let snapshot = await props.user.ref.get()
-        user = await snapshot.data()
-        const newArticles = []
-        const savedArticles = user.bookmarks || []
-        // console.log("bookmarks", savedArticles)
-        console.log(filter)
-        articlesRef
-            .where("community", "in", ["all", user.identity.community])
-            .where("status", "==", "published")
-            .where("tags", "array-contains", filter.data)
-            .orderBy('pinned', 'desc')
-            .orderBy('publishedAt', 'desc')
-            .get().then(querySnapshot => {
+        } else {  
+            let snapshot = await props.user.ref.get()
+            user = await snapshot.data()
+            const savedArticles = user.bookmarks || []
+            if (filter.type == 'history') {
+                console.log("history", user.id)
+                articlesRef = articlesRef.where("publishedBy", "==", user.id)
+                                // .orderBy('publishedAt', 'desc')
+            } else {
+                articlesRef = articlesRef
+                                .where("community", "in", ["all", user.identity.community])
+                                .where("status", "==", "published")
+                                .where("tags", "array-contains", filter.data)
+                                .orderBy('pinned', 'desc')
+                                .orderBy('publishedAt', 'desc')
+            }
+            const newArticles = []
+            articlesRef.get().then(querySnapshot => {
                 let promises = []
                 console.log(filter)
                 querySnapshot.forEach(async snapshot => {

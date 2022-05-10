@@ -29,7 +29,7 @@ const PostBar = (props) =>
                 autoCapitalize="none"
                 />
             
-            <TouchableOpacity onPress={() => props.navigation.navigate('Filter', {type: 'saved'})}>
+            <TouchableOpacity onPress={() => props.navigation.navigate('Filter', {type: 'history'})}>
                 <Image source={Asset('history')} style={[stylesheet.iconColor, {tintColor: Color.grey0, width: 32, height: 32}]} />
             </TouchableOpacity>
     </TouchableOpacity>
