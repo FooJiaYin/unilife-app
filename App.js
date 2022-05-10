@@ -7,7 +7,8 @@ import { firebase } from './src/firebase/config'
 import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs' 
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import * as Linking from 'expo-linking'
 import { LoginScreen, ResetPasswordScreen } from './src/screens'
 import { RegistrationScreen, FillInfoScreen, TopicSelectScreen, SuccessScreen, VerificationScreen } from './src/screens'
 import { HomeScreen, IntroScreen } from './src/screens'
@@ -21,7 +22,39 @@ if (!global.btoa) {  global.btoa = encode }
 if (!global.atob) { global.atob = decode }
 
 const Stack = createStackNavigator()
-const Tab = createBottomTabNavigator()
+const Tab = createBottomTabNavigator();
+
+const prefix = Linking.makeUrl('/');
+
+const linking = {
+	prefixes: [prefix],
+	config: {
+		screens: {
+			Login: "login/:token",
+			Tabs: {
+				screens: {
+					ArticleStack: {
+						screens: {
+							Articles: "articles",
+							Article: "article/:id",
+							// Article: {
+							// 	path: 'article/:id',
+							// 	parse: {
+							// 	  article: (id) => ({id: id}),
+							// 	},
+							// 	stringify: {
+							// 	  id: (id) => id.replace(/^user-/, ''),
+							// 	},
+							// }
+						}
+					}
+				}
+			}
+			// Home: "home",
+			// Settings: "settings",
+		}
+	}
+}
 
 // Notifications.setNotificationHandler({
 // 	handleNotification: async () => ({
@@ -104,8 +137,23 @@ export default function App() {
 			Notifications.removeNotificationSubscription(responseListener.current);
 		};
 	}
+
+	async function getInitialUrl() {
+		const initialURL = await Linking.getInitialURL()
+		if (initialURL) {
+			console.log('initialURL', initialURL)
+			// setData(Linking.parse(initialURL));
+		}
+	}
 	
 	useEffect(() => {
+		Linking.addEventListener("url", (event) => {
+			if(!data) {
+				getInitialUrl();
+			}
+			let data = Linking.parse(event.url);
+			// setData(data);
+		})
 		const usersRef = firebase.firestore().collection('users')
 		firebase.auth().onAuthStateChanged(user => {
 			if (user) {
@@ -251,7 +299,7 @@ export default function App() {
 
 	return (
 		<SafeAreaProvider>
-			<NavigationContainer>
+			<NavigationContainer linking={linking}>
 				{ firebase.auth().currentUser ? (
 					<Stack.Navigator>	
 						{/* <Stack.Screen name="Chatroom">

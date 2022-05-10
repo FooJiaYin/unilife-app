@@ -2,6 +2,7 @@
   "expo": {
     "name": "UniLife",
     "slug": "unilife",
+    "scheme": "unilife",
     "platforms": [
       "ios",
       "android",
