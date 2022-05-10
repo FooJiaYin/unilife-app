@@ -25,7 +25,7 @@ export function ArticleTabs({titles, articles, ...props}) {
         // second: () =>　<View style={{ flex: 1, backgroundColor: '#673ab7' }} />
         tab1: () => 
         <View>
-            <ScrollTags tags={featuredTags[categories[0]]} />
+            <ScrollTags {...props} tags={featuredTags[categories[0]]? featuredTags[categories[0]]: []} />
             <FlatList
                     data={articles[categories[0]]}
                     renderItem={({item}) => <ArticleListItem item={item} {...props} />}
@@ -37,7 +37,7 @@ export function ArticleTabs({titles, articles, ...props}) {
         </View>,
         tab2: () =>  
         <View>
-            <ScrollTags tags={featuredTags[categories[1]]} />
+            <ScrollTags {...props} tags={featuredTags[categories[1]]? featuredTags[categories[1]]: []} />
             <FlatList
                     data={articles[categories[1]]}
                     renderItem={({item}) => <ArticleListItem item={item} {...props} />}
@@ -49,7 +49,7 @@ export function ArticleTabs({titles, articles, ...props}) {
         </View>,
         tab3: () =>  
         <View>
-            <ScrollTags tags={featuredTags[categories[2]]} />
+            <ScrollTags {...props} tags={featuredTags[categories[2]]? featuredTags[categories[2]]: []} />
             <FlatList
                     data={articles[categories[2]]}
                     renderItem={({item}) => <ArticleListItem item={item} {...props} />}
@@ -61,7 +61,7 @@ export function ArticleTabs({titles, articles, ...props}) {
         </View>,
         tab4: () =>  
         <View>
-            <ScrollTags tags={featuredTags[categories[3]]} />
+            <ScrollTags {...props} tags={featuredTags[categories[3]]? featuredTags[categories[3]]: []} />
             <FlatList
                     data={articles[categories[3]]}
                     renderItem={({item}) => <ArticleListItem item={item} {...props} />}

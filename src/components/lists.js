@@ -177,12 +177,7 @@ export function ListItem({ item, onPress, style, onButtonPress, chipAction, ...p
                                 name="article"
                                 >
                             <copilot.View> */}
-                            {data.tags? 
-                                <SmallTags 
-                                    tags={data.tags} 
-                                    action={chipAction? ()=> action('tag', tag) : ()=>props.navigation.navigate('Filter', {type: 'tag', data: tag}) }
-                                /> 
-                            : null}
+                            {data.tags?  <SmallTags tags={data.tags} {...props} /> : null}
                             {/* </copilot.View>
                             </copilot.Step> */}
                             <Text style={style? [listItemStyle.bottomText, style.bottomText] : listItemStyle.bottomText}>
