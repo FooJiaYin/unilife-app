@@ -13,8 +13,7 @@
     "icon": "./assets/logo.png",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#0f355c"
+      "resizeMode": "cover"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
