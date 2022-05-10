@@ -212,20 +212,15 @@ export default function TopicSelectScreen(props) {
         // TODO: submit user input here
 
         // setInterest(selectedItems)
-        
-        props.route.params.user.ref.update({
-            interests: selectedItems,
-            score: getScore(selectedItems)
-        })
         props.route.params.user.ref.get().then(snapshot => {
                 const data = snapshot.data()
                 // console.log(data.info.name, data.lastActive, data.score)
                 var recommendations = []
                 firebase.firestore().collection('articles')
-                .where('community', '==', data.identity.community)
-                .where('status', '==', 'published')
-                .where('pinned', '==', false)
-                // .where('publishedAt', '<', data.lastActive.toDate())
+                .where("community", "in", user.identity.communities.concat(["all"]))
+                .where("category", "!=", 'posts')
+                .orderBy("pinned", 'desc')
+                .where("status", "==", "published")
                 .orderBy('publishedAt', 'desc').get().then(article_querySnapshot => {
                     article_querySnapshot.forEach(articleSnapshot => {
                         const data = articleSnapshot.data()
@@ -233,19 +228,15 @@ export default function TopicSelectScreen(props) {
                         recommendations.push(articleSnapshot.id)
                     })
                 }).finally(() => {
-                    snapshot.ref.update({
+                    snapshot.ref.update({   
+                        interests: selectedItems,
+                        score: getScore(selectedItems),
                         recommendation: recommendations.slice(0,500),
                         lastActive: firebase.firestore.FieldValue.serverTimestamp()
                     })
                     return props.navigation.navigate('Success')
                 })
-            // else {
-            //     snapshot.ref.update({
-            //         lastActive: admin.firestore.Timestamp.fromMillis(1633977297000)
-            //     })
-            // }
             })
-        // return props.navigation.navigate('Tabs')
     }
     return(
         <>
