@@ -20,24 +20,30 @@ export default function ProfileScreen(props) {
     const [user, setUser] = useState({})
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false)
     const [options, setOptions] = useState({
-        grade: [
-            {label: '一年級', value: 1},
-            {label: '二年級', value: 2},
-            {label: '三年級', value: 3},
-            {label: '四年級', value: 4},
-            {label: '五年級', value: 5},
-            {label: '六年級', value: 6},
-            {label: '七年級', value: 7},
+        counties: [
+            {label: '基隆市', value: 'keelung'},
+            {label: '臺北市', value: 'taipei'},
+            {label: '新北市', value: 'newtaipei'},
+            {label: '桃園市', value: 'taoyuan'},
+            {label: '新竹市', value: 'hsinchuCity'},
+            {label: '新竹縣', value: 'hsinchuCounty'},
+            {label: '苗栗縣', value: 'miaoli'},
+            {label: '臺中市', value: 'taichung'},
+            {label: '彰化縣', value: 'changhua'},
+            {label: '南投縣', value: 'nantou'},
+            {label: '雲林縣', value: 'yunlin'},
+            {label: '嘉義市', value: 'chiayiCity'},
+            {label: '嘉義縣', value: 'chiayiCounty'},
+            {label: '臺南市', value: 'tainan'},
+            {label: '高雄市', value: 'kaohsiung'},
+            {label: '屏東縣', value: 'pintung'},
+            {label: '臺東縣', value: 'taitung'},
+            {label: '花蓮縣', value: 'hualien'},
+            {label: '宜蘭縣', value: 'yilan'},
+            {label: '澎湖縣', value: 'penghu'},
+            {label: '金門縣', value: 'kinmen'},
+            {label: '連江縣', value: 'matsu'},
         ],
-        degree: [
-            {label: '大學部', value: 'bachelor'},
-            {label: '碩士班', value: 'master'},
-            {label: '博士班', value: 'phd'},
-        ],
-        gender: [
-            {label: '男', value: '男'},
-            {label: '女', value: '女'}
-        ]
     }) 
 
     const headerOptions = {
@@ -65,18 +71,19 @@ export default function ProfileScreen(props) {
         // console.log(newOptions)
     }
 
-    async function loadDepartments(community) {
-        let querySnapshot = await firebase.firestore().doc('communities/' + community).collection('departments').get()
-        let newDepartments = []
-        querySnapshot.forEach(snapshot => {
-            newDepartments.push({
-                value: snapshot.id,
-                label: snapshot.data().name
+    async function setCounty(county) {
+        if (county != identity.county) {
+            setIdentity({ 
+                ...identity, 
+                county: county, 
+                district: undefined,
             })
-        })
-        setOptions({...options, departments: newDepartments})
-        // console.log(newDepartments)
-        // console.log(departments)
+        }
+        let snapshot = await firebase.firestore().doc('communities/' + county).get()
+        let data = await snapshot.data()
+        let districts = data && data.districts? data.districts.map(district => ({value: data.name + district, label: district})) : [];
+        setOptions({...options, districts: districts})
+        console.log(options)
     }
 
     async function loadUserData() {
@@ -84,31 +91,39 @@ export default function ProfileScreen(props) {
         // console.log("identity", user.identity.community)
         let snapshot = await props.user.ref.get()
         let user = await snapshot.data()
-        loadDepartments(user.identity.community)
+        // loadDepartments(user.identity.community)
         // console.log(user)
-        setInfo(user.info)
-        setIdentity(user.identity)
+        if(user.info) {
+            setInfo(user.info)
+        }
         setUser(user)
+        setIdentity(user.identity)
+        setCounty(user.identity.county)
     }
 
     const updateUserData = async () => {
         // console.log(identity)
         await props.user.ref.update({
             info: info,
-            identity: identity.grade? {
+            identity: {
                 ...identity,
-                grade: Number(identity.grade),
-            } : identity,
+                community: identity.district,
+                communities: [identity.district, identity.county],
+            },
         })
     }
 
     const onSavePress = () => {
-        if (!info.name || info.name == '') {
-            Alert.alert('', "請設定姓名")
-            return
-        }
         if (!info.nickname || info.nickname == '') {
             Alert.alert('', "請設定暱稱")
+            return
+        }
+        if (!identity.county || identity.county == '') {
+            Alert.alert('', "請選擇縣市")
+            return
+        }
+        if (!identity.district || identity.district == '') {
+            Alert.alert('', "請選擇行政區")
             return
         }
         // if (!info.birthday) {
@@ -156,32 +171,12 @@ export default function ProfileScreen(props) {
         }).then(() => {
             firebase.auth().signOut().then(() => {
                 console.log( firebase.auth().currentUser)
-                props.navigation.navigate('Login2')
+                props.navigation.navigate('Login')
             })
         })
     }
 
     useEffect(() => {
-        // firebase.firestore().doc('config/options').update({
-        //     grade: [
-        //         {label: '一年級', value: 1},
-        //         {label: '二年級', value: 2},
-        //         {label: '三年級', value: 3},
-        //         {label: '四年級', value: 4},
-        //         {label: '五年級', value: 5},
-        //         {label: '六年級', value: 6},
-        //         {label: '七年級', value: 7},
-        //     ],
-        //     degree: [
-        //         {label: '大學部', value: 'bachelor'},
-        //         {label: '碩士班', value: 'master'},
-        //         {label: '博士班', value: 'phd'},
-        //     ],
-        //     gender: [
-        //         {label: '男', value: '男'},
-        //         {label: '女', value: '女'}
-        //     ],
-        // })
         // loadOptions()
         loadUserData()
     }, [])
@@ -201,6 +196,27 @@ export default function ProfileScreen(props) {
                 </View>
                 <View style={styles.container}>
                     <TextInput
+                        style={styles.input}
+                        defaultValue={info.nickname}
+                        placeholder='暱稱'
+                        placeholderTextColor="#aaaaaa"
+                        underlineColorAndroid="transparent"
+                        autoCapitalize="none"
+                        onChangeText={(input) => setInfo({ ...info, nickname: input })}
+                    />
+                    <Select 
+                        value={identity.county} 
+                        items={options.counties}
+                        onChange={(input) => setCounty(input)}
+                        placeholder='請選擇縣市...'
+                    />
+                    <Select 
+                        value={identity.district} 
+                        items={options.districts}
+                        onChange={(input) => setIdentity({ ...identity, district: input })}
+                        placeholder='請選擇行政區...'
+                    />
+                    <TextInput
                         style={[styles.input]}
                         value={info.email}
                         placeholder='Email'
@@ -209,24 +225,6 @@ export default function ProfileScreen(props) {
                         underlineColorAndroid="transparent"
                         autoCapitalize="none"
                         editable={false}
-                    />
-                    <TextInput
-                        style={styles.input}
-                        defaultValue={info.name}
-                        placeholder='姓名'
-                        placeholderTextColor="#aaaaaa"
-                        underlineColorAndroid="transparent"
-                        autoCapitalize="none"
-                        onChangeText={(input) => setInfo({ ...info, name: input })}
-                    />
-                    <TextInput
-                        style={styles.input}
-                        defaultValue={info.nickname}
-                        placeholder='暱稱'
-                        placeholderTextColor="#aaaaaa"
-                        underlineColorAndroid="transparent"
-                        autoCapitalize="none"
-                        onChangeText={(input) => setInfo({ ...info, nickname: input })}
                     />
                     <TextInput
                         style={styles.input}
@@ -243,32 +241,6 @@ export default function ProfileScreen(props) {
                             Keyboard.dismiss()}
                         }
                     />
-                    <Select 
-                        value={identity.department} 
-                        items={options.departments}
-                        onChange={(input) => setIdentity({ ...identity, department: input })}
-                        placeholder='請選擇系所...'
-                    />
-                    <Select 
-                        value={identity.degree} 
-                        items={options.degree}
-                        onChange={(input) => setIdentity({ ...identity, degree: input })}
-                        placeholder='請選擇學位...'
-                    />
-                    <Select 
-                        value={identity.grade} 
-                        items={options.grade}
-                        onChange={(input) => setIdentity({ ...identity, grade: input })}
-                        placeholder='請選擇年級...'
-                    />
-                    {
-                        user.verification && user.verification.status == true ? null :
-                        <Button
-                            titleStyle={[stylesheet.textBlue, {fontWeight: 'bold'}]}
-                            onPress={() => props.navigation.navigate('Verification', {user: props.user})} 
-                            title='驗證身份'
-                        />
-                    }
                     <Button
                         style={stylesheet.bgGreen}
                         onPress={() => onSavePress()} 
@@ -297,4 +269,3 @@ export default function ProfileScreen(props) {
         </View>
     )
 }
-

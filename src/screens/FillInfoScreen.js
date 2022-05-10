@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { Image, Text, TextInput, Modal, View, Keyboard, Alert, ScrollView } from 'react-native'
+import { Image, ImageBackground, Text, TextInput, Modal, View, Keyboard, Alert, ScrollView } from 'react-native'
 import { setHeaderOptions } from '../components/navigation'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { stylesheet, htmlStyles } from '../styles/styles'
+import { stylesheet, Color } from '../styles'
+import styles from '../styles/profileStyles'
+import Asset from '../components/assets'
 import { firebase } from '../firebase/config'
 import { Button, Select, PasswordInput } from '../components/forms'
 import RenderHtml from 'react-native-render-html'
@@ -12,28 +14,52 @@ import time from '../utils/time'
 export default function FillInfoScreen(props) {
     const [info, setInfo] = useState({})
     const [identity, setIdentity] = useState({})
-	const [password, setPassword] = useState("")
-	const [confirmPassword, setConfirmPassword] = useState("")
+	// const [password, setPassword] = useState("")
+	// const [confirmPassword, setConfirmPassword] = useState("")
     const [agree, setAgree] = useState(false)
     const [termsAndConditions, setTermsAndConditions] = useState(false)
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false)
     const [isModalVisible, setModalVisibility] = useState(false)
     const [currentHTML, setCurrentHTML] = useState("")
     const [options, setOptions] = useState({
-        grade: [
-            {label: '一年級', value: 1},
-            {label: '二年級', value: 2},
-            {label: '三年級', value: 3},
-            {label: '四年級', value: 4},
-            {label: '五年級', value: 5},
-            {label: '六年級', value: 6},
-            {label: '七年級', value: 7},
+        counties: [
+            {label: '基隆市', value: 'keelung'},
+            {label: '臺北市', value: 'taipei'},
+            {label: '新北市', value: 'newtaipei'},
+            {label: '桃園市', value: 'taoyuan'},
+            {label: '新竹市', value: 'hsinchuCity'},
+            {label: '新竹縣', value: 'hsinchuCounty'},
+            {label: '苗栗縣', value: 'miaoli'},
+            {label: '臺中市', value: 'taichung'},
+            {label: '彰化縣', value: 'changhua'},
+            {label: '南投縣', value: 'nantou'},
+            {label: '雲林縣', value: 'yunlin'},
+            {label: '嘉義市', value: 'chiayiCity'},
+            {label: '嘉義縣', value: 'chiayiCounty'},
+            {label: '臺南市', value: 'tainan'},
+            {label: '高雄市', value: 'kaohsiung'},
+            {label: '屏東縣', value: 'pintung'},
+            {label: '臺東縣', value: 'taitung'},
+            {label: '花蓮縣', value: 'hualien'},
+            {label: '宜蘭縣', value: 'yilan'},
+            {label: '澎湖縣', value: 'penghu'},
+            {label: '金門縣', value: 'kinmen'},
+            {label: '連江縣', value: 'matsu'},
         ],
-        degree: [
-            {label: '大學部', value: 'bachelor'},
-            {label: '碩士班', value: 'master'},
-            {label: '博士班', value: 'phd'},
-        ],
+        // grade: [
+        //     {label: '一年級', value: 1},
+        //     {label: '二年級', value: 2},
+        //     {label: '三年級', value: 3},
+        //     {label: '四年級', value: 4},
+        //     {label: '五年級', value: 5},
+        //     {label: '六年級', value: 6},
+        //     {label: '七年級', value: 7},
+        // ],
+        // degree: [
+        //     {label: '大學部', value: 'bachelor'},
+        //     {label: '碩士班', value: 'master'},
+        //     {label: '博士班', value: 'phd'},
+        // ],
         gender: [
             {label: '男', value: '男'},
             {label: '女', value: '女'}
@@ -59,43 +85,46 @@ export default function FillInfoScreen(props) {
         setCurrentHTML(termsData.terms)
     }
 
-    async function loadDepartments(community) {
-        let querySnapshot = await firebase.firestore().doc('communities/' + community).collection('departments').get()
-        let newDepartments = []
-        querySnapshot.forEach(snapshot => {
-            newDepartments.push({
-                value: snapshot.id,
-                label: snapshot.data().name
-            })
-        })
-        setOptions({...options, departments: newDepartments})
-        // console.log(newDepartments)
-        // console.log(departments)
-    }
-
     async function loadUserData() {
-        // console.log(firebase.auth().currentUser)
-        // console.log("community", user.community)
-        // console.log("identity", user.identity.community)
         let snapshot = await user.ref.get()
         let userData = await snapshot.data()
-        // console.log(userData)
-        loadDepartments(userData.identity.community)
-        if(userData.info) setInfo(userData.info)
-        if(userData.identity) setIdentity(userData.identity)
+        if(userData.info) {
+            setInfo(userData.info)
+        }
+        if(userData.identity) {
+            // userData.identity.communities = [undefined, undefined]
+            setIdentity(userData.identity)
+        }
+    }
+
+    async function setCounty(county) {
+        if (county != identity.county) {
+            setIdentity({ 
+                ...identity, 
+                county: county, 
+                district: undefined,
+            })
+        }
+        let snapshot = await firebase.firestore().doc('communities/' + county).get()
+        let data = await snapshot.data()
+        let districts = data && data.districts? data.districts.map(district => ({value: (data.name + district), label: district})) : [];
+        setOptions({...options, districts: districts})
     }
 
     async function updateUserData() {
         // console.log(password)
         await user.ref.update({
             info: info,
-            verification: {
-                status: true,
-                type: 'file'
-            },
             identity: {
                 ...identity,
-                grade: Number(identity.grade),
+                community: identity.district,
+                communities: [identity.district, identity.county],
+                // grade: Number(identity.grade),
+            },
+            guide: {
+                home: false,
+                intro: false,
+                notification: false,
             },
             settings: {
                 chat: false,
@@ -131,40 +160,20 @@ export default function FillInfoScreen(props) {
     }
 
     const onRegisterPress = () => {
-        if (!info.name || info.name == '') {
-            Alert.alert('', "請設定姓名")
+        // if (!info.name || info.name == '') {
+        //     Alert.alert('', "請設定姓名")
+        //     return
+        // }
+        if (!info.nickname || info.nickname == '') {
+            Alert.alert('', "請設定暱稱")
             return
         }
-        // if (!info.nickname || info.nickname == '') {
-        //     Alert.alert('', "請設定暱稱")
-        //     return
-        // }
-        // if (!info.birthday) {
-        //     Alert.alert('', "請設定生日日期")
-        //     return
-        // }
-        // if (!info.gender || info.gender == '') {
-        //     Alert.alert('', "請選擇性別")
-        //     return
-        // }
-        // if (!identity.department || identity.department == '') {
-        //     Alert.alert('', "請選擇系所")
-        //     return
-        // }
-        // if (!identity.degree || identity.degree == '') {
-        //     Alert.alert('', "請選擇學位")
-        //     return
-        // }
-        // if (!identity.grade || identity.grade == '') {
-        //     Alert.alert('', "請選擇年級")
-        //     return
-        // }
-        if (password.length < 6) {
-            Alert.alert('', "密碼長度不足")
+        if (!identity.county || identity.county == '') {
+            Alert.alert('', "請選擇縣市")
             return
         }
-        if (password !== confirmPassword) {
-            Alert.alert('', "確認密碼不相符！")
+        if (!identity.district || identity.district == '') {
+            Alert.alert('', "請選擇行政區")
             return
         }
         if (!agree) {
@@ -215,10 +224,6 @@ export default function FillInfoScreen(props) {
     useEffect(() => {
         loadUserData()
         loadTermsAndConditions()
-        setInfo({
-            email: firebase.auth().currentUser.email,
-            profileImage: info.profileImage || 'profile-image-0.png'
-        })
     }, [])
 
     return (
@@ -227,7 +232,16 @@ export default function FillInfoScreen(props) {
             <KeyboardAwareScrollView
                 style={{ flex: 1, width: '100%', height:'100%'}}
                 keyboardShouldPersistTaps="always">
-                <View style={{padding: 16}}>
+                <View style={{padding: 16}} >
+                    <TextInput
+                        style={stylesheet.input}
+                        defaultValue={info.nickname}
+                        placeholder='暱稱（必填）'
+                        placeholderTextColor="#aaaaaa"
+                        underlineColorAndroid="transparent"
+                        autoCapitalize="none"
+                        onChangeText={(input) => setInfo({ ...info, nickname: input })}
+                    />
                     <TextInput
                         style={[stylesheet.input, stylesheet.textGrey]}
                         value={info.email}
@@ -238,38 +252,17 @@ export default function FillInfoScreen(props) {
                         autoCapitalize="none"
                         editable={false}
                     />
-                    <TextInput
-                        style={stylesheet.input}
-                        defaultValue={info.name}
-                        placeholder='姓名'
-                        placeholderTextColor="#aaaaaa"
-                        underlineColorAndroid="transparent"
-                        autoCapitalize="none"
-                        onChangeText={(input) => setInfo({ ...info, name: input })}
+                    <Select 
+                        value={identity.county} 
+                        items={options.counties}
+                        onChange={(input) => setCounty(input)}
+                        placeholder='請選擇縣市（必填）...'
                     />
-                    {/* <TextInput
-                        style={stylesheet.input}
-                        defaultValue={info.nickname}
-                        placeholder='暱稱'
-                        placeholderTextColor="#aaaaaa"
-                        underlineColorAndroid="transparent"
-                        autoCapitalize="none"
-                        onChangeText={(input) => setInfo({ ...info, nickname: input })}
-                    />
-                    <TextInput
-                        style={stylesheet.input}
-                        // defaultValue={time(info.birthday).format('YYYY-MM-DD') || ''}
-                        value={info.birthday? time(info.birthday).format('YYYY-MM-DD') : ''}
-                        placeholder='生日'
-                        placeholderTextColor="#aaaaaa"
-                        underlineColorAndroid="transparent"
-                        autoCapitalize="none"
-                        showSoftInputOnFocus={false}
-                        // onChangeText={(input) => setInfo({ ...info, birthday: input })}
-                        onFocus={()=>{
-                            setDatePickerVisibility(true)
-                            Keyboard.dismiss()}
-                        }
+                    <Select 
+                        value={identity.district} 
+                        items={options.districts}
+                        onChange={(input) => setIdentity({ ...identity, district: input })}
+                        placeholder='請選擇行政區（必填）...'
                     />
                     <Select 
                         // value={info.gender} 
@@ -277,92 +270,21 @@ export default function FillInfoScreen(props) {
                         onChange={(input) => setInfo({ ...info, gender: input })}
                         placeholder='請選擇生理性別...'
                     />
-                    <Select 
-                        // value={identity.department} 
-                        items={options.departments}
-                        onChange={(input) => setIdentity({ ...identity, department: input })}
-                        placeholder='請選擇系所...'
+                    <TextInput
+                        style={stylesheet.input}
+                        value={info.birthday? time(info.birthday).format('YYYY-MM-DD') : ''}
+                        placeholder='生日'
+                        placeholderTextColor="#aaaaaa"
+                        underlineColorAndroid="transparent"
+                        autoCapitalize="none"
+                        showSoftInputOnFocus={false}
+                        onFocus={()=>{
+                            setDatePickerVisibility(true)
+                            Keyboard.dismiss()}
+                        }
                     />
-                    <Select 
-                        // value={identity.degree} 
-                        items={options.degree}
-                        onChange={(input) => setIdentity({ ...identity, degree: input })}
-                        placeholder='請選擇學位...'
-                    />
-                    <Select 
-                        // value={identity.grade} 
-                        items={options.grade}
-                        onChange={(input) => setIdentity({ ...identity, grade: input })}
-                        placeholder='請選擇年級...'
-                    />  */}
-                    {/* <View style={[stylesheet.input, {justifyContent: 'center'}]}>
-                        <Picker
-                            selectedValue={''}
-                            onValueChange={(itemValue, itemIndex) =>{
-                                setIdentity({ ...identity, department: itemValue })
-                            }}
-                            style={{padding: 0, margin: -10}}
-                            // mode="dropdown"
-                        >
-                            <Picker.Item label="請選擇系所..." value="" />
-                            {departments.map((department, i)=>
-                                <Picker.Item label={department.name} value={department.id} />
-                            )}
-                        </Picker> 
-                    </View>  
-                    <View style={[stylesheet.input, {justifyContent: 'center'}]}>
-                        <Picker
-                            selectedValue={''}
-                            onValueChange={(itemValue, itemIndex) =>{
-                                setIdentity({ ...identity, degree: itemValue })
-                            }}
-                            style={{padding: 0, margin: -10}}
-                            // mode="dropdown"
-                        >
-                            <Picker.Item label="請選擇學位..." value="" />
-                            <Picker.Item label="大學部" value="bachelor" />
-                            <Picker.Item label="碩士班" value="master" />
-                            <Picker.Item label="博士班" value="phd" />
-                        </Picker> 
-                    </View> 
-                    <View style={[stylesheet.input, {justifyContent: 'center'}]}>
-                        <Picker
-                            selectedValue={''}
-                            onValueChange={(itemValue, itemIndex) =>{
-                                setIdentity({ ...identity, grade: itemValue })
-                            }}
-                            style={{padding: 0, margin: -10}}
-                            // mode="dropdown"
-                        >
-                            <Picker.Item label="請選擇年級..." value="" />
-                            <Picker.Item label="1" value={1} />
-                            <Picker.Item label="2" value={2} />
-                            <Picker.Item label="3" value={3} />
-                            <Picker.Item label="4" value={4} />
-                            <Picker.Item label="5" value={5} />
-                            <Picker.Item label="6" value={6} />
-                            <Picker.Item label="7" value={7} />
-                        </Picker> 
-                    </View>  */}
-                    <PasswordInput
-                        placeholder='密碼（至少6字元）'
-                        onChangeText={(text) => setPassword(text)}
-                        value={password}
-                    />
-                    <PasswordInput
-                        placeholder='再次輸入密碼'
-                        onChangeText={(text) => setConfirmPassword(text)}
-                        value={confirmPassword}
-                    />
-                    {/* <View style={{height:70}} /> */}
                     <View style={stylesheet.footerView}>
-                        <Text style={stylesheet.footerText}>
-                        {/* <Button
-                            onPress={()=>setAgree(true)}
-                            color={agree?'#00aebb':'#e2e3e4'}>
-                                    v
-                            </Button> */}
-                            
+                        <Text style={stylesheet.footerText}>                            
                             請閲讀並同意
                             <Text onPress={()=>setModalVisibility(true)}
                                 style={stylesheet.footerLink}>UniLife服務條款</Text>
