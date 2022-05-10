@@ -19,7 +19,7 @@ export default function FilterScreen({type, ...props}) {
     const options = {
         title: (filter.type == 'saved')? '收藏' : 
                 (filter.type == 'history')? '我的貼文' : 
-                '#' + tagNames[filter.data],
+                '#' + (tagNames[filter.data] || filter.data),
         headerLeft: 'back'
     }
 
@@ -142,7 +142,7 @@ export default function FilterScreen({type, ...props}) {
             chipAction={(type, data) => {
                 loadArticles({type, data})
                 props.navigation.setOptions({
-                    title: '#' + tagNames[data]
+                    title: '#' + tagNames[data] || data
                 })
             }}
         />

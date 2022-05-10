@@ -7,7 +7,7 @@ import { firebase } from '../firebase/config'
 import { Button, Select, PasswordInput } from '../components/forms'
 import RenderHtml from 'react-native-render-html'
 import { Chip } from '../components/chip'
-import { tagNames, localTags, foodTags } from '../firebase/functions'
+import { tagNames, helpTags, localTags, pandemicTags } from '../firebase/functions'
 import Asset from '../components/assets'
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
@@ -293,8 +293,8 @@ export default function NewArticleScreen(props) {
                             style={{flexDirection: 'row', paddingTop: 14, paddingBottom: 5, flexGrow: 0}}
                             contentContainerStyle={{alignItems: 'center'}} >
                             {article.tags.map(tag => <Chip 
-                                label={tagNames[tag]} 
-                                color={foodTags.includes(tag) ? Color.red : Color.green} 
+                                label={tagNames[tag] || tag} 
+                                color={pandemicTags.includes(tag) ? Color.red : Color.green} 
                                 size={'large'} focused 
                                 action={() => setTagSelectModalVisibility(true)}
                             />)}
@@ -363,8 +363,8 @@ export function TagSelectModal ({visible, onClose, tags}) {
 
     function updateTags(tag) {
         let tags = selectedTags.includes(tag)? selectedTags.filter(e => e !== tag) : [...selectedTags, tag]
-        if (tags.length > 3) {
-            Alert.alert('標籤數量已達上限', '目前最多只能選擇三個標籤喔！')
+        if (tags.length > 2) {
+            Alert.alert('標籤數量已達上限', '目前最多只能選擇兩個標籤喔！')
             return
         }
         setSelectedTags(tags)
@@ -386,6 +386,22 @@ export function TagSelectModal ({visible, onClose, tags}) {
                             </Button> */}
                             
                         </Text>
+            <Text style={{flex: 0, ...stylesheet.textDark}}>鄰里互助</Text>
+            <FlatList
+                data={helpTags}
+                style={{ marginVertical: 10 }}
+                contentContainerStyle={{flexDirection : "row", flexWrap : "wrap", justifyContent : 'space-between'}} 
+                renderItem={({item}) => 
+                    <Chip 
+                        style={{marginVertical: 6}}
+                        label={tagNames[item] || item} 
+                        type={'tag'} size={'large'} 
+                        focused={selectedTags.includes(item)}
+                        action={()=>updateTags(item)} /> 
+                }
+                // horizontal={true}
+                keyExtractor={(item, index) => item}
+            />
             <Text style={{flex: 0, ...stylesheet.textDark}}>在地生活</Text>
             <FlatList
                 data={localTags}
@@ -394,7 +410,7 @@ export function TagSelectModal ({visible, onClose, tags}) {
                 renderItem={({item}) => 
                     <Chip 
                         style={{marginVertical: 6}}
-                        label={tagNames[item]} 
+                        label={tagNames[item] || item} 
                         type={'tag'} size={'large'} 
                         focused={selectedTags.includes(item)}
                         action={()=>updateTags(item)} /> 
@@ -402,16 +418,16 @@ export function TagSelectModal ({visible, onClose, tags}) {
                 // horizontal={true}
                 keyExtractor={(item, index) => item}
             />
-            <Text style={{flex: 0, ...stylesheet.textDark}}>三餐日常（請選擇一個用餐時段ex.午餐，和一個食物類型ex.中式）</Text>
+            <Text style={{flex: 0, ...stylesheet.textDark}}>疫情消息</Text>
             {/* <Text style={{flex: 0, ...stylesheet.textDark}}>美食</Text> */}
             <FlatList
-                data={foodTags}
+                data={pandemicTags}
                 style={{ marginVertical: 10 }}
                 contentContainerStyle={{flexDirection : "row", flexWrap : "wrap", justifyContent : 'space-between'}} 
                 renderItem={({item}) => 
                     <Chip 
                         style={{marginVertical: 6}}
-                        label={tagNames[item]} 
+                        label={tagNames[item] || item} 
                         color={Color.red}
                         size={'large'} 
                         focused={selectedTags.includes(item)}

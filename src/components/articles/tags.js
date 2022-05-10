@@ -7,7 +7,7 @@ import { Chip } from '../chip'
 export const ScrollTags = ({tags}) => <ScrollView horizontal showsHorizontalScrollIndicator={false} 
     style={{flexDirection: 'row', paddingHorizontal: 10, paddingVertical: 5, height: 56}}>
     {tags.map(tag => <Chip 
-        label={'#' + tagNames[tag]} 
+        label={'#' + (tagNames[tag] || tag)} 
         color={Color.green} 
         size={'large'} focused 
         action={()=>props.navigation.navigate('Filter', {type: 'tag', data: tag}) }
@@ -17,7 +17,7 @@ export const ScrollTags = ({tags}) => <ScrollView horizontal showsHorizontalScro
 export const SmallTags = ({tags, action}) => <View
     style={{flexDirection: 'row'}}>
     {tags.map(tag => <Chip 
-        label={tagNames[tag]} 
+        label={tagNames[tag] || tag} 
         type={'tag'} 
         action={action}
     />)}
