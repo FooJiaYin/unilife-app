@@ -222,6 +222,7 @@ export function ArticleListItem(props) {
                         total: 0.0,
                         max: 0.0,
                     },
+                    like: 0,
                     save: false,
                     share: 0,
                     comment: 0,
