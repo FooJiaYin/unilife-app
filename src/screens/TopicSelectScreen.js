@@ -212,20 +212,23 @@ export default function TopicSelectScreen(props) {
         // TODO: submit user input here
 
         // setInterest(selectedItems)
+        const user = 
         props.route.params.user.ref.get().then(snapshot => {
                 const data = snapshot.data()
                 // console.log(data.info.name, data.lastActive, data.score)
                 var recommendations = []
                 firebase.firestore().collection('articles')
-                .where("community", "in", user.identity.communities.concat(["all"]))
-                .where("category", "!=", 'posts')
+                .where("community", "in", data.identity.communities.concat(["all"]))
                 .orderBy("pinned", 'desc')
                 .where("status", "==", "published")
-                .orderBy('publishedAt', 'desc').get().then(article_querySnapshot => {
+                .orderBy('publishedAt', 'desc')
+                .get().then(article_querySnapshot => {
                     article_querySnapshot.forEach(articleSnapshot => {
                         const data = articleSnapshot.data()
+                        if (data.category && data.category != "posts") {
+                            recommendations.push(articleSnapshot.id)
+                        }
                         // console.log(data.title, data.publishedAt.toDate(), data.topic)
-                        recommendations.push(articleSnapshot.id)
                     })
                 }).finally(() => {
                     snapshot.ref.update({   
