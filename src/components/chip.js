@@ -40,7 +40,7 @@ export function Chip({ label, type, focused = false, size = 'small', action, sty
             },
             text: {
                 fontSize: 16,
-                // lineHeight: 18,
+                lineHeight: 20,
             }
         })
     }
