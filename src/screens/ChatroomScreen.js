@@ -51,7 +51,7 @@ export default function ChatroomScreen(props) {
                 inChat: (userData.settings && userData.settings.inChat) ? userData.settings.inChat : false,
                 verified: (userData.verification && userData.verification.status) ? userData.verification.status : false,
             });
-            firebase.firestore().doc(`communities/${user.identity.community}`).onSnapshot(snapshot => {
+            firebase.firestore().doc(`communities/${userData.identity.community}`).onSnapshot(snapshot => {
                 let community = snapshot.data()
                 if(userData.settings && userData.settings.inChat == false) {
                     let newChatrooms = chatrooms
