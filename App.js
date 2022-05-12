@@ -1,4 +1,4 @@
-import 'react-native-gesture-handler'
+// import 'react-native-gesture-handler'
 import React, { useEffect, useState, useRef } from 'react'
 import { Platform } from 'react-native';
 import Constants from 'expo-constants';
@@ -17,7 +17,7 @@ import { ChatroomScreen, MessageScreen } from './src/screens'
 import { SettingScreen, ProfileScreen } from './src/screens'
 import { tabBarObject, tabBarOptions } from './src/components/navigation'
 import {decode, encode} from 'base-64'
-import Test from './src/screens/text'
+// import Test from './src/screens/text'
 if (!global.btoa) {  global.btoa = encode }
 if (!global.atob) { global.atob = decode }
 
@@ -37,6 +37,7 @@ const linking = {
 						screens: {
 							Articles: "articles",
 							Article: "article/:id",
+							Filter: "articles/filter/:type/:data?",
 							// Article: {
 							// 	path: 'article/:id',
 							// 	parse: {
@@ -47,9 +48,25 @@ const linking = {
 							// 	},
 							// }
 						}
+					},
+					CommunityStack: {
+						screens: {
+							Community: "community",
+						}
+					},
+					ChatStack: {
+						screens: {
+							Chatroom: "chatrooms",
+						}
+					},
+					SettingStack: {
+						screens: {
+							Profile: "profile",
+						}
 					}
 				}
-			}
+			},
+			Intro: "intro"
 			// Home: "home",
 			// Settings: "settings",
 		}
