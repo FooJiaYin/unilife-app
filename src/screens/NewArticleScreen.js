@@ -267,7 +267,7 @@ export default function NewArticleScreen(props) {
                     <TextInput
                         style={stylesheet.input}
                         defaultValue={article.title}
-                        placeholder='標題：輸入你的文章標題'
+                        placeholder='輸入你的文章標題'
                         placeholderTextColor="#aaaaaa"
                         underlineColorAndroid="transparent"
                         autoCapitalize="none"
