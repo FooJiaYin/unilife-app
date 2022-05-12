@@ -101,8 +101,11 @@ export default function ProfileScreen(props) {
             }
         }
         setUser(user)
+        snapshot = await firebase.firestore().doc('communities/' + user.identity.county).get()
+        let county = await snapshot.data()
+        let districts = county && county.districts? county.districts.map(district => ({value: county.name + district, label: district})) : [];
+        setOptions({...options, districts: districts})
         setIdentity(user.identity)
-        setCounty(user.identity.county)
     }
 
     const updateUserData = async () => {
