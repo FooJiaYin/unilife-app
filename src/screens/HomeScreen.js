@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList, Text, Alert, ScrollView, View, StyleSheet,Image, useWindowDimensions } from 'react-native'
+import { Linking, Text, Alert, TouchableOpacity, View, StyleSheet,Image, useWindowDimensions } from 'react-native'
+import { useFocusEffect } from "@react-navigation/native";
+import Carousel from 'react-native-snap-carousel'
+import * as WebBrowser from 'expo-web-browser';
 import { setHeaderOptions } from '../components/navigation'
 import Asset from '../components/assets'
 import { stylesheet, Color } from '../styles'
 import time from '../utils/time'
 import { firebase } from '../firebase/config'
-import { useFocusEffect } from "@react-navigation/native";
 import { StickedBg } from '../components/decorative'
 import { HomeShortcutItem, ShortcutEditModal } from '../components/shortcutItem'
-import Carousel from 'react-native-snap-carousel'
 import * as copilot from '../components/guide'
 
 export function HomeScreen(props) {
@@ -22,7 +23,7 @@ export function HomeScreen(props) {
         {icon: 'blank.png', title: '', url: ''},
         {icon: 'blank.png', title: '', url: ''},
     ])
-    const [featuredImages, setfeaturedImages] = useState([""]);
+    const [featuredImages, setfeaturedImages] = useState([]);
     const [isModalVisible, setModalVisibility] = useState(false)
     const [currentShortcut, setCurrentShortcut] = useState({})
 
@@ -130,6 +131,15 @@ export function HomeScreen(props) {
 
     setHeaderOptions(props.navigation, {headerShown: false})
 
+    const featuredCard = ({item}) => 
+        <TouchableOpacity onPress={
+            item.url == ""? ()=>{} :
+            item.url.startsWith("unilife://") || item.url.startsWith("exp://")? ()=>Linking.openURL(item.url) :
+            ()=>WebBrowser.openBrowserAsync(item.url)
+        }>
+            <Image source={{uri: item.src}} style={homeCardStyle.card} />
+        </TouchableOpacity>
+
     return (
         <View style={stylesheet.container}>
             <ShortcutEditModal visible={isModalVisible} onClose={closeShortcutEditModal} shortcut={currentShortcut} setShortcut={setCurrentShortcut} />
@@ -179,7 +189,7 @@ export function HomeScreen(props) {
                 style={{ flex: 1 }}
                 contentContainerCustomStyle={{ alignItems: 'center',}}
                 data={featuredImages}
-                renderItem={({item}) => <Image source={{uri: item}} style={homeCardStyle.card} />}
+                renderItem={featuredCard}
                 sliderWidth={useWindowDimensions().width}
                 itemWidth={useWindowDimensions().width * 3/4 }
                 itemHeight={useWindowDimensions().width}
