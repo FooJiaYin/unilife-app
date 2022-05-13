@@ -6,6 +6,10 @@ export function remove(array, item) {
     return array;
 }
 
+export function getUnique(array) {
+    return array.filter((item, index) => array.indexOf(item) === index);
+}
+
 export function getItemByProperty(array, property, value) {
     return array.find(item => item[property] === value);
 }
