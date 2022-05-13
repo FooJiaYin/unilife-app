@@ -148,11 +148,11 @@ export function ListItem({ item, onPress, style, onButtonPress, chipAction, ...p
             /> */}
             
             <View style={style? [listItemStyle.container, style.container] : listItemStyle.container}>
-                { data.category=='announcement' || imageUrl != '' ? 
+                { (data.category=='announcement' || imageUrl != '') &&
                     <Image 
                         style={data.type == 'banner'? listItemStyle.imageFull : listItemStyle.image} 
                         source={(data.category=='announcement' && data.tags && imageUrl == '')? Asset(data.tags[0]) : {uri: imageUrl}}
-                    /> : null 
+                    />
                 }
                 {/* <Image style={style? [listItemStyle.image, style.image] : listItemStyle.image} source={ {uri: imageUrl}}/> */}
                 { data.type=='banner' && data.title == '' ? null : 
@@ -177,7 +177,7 @@ export function ListItem({ item, onPress, style, onButtonPress, chipAction, ...p
                                 name="article"
                                 >
                             <copilot.View> */}
-                            {data.tags?  <SmallTags tags={data.tags} {...props} /> : null}
+                            {data.tags && <SmallTags tags={data.tags} {...props} />}
                             {/* </copilot.View>
                             </copilot.Step> */}
                             <Text style={style? [listItemStyle.bottomText, style.bottomText] : listItemStyle.bottomText}>

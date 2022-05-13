@@ -172,7 +172,7 @@ export function ExpandCard({height = 300, ...props}){
                 name="article"
                 >
             <copilot.View style={[curveStyles.card]}>
-            {/* {fixHeader? <SafeAreaView /> : null} */}
+            {/* {fixHeader && <SafeAreaView />} */}
                 <copilot.Step
                     text="往上滑可以開啟文章列表；按住Uni資訊往下滑就會回到首頁囉～"
                     order={4}
