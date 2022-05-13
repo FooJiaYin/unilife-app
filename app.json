@@ -24,7 +24,8 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "cc.UniLife.UniLife",
-      "buildNumber": "2.0.1"
+      "buildNumber": "2.0.1",
+      "usesAppleSignIn": true
     },
     "android": {
       "package": "cc.unilife.unilife",

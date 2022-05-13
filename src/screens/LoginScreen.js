@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Dimension, ImageBackground, Image, Text, Linking, Alert, View } from 'react-native'
+import { Platform, Dimension, ImageBackground, Image, Text, Linking, Alert, View } from 'react-native'
 import { setHeaderOptions } from '../components/navigation'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Asset from '../components/assets'
@@ -9,6 +9,7 @@ import { stylesheet } from '../styles'
 import { firebase } from '../firebase/config'
 import { CurvedBg } from '../components/decorative'
 import * as WebBrowser from 'expo-web-browser';
+import * as AppleAuthentication from 'expo-apple-authentication';
 import { LineLoginUrl } from '../api/linelogin';
 
 export default function LoginScreen({navigation, ...props}) {
@@ -18,41 +19,83 @@ export default function LoginScreen({navigation, ...props}) {
 
     setHeaderOptions(navigation)
 
-    const onLoginPress = () => {
+    const lineLogin = () => {
         // WebBrowser.openBrowserAsync(LineLoginUrl)
         Linking.openURL(LineLoginUrl)
     }
 
-    const login = (token) => {
-        firebase
-            .auth()
-            .signInWithCustomToken(token)
-            .then((response) => {
-                const uid = response.user.uid
-                usersRef
-                    .doc(uid)
-                    .get()
-                    .then(snapshot => {
-                        if (!snapshot.exists) {
-                            Alert.alert('', "該帳號不存在")
-                            return
-                        }
-                        const user = snapshot.data()
-                        if(user.interests && user.interests.length == 5) {
-                            navigation.navigate('Tabs')
-                        } else {
-                            navigation.navigate('FillInfo', {user: snapshot})
-                        }
+    const appleLogin = async () => {
+        try {
+            const appleCredential = await AppleAuthentication.signInAsync({
+                requestedScopes: [
+                    AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+                    AppleAuthentication.AppleAuthenticationScope.EMAIL,
+                ],
+            });
+            console.log(appleCredential);
+            const provider = new firebase.auth.OAuthProvider('apple.com');
+            const credential = provider.credential({
+                idToken: appleCredential.identityToken, 
+                rawNonce: '123456789'
+            });
+            const response = await firebase.auth().signInWithCredential(credential);
+            console.log(response);
+            const uid = response.user.uid
+            usersRef.doc(uid).get().then(async snapshot => {
+                if (!snapshot.exists) {
+                    let userInfo = {}
+                    if (response.user.providerData[0].email) {
+                        userInfo['email'] = response.user.providerData[0].email
+                    }
+                    await usersRef.doc(uid).set({
+                        id: uid,
+                        info: userInfo,
+                        verification: {
+                            status: true,
+                            type: 'apple',
+                            apple: response.user.providerData[0].uid
+                        },               
+                        guide: {
+                            home: false,
+                            intro: false,
+                            notification: false,
+                        },
+                        identity: {
+                            communities: [],
+                        },
+                        interests: [],
+                        recommendation: [],
+                        bookmarks: [],
+                        score: {},
+                        settings: {
+                            chat: false,
+                            inChat: false
+                        },
+                        createdTime: firebase.firestore.Timestamp.now(),
+                        lastActive: firebase.firestore.Timestamp.now()
+                    })  
+                    usersRef.doc(uid).get().then(snapshot => {
+                        navigation.navigate('FillInfo', {user: snapshot})
                     })
-                    .catch(error => {
-                        alert(error)
-                    })
+                }
+                else {
+                    const user = snapshot.data()
+                    if(user.interests && user.interests.length == 5 && user.identity.communities) {
+                        navigation.navigate('Tabs')
+                    } else {
+                        navigation.navigate('FillInfo', {user: snapshot})
+                    }
+                }
             })
-            .catch(error => {
-                if(error.code == 'auth/user-not-found' || error.code == 'auth/invalid-email') Alert.alert("該用戶不存在", "請檢查您輸入的信箱是否與註冊信箱相同。如需更改信箱，請洽客服協助。")
-                else if(error.code == 'auth/wrong-password') Alert.alert("密碼錯誤", "請檢查您輸入的密碼是否正確。")
-                else Alert.alert(error)
-            })
+        // signed in
+        } catch (e) {
+            if (e.code === 'ERR_CANCELED') {
+                // handle that the user canceled the sign-in flow
+            } else {
+                // handle other errors
+                console.log(e)
+            }
+        }
     }
 
     React.useLayoutEffect(() => {
@@ -62,7 +105,6 @@ export default function LoginScreen({navigation, ...props}) {
       }, [navigation])
 
     useEffect(() => {
-        if(authToken) login(authToken)
     }, [])
 
     return (
@@ -73,7 +115,16 @@ export default function LoginScreen({navigation, ...props}) {
                 style={styles.logo}
                 source={Asset('logo_with_text.png')}
             />
-            <Button onPress={() => onLoginPress()} style={[stylesheet.bgGreen, {margin: 60, marginTop: 200}]} title="LINE 登入" />
+            <Button onPress={lineLogin} style={[stylesheet.bgGreen, {marginHorizontal: 50, marginBottom: 10, marginTop: 200}]} title="LINE 登入" />
+            {Platform.OS === 'ios' &&
+                <AppleAuthentication.AppleAuthenticationButton
+                    buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
+                    buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
+                    cornerRadius={44}
+                    style={{ marginHorizontal: 50, marginBottom: 5, borderRadius: 50, height: 44 }}
+                    onPress={appleLogin}
+                />
+            }
             <View style={stylesheet.footerView}>
                 <Text style={stylesheet.footerText}>遇到問題嗎？<Text onPress={()=>WebBrowser.openBrowserAsync("https://supr.link/kmc3i")} style={stylesheet.footerLink}>聯絡客服</Text></Text>
             </View>
