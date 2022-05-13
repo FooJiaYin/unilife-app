@@ -327,21 +327,24 @@ export default function NewArticleScreen(props) {
                             請注意，您在網路上的發言須負法律上的責任。請在發布訊息前進行查證，尤其在疫情期間，假消息可能會危及他人的健康。
                         </Text>
                         <Text style={{...stylesheet.textS, ...stylesheet.textGrey, marginHorizontal: 12}}>
-                            若是您在UniLife看見不實的資訊，請聯繫我們的
+                            若是您在UniLife看見不實資訊，請聯繫我們的
                             <Text onPress={()=>WebBrowser.openBrowserAsync('https://supr.link/HjULp')} style={{...stylesheet.footerLink, ...stylesheet.textS, opacity: 1}}>
-                                檢舉受理窗口
+                                檢舉受理單位
                             </Text>
                             ，或是點選
-                            <Text onPress={()=>WebBrowser.openBrowserAsync('https://supr.link/HjULp')} style={{...stylesheet.footerLink, ...stylesheet.textS, opacity: 1}}>
-                                檢舉受理窗口
+                            <Text onPress={()=>WebBrowser.openBrowserAsync('https://supr.link/xltJy')} style={{...stylesheet.footerLink, ...stylesheet.textS, opacity: 1}}>
+                                聯絡客服
                             </Text>
                             洽客服人員尋求協助。UniLife團隊目前的人力無法審核所有的言論，懇請大家跟我們一起維護良好的社群風氣。
+                        </Text>
+                        <Text style={{...stylesheet.textS, ...stylesheet.textGrey, margin: 12}}>
+                            發文後，請按文章列表左上角的重新整理按鈕，這樣您的文章才會出現在您的列表。
                         </Text>
                     </View>
                     <Button
                         style={stylesheet.bgBlue}
                         onPress={() => onRegisterPress()} 
-                        title='提交發文'
+                        title='發布貼文'
                     />
                     <TagSelectModal visible={isTagSelectModalVisible} onClose={updateTags} tags={article.tags} />
                     <LoadingModal visible={isUploading} />
@@ -427,7 +430,7 @@ export function TagSelectModal ({visible, onClose, tags}) {
                 // horizontal={true}
                 keyExtractor={(item, index) => item}
             />
-            <Text style={{flex: 0, ...stylesheet.textDark}}>疫情消息</Text>
+            <Text style={{flex: 0, ...stylesheet.textDark}}>疫情資訊</Text>
             {/* <Text style={{flex: 0, ...stylesheet.textDark}}>美食</Text> */}
             <FlatList
                 data={pandemicTags}

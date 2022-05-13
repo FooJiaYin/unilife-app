@@ -74,6 +74,9 @@ export default function LoginScreen({navigation, ...props}) {
                 source={Asset('logo_with_text.png')}
             />
             <Button onPress={() => onLoginPress()} style={[stylesheet.bgGreen, {margin: 60, marginTop: 200}]} title="LINE 登入" />
+            <View style={stylesheet.footerView}>
+                <Text style={stylesheet.footerText}>遇到問題嗎？<Text onPress={()=>WebBrowser.openBrowserAsync("https://supr.link/kmc3i")} style={stylesheet.footerLink}>聯絡客服</Text></Text>
+            </View>
         </View>
     )
 }
@@ -135,7 +138,7 @@ export function ResetPasswordScreen({navigation}) {
                 <Button onPress={sendPasswordResetEmail} style={stylesheet.bgGreen} title="重設密碼" />
             </View>
             <View style={stylesheet.footerView}>
-                <Text style={stylesheet.footerText}>需要協助嗎？<Text onPress={()=>WebBrowser.openBrowserAsync("https://supr.link/znUbr")} style={stylesheet.footerLink}>聯絡客服</Text></Text>
+                <Text style={stylesheet.footerText}>需要協助嗎？<Text onPress={()=>WebBrowser.openBrowserAsync("https://supr.link/WMlqU")} style={stylesheet.footerLink}>聯絡客服</Text></Text>
             </View>
             </KeyboardAwareScrollView>
         </View>

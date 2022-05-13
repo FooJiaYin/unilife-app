@@ -301,7 +301,7 @@ export default function App() {
 				<Tab.Screen name="CommunityStack" options={tabBarObject('社群', 'community')}>
 					{props => <CommunityStackScreen {...props} user={user} />}
 				</Tab.Screen>
-				<Tab.Screen name="ChatStack" options={tabBarObject('聊天室', 'chat')}>
+				<Tab.Screen name="ChatStack" options={tabBarObject('聊天', 'chat')}>
 					{props => <ChatStackScreen {...props} user={user} />}
 				</Tab.Screen>
 				<Tab.Screen name="SettingStack" options={tabBarObject('設定', 'profile')}>

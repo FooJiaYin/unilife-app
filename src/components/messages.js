@@ -316,7 +316,7 @@ export function Chatroom({item, size, navigation, matchState = {}, toggleWaiting
                         <Text style={[cardStyle.text, cardStyle.textL]}>{"在地聊天室"}</Text>
                         <Text style={[cardStyle.text]}>{matchState.text}</Text>
                     </View>
-                    <Button style={cardStyle.button} title={'開啟LINE'} onPress={() => openUrl(item.link)}/>
+                    <Button style={cardStyle.button} title={'前往LINE社群'} onPress={() => openUrl(item.link)}/>
                     {/* <Text style={[stylesheet.textWhite, stylesheet.textCenter]}>{time().getNextDayofWeek(matchState.day, matchState.time).fromNow('倒數計時 %d %H %M')}</Text> */}
                     {/* <Text style={cardStyle.text}>{active ? 'Active' : 'Inactive'}</Text> */}
                 </View>
