@@ -173,6 +173,10 @@ export function Comment(message) {
     )
 }
 
+export function Avatar({source}) {
+    return <ProfileImage source={source} style={messageStyle.profileImage} />
+}
+
 export function Message ({props}) {
     return <GiftedChat.Message {...props} linkStyle={{right: styles.textWhite}}/>
 } 
