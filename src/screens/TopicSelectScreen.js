@@ -214,6 +214,9 @@ export default function TopicSelectScreen(props) {
         // TODO: submit user input here
 
         // setInterest(selectedItems)
+        Alert.alert('請耐心等待', "正在為您客制化在地資訊，需要約10秒...",
+            [], {cancelable: false}
+        )
         props.route.params.user.ref.get().then(snapshot => {
                 const data = snapshot.data()
                 // console.log(data.info.name, data.lastActive, data.score)
@@ -238,6 +241,13 @@ export default function TopicSelectScreen(props) {
                         recommendation: recommendations.slice(0,500),
                         lastActive: firebase.firestore.FieldValue.serverTimestamp()
                     })
+                    Alert.alert('完成！', "感謝您耐心等候！",
+                        [{
+                            text: "OK",
+                            // onPress: () => console.log("Cancel Pressed"),
+                            style: "cancel"
+                        }]
+                    )
                     return props.navigation.navigate('Success')
                 })
             })
