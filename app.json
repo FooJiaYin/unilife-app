@@ -32,6 +32,10 @@
       "versionCode": 20,
       "googleServicesFile": "./google-services.json"
     },
+    "notification": {
+      "icon": "./assets/android-notification.png",
+      "color": "#00aebb"
+    },
     "userInterfaceStyle": "automatic",
     "githubUrl": "https://github.com/Unilife-App/unilife-app",
     "description": ""
