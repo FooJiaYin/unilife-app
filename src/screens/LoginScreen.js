@@ -126,6 +126,13 @@ export default function LoginScreen({navigation, ...props}) {
                 />
             }
             <View style={stylesheet.footerView}>
+            {Platform.OS === 'ios' && 
+                <Text style={[stylesheet.footerText, stylesheet.textGrey]}>一鍵快速登入/註冊</Text>
+            }
+            {Platform.OS === 'ios' && 
+                <Text style={[stylesheet.footerText, stylesheet.textGrey]}>為您客製化在地社群資訊</Text>
+            }
+                <Text></Text>
                 <Text style={stylesheet.footerText}>遇到問題嗎？<Text onPress={()=>WebBrowser.openBrowserAsync("https://supr.link/kmc3i")} style={stylesheet.footerLink}>聯絡客服</Text></Text>
             </View>
         </View>

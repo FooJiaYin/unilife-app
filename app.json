@@ -8,7 +8,7 @@
       "android",
       "web"
     ],
-    "version": "2.0.1",
+    "version": "2.0.4",
     "orientation": "portrait",
     "icon": "./assets/logo.png",
     "splash": {
@@ -24,12 +24,15 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "cc.UniLife.UniLife",
-      "buildNumber": "2.0.1",
-      "usesAppleSignIn": true
+      "buildNumber": "2.0.4",
+      "usesAppleSignIn": true,
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "我們需要取用您的相片，讓您在撰寫貼文時可以選取照片"
+      }
     },
     "android": {
       "package": "cc.unilife.unilife",
-      "versionCode": 20,
+      "versionCode": 21,
       "googleServicesFile": "./google-services.json"
     },
     "notification": {
