@@ -118,6 +118,7 @@ export default function ProfileScreen(props) {
                 communities: [identity.district, identity.county],
             },
         })
+        Alert.alert('儲存成功', '您的資料已儲存。\n如果其他頁面資料未更新，請重啟UniLife應用程序。')
     }
 
     const onSavePress = () => {
