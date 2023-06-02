@@ -217,7 +217,15 @@ export default function ProfileScreen(props) {
                         autoCapitalize="none"
                         onChangeText={(input) => setInfo({ ...info, nickname: input })}
                     />
-                    <Select 
+                    <TextInput
+                        style={[styles.input, stylesheet.textGrey]}
+                        value={identity.district} 
+                        placeholderTextColor="#aaaaaa"
+                        underlineColorAndroid="transparent"
+                        autoCapitalize="none"
+                        editable={false}
+                    />
+                    {/* <Select 
                         value={identity.county} 
                         items={options.counties}
                         onChange={(input) => setCounty(input)}
@@ -228,7 +236,7 @@ export default function ProfileScreen(props) {
                         items={options.districts}
                         onChange={(input) => setIdentity({ ...identity, district: input })}
                         placeholder='請選擇行政區...'
-                    />
+                    /> */}
                     <TextInput
                         style={[styles.input]}
                         value={info.email}
@@ -270,6 +278,7 @@ export default function ProfileScreen(props) {
                     </View>
                     
                 </View>
+                }
                 <DateTimePickerModal
                     isVisible={isDatePickerVisible}
                     mode="date"
