@@ -30,9 +30,9 @@ export function HomeScreen(props) {
     async function loadShortcuts() {
         let snapshot = await props.user.ref.get()
         user = await snapshot.data()
-        if (!user.interests || user.interests.length == 0) props.navigation.navigate('FillInfo', {user: snapshot})
+        if (user.id != "anonymous" && (!user.interests || user.interests.length == 0)) props.navigation.navigate('FillInfo', {user: snapshot})
         setNickname(user.info.nickname)
-        if(!user.guide || !user.guide.intro || user.guide.intro == false) {
+        if (!user.guide || !user.guide.intro || user.guide.intro == false) {
             props.navigation.navigate('Intro', {user: props.user})
         }
         else if(user.guide.home == false) {
@@ -40,7 +40,7 @@ export function HomeScreen(props) {
         }
         let images = []
         let communityData
-        user.identity.communities.push('all')
+        if(user.id != "anonymous") user.identity.communities.push('all')
         for(let i = 0; i < user.identity.communities.length; i++) {
             let comm = user.identity.communities[i]
             let snapshot = await firebase.firestore().doc('communities/' + comm).get()
