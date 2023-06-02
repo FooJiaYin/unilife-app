@@ -24,6 +24,10 @@ export default function LoginScreen({navigation, ...props}) {
         Linking.openURL(LineLoginUrl)
     }
 
+    const emailLogin = () => {
+        navigation.navigate('EmailLogin', props)
+    }
+
     const appleLogin = async () => {
         try {
             const appleCredential = await AppleAuthentication.signInAsync({
@@ -115,13 +119,14 @@ export default function LoginScreen({navigation, ...props}) {
                 style={styles.logo}
                 source={Asset('logo_with_text.png')}
             />
-            <Button onPress={lineLogin} style={[stylesheet.bgGreen, {marginHorizontal: 50, marginBottom: 10, marginTop: 200}]} title="LINE 登入" />
+            <Button onPress={lineLogin} style={[stylesheet.bgBlue, {marginHorizontal: 50, marginBottom: 10}]} title="LINE 註冊/登入" />
+            <Button onPress={emailLogin} style={[stylesheet.bgBlue, {marginHorizontal: 50, marginBottom: 10}]} title="Email 註冊/登入" />
             {Platform.OS === 'ios' &&
                 <AppleAuthentication.AppleAuthenticationButton
                     buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
                     buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
                     cornerRadius={44}
-                    style={{ marginHorizontal: 50, marginBottom: 5, borderRadius: 50, height: 44 }}
+                    style={{ marginHorizontal: 50, marginTop: 5, borderRadius: 50, height: 44 }}
                     onPress={appleLogin}
                 />
             }
