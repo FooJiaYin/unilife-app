@@ -76,12 +76,8 @@ export default function FillInfoScreen(props) {
     setHeaderOptions(props.navigation, headerOptions)
 
     async function loadTermsAndConditions() {
-        // console.log(firebase.auth().currentUser)
-        // console.log("community", user.community)
-        // console.log("identity", user.identity.community)
         let snapshot = await firebase.firestore().doc('config/terms').get()
         let termsData = await snapshot.data()
-        // console.log(termsData)
         setTermsAndConditions(termsData)
         setCurrentHTML(termsData.terms)
     }
@@ -167,6 +163,10 @@ export default function FillInfoScreen(props) {
         // }
         if (!info.nickname || info.nickname == '') {
             Alert.alert('', "請設定暱稱")
+            return
+        }
+        if (!info.gender || info.gender == '') {
+            Alert.alert('', "請設定性別")
             return
         }
         if (!identity.county || identity.county == '') {
@@ -269,7 +269,7 @@ export default function FillInfoScreen(props) {
                         // value={info.gender} 
                         items={options.gender}
                         onChange={(input) => setInfo({ ...info, gender: input })}
-                        placeholder='請選擇您的性別...'
+                        placeholder='請選擇您的性別（必填）...'
                     />
                     <TextInput
                         style={stylesheet.input}
