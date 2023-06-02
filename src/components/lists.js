@@ -17,17 +17,14 @@ export function ListItem({ item, onPress, style, onButtonPress, chipAction, ...p
         tags: [],
         ...item
     })
- // console.log(item.id, isSaved)
     const storageRef = firebase.storage().ref()
 
     useEffect(() => {
-        // loadArticle_old()
-        // console.log(item.id)
         loadArticle(item.id)
-    }, [])
+    }, [item])
 
     function loadArticle(articleId) {
-        firebase.firestore().doc('articles/' + articleId).get().then(async snapshot => {
+        firebase.firestore().doc('articles/' + articleId).onSnapshot(async snapshot => {
             const data = await snapshot.data()
             const stats = data.stats
             setStats(stats)
@@ -256,7 +253,7 @@ export function ArticleListItem(props) {
     function openArticle(article) {
         setBehavior(article, 'read')
         // if (article.type=='banner') WebBrowser.openBrowserAsync(article.meta.url)
-        props.navigation.navigate('Article', {article: article})
+        props.navigation.push('Article', {article: article})
     }
 
     function toggleSaveArticle(article) {

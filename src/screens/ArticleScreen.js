@@ -238,7 +238,7 @@ export default function ArticleScreen(props) {
 
     const Chips = []
     for (const tag of (article.tags || [])) {
-        Chips.push(<Chip label={tagNames[tag] || tag} type={'tag'} action={()=>props.navigation.navigate('Filter', {type: 'tag', data: tag}) } />)
+        Chips.push(<Chip label={tagNames[tag] || tag} type={'tag'} action={()=>props.navigation.push('Filter', {type: 'tag', data: tag}) } />)
     }
 
     const Wrapper = (props) => Platform.OS === "ios" ? <KeyboardAwareScrollView>{props.children}</KeyboardAwareScrollView> : <View>{props.children}</View>

@@ -214,7 +214,7 @@ export default function ArticleListScreen(props) {
         },
         headerRight: {
             icon: 'bookmark',
-            onPress: () => props.navigation.navigate('Filter', {type: 'saved'})
+            onPress: () => props.navigation.push('Filter', {type: 'saved'})
         }
     }
 
