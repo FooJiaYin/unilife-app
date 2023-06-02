@@ -10,13 +10,27 @@ import { checkAuthStatus } from '../utils/auth'
 export default function ArticleListScreen(props) {
     
     const articlesRef = firebase.firestore().collection('articles')
-    let user
+    const [user, setUser] = useState()
     const [articles, setArticles] = useState({
         all: [],
         announcement: [],
         local: [],
         news: []
     })
+
+    async function loadUserData() {
+        console.log("loadUserData")
+        props.user.ref.onSnapshot(async snapshot => {
+            console.log("userData received")
+            let userData = await snapshot.data()
+            if (!user) {
+                setUser(userData)
+                recommendation(userData)
+            } else if (userData.recommendation[0] != user.recommendation[0]) {
+                setUser(userData)
+            }
+        })
+    }
     
     async function loadArticles() {
         // console.log("identity", user.identity.community)
@@ -219,9 +233,7 @@ export default function ArticleListScreen(props) {
     }
 
     useEffect(() => {
-        loadArticles().then(() => {
-            // setArticles(newArticles)
-        })
+        loadUserData()
     }, [])
 
     useEffect(() => {
