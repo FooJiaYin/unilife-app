@@ -76,6 +76,7 @@ export function ArticleTabs({titles, articles, ...props}) {
     return (
       <TabView
         navigationState={{ index, routes }}
+        swipeEnabled={false}
         renderScene={renderScene}
         renderTabBar={(props) => <TabBar {...props} routes={routes} 
                 activeColor={Color.blue} inactiveColor={Color.grey1} labelStyle={{fontWeight: 'bold'}}
