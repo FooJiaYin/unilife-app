@@ -384,6 +384,9 @@ export default function App() {
 						<Stack.Screen name="Tabs" options={{headerShown: false}}>
 							{props => <Tabs {...props} user={user} />}
 						</Stack.Screen>
+						<Stack.Screen name="Intro">
+							{props => <IntroScreen {...props} user={user} />}
+						</Stack.Screen>
 					</Stack.Navigator>
 				)} 
 			</NavigationContainer>
