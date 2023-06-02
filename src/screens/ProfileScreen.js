@@ -241,11 +241,10 @@ export default function ProfileScreen(props) {
                         placeholder='請選擇行政區...'
                     /> */}
                     <TextInput
-                        style={[styles.input]}
+                        style={[styles.input, stylesheet.textGrey]}
                         value={info.email}
                         placeholder='Email'
-                        placeholderTextColor="#aaaaaa"
-                        onChangeText={(text) => setEmail(text)}
+                        // onChangeText={(text) => setEmail(text)}
                         underlineColorAndroid="transparent"
                         autoCapitalize="none"
                         editable={false}
@@ -289,7 +288,6 @@ export default function ProfileScreen(props) {
                     onConfirm={(date)=>setBirthday(date)}
                     onCancel={()=>setDatePickerVisibility(false)}
                 />
-                 
             </KeyboardAwareScrollView>
         </View>
     )
