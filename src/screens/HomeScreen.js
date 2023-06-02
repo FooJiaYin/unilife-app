@@ -207,6 +207,10 @@ export function HomeScreen(props) {
                 keyExtractor={(item) => item.id}
                 loop={true}
                 enableSnap={true}
+                // decelerationRate={0.92}
+                // lockScrollWhileSnapping={true}
+                enableMomentum={true}
+                // swipeThreshold={1}
                 inverted={true}
             />
         </View>
