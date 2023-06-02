@@ -205,6 +205,7 @@ export default function ProfileScreen(props) {
                         <Button style={[stylesheet.outlineWhite, styles.editButton]} title="切換頭像" onPress={() => changeProfileImage()}/>
                     </ImageBackground>
                 </View>
+                {user && user.verification && user.verification.type != "anonymous" &&
                 <View style={styles.container}>
                     <TextInput
                         style={styles.input}
