@@ -11,7 +11,7 @@ class Time {
         this.now = moment(t)
         // console.log(this.now)
     }
-    fromFirestore = (firestoreTime) => new Time(firestoreTime.toDate())
+    static fromFirestore = (firestoreTime) => new Time(firestoreTime.toDate())
     toFirestore = () => {
         return firebase.firestore.Timestamp.fromDate(this.now.toDate())
     }
