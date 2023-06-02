@@ -16,19 +16,20 @@ export default function IntroScreen(props) {
 
     async function loadImages() {
         let snapshot = await props.user.ref.get()
-        let userData = snapshot.data()
         firebase.firestore().doc('config/userGuide').get().then(snapshot => {
             setImages(snapshot.data().images)
         })
     }
 
     useEffect(() => {
-        props.user.ref.update({
-            guide: {
-                intro: true,
-                home: false
-            }
-        })
+        if (props.user) {
+            props.user.ref.update({
+                guide: {
+                    intro: true,
+                    home: false
+                }
+            })
+        }
         loadImages()
     }, [])
 
@@ -72,6 +73,7 @@ export default function IntroScreen(props) {
                 onSnapToItem={(index) => setActiveSlide(index)}
                 keyExtractor={item => item}
                 enableSnap={true}
+                ref={(c) => { this.slides = c; }}
             />
             <View style={guideStyles.pagination}>
                 <TouchableOpacity style={{ flexShrink: 1, opacity: 0 }} onPress={()=>{}}>
@@ -98,22 +100,17 @@ export default function IntroScreen(props) {
                     inactiveDotOpacity={0.4}
                     inactiveDotScale={0.6}
                 />
-                <TouchableOpacity style={{ flexShrink: 0 }} onPress={ () => props.navigation.navigate('Tabs', {user: props.user}) }>
+                {activeSlide < images.length - 1?
+                <TouchableOpacity style={{ flexShrink: 0 }} onPress={ () => this.slides.snapToNext() }>
+                    <Text style={guideStyles.buttonText}>下一步</Text>
+                </TouchableOpacity> 
+                :
+                // <TouchableOpacity style={{ flexShrink: 0 }} onPress={ () => props.navigation.replace('Tabs', {user: props.user}) }>
+                <TouchableOpacity style={{ flexShrink: 0 }} onPress={ () => props.navigation.goBack() }>
                     <Text style={guideStyles.buttonText}>結束</Text>
                 </TouchableOpacity>
+                }
             </View>
-            {/* <FlatList
-                style={{ flex: 1 }}
-                data={chatrooms}
-                renderItem={chatroomItem}
-                keyExtractor={(item) => item.id}
-                removeClippedSubviews={true}
-                horizontal={true}
-                inverted={true}
-                getItemLayout={(data, index) => (
-                    {length: 300, offset: 300 * index, index}
-                )}
-            /> */}
         </View>
     )
 }
