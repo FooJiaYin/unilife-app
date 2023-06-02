@@ -13,7 +13,10 @@ export function checkAuthStatus(user, props, message) {
                         style: "cancel"
                     }, {
                         text: "前往註冊",
-                        onPress: () => props.navigation.navigate('Login'),
+                        onPress: () => props.navigation.reset({
+                            index: 0,
+                            routes: [{ name: 'Login' }],
+                        }),
                         style: "OK"
                     }]
                 )
