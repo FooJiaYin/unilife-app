@@ -20,7 +20,7 @@ export default function NewArticleScreen(props) {
     let userData = user.data()
     const [article, setArticle] = useState({
         category: 'posts',
-        community: userData.identity.community,
+        community: userData.identity.county || userData.identity.community,
         title: '',
         content: '',
         rawContent: '',
@@ -103,7 +103,7 @@ export default function NewArticleScreen(props) {
             let content = marked.parse(article.rawContent, {breaks: true})
             let articleRef = await firebase.firestore().collection('articles').add({
                 ...article,
-                community: userData.identity.community,
+                community: userData.identity.county || userData.identity.community,
                 content: content,
                 meta: {
                     abstract: article.rawContent,
