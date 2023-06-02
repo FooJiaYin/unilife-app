@@ -30,6 +30,7 @@ const linking = {
 	prefixes: [prefix],
 	config: {
 		screens: {
+			Login: "login",
 			LineLogin: "login/:token",
 			Tabs: {
 				screens: {
