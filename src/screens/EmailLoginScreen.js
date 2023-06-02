@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Dimension, ImageBackground, Image, Text, TextInput, Linking, Alert, View } from 'react-native'
+import { Dimension, ImageBackground, Image, Text, TextInput, Linking, Alert, View, KeyboardAvoidingView } from 'react-native'
 import { setHeaderOptions } from '../components/navigation'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Asset from '../components/assets'
@@ -89,6 +89,7 @@ export default function EmailLoginScreen({navigation, ...props}) {
                 style={styles.logo}
                 source={Asset('logo_with_text.png')}
             />
+            <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : ""}>
             <View style={[styles.card, {marginVertical: 30}]}>
                 <TextInput
                     style={styles.input}
@@ -109,11 +110,11 @@ export default function EmailLoginScreen({navigation, ...props}) {
                     忘記密碼？
                 </Text>
                 <Button onPress={onLoginPress} style={stylesheet.bgGreen} title="登入" />
-            <View style={[stylesheet.footerView, {marginBottom: 0}]}>
-                <Text style={stylesheet.footerText}>沒有帳號？<Text onPress={onFooterLinkPress} style={stylesheet.footerLink}>現在註冊</Text></Text>
+                <View style={[stylesheet.footerView, {marginBottom: 0}]}>
+                    <Text style={stylesheet.footerText}>沒有帳號？<Text onPress={onFooterLinkPress} style={stylesheet.footerLink}>現在註冊</Text></Text>
+                </View>
             </View>
-            </View>
-            {/* </KeyboardAwareScrollView> */}
+            </KeyboardAvoidingView>
             <View style={stylesheet.footerView}>
                 <Text style={stylesheet.footerText}>遇到問題嗎？<Text onPress={()=>WebBrowser.openBrowserAsync("https://supr.link/kmc3i")} style={stylesheet.footerLink}>聯絡客服</Text></Text>
             </View>
