@@ -317,30 +317,30 @@ export default function NewArticleScreen(props) {
                             <Image source={Asset('add-circle')} style={[stylesheet.icon, {margin: 0, height: 30, width: 25}]}/>
                         </ScrollView>
                     </TouchableOpacity>
-                    <View style={stylesheet.footerView}>
+                    <View style={[stylesheet.footerView, {marginBottom: 0}]}>
                         <Text style={stylesheet.footerText}>
                             請遵守
                             <Text onPress={()=>setModalVisibility(true)}
                                 style={stylesheet.footerLink}>發文規範</Text>
                         </Text>
-                        <Text style={{...stylesheet.textS, ...stylesheet.textGrey, margin: 12}}>
-                            請注意，您在網路上的發言須負法律上的責任。請在發布訊息前進行查證，尤其在疫情期間，假消息可能會危及他人的健康。
-                        </Text>
-                        <Text style={{...stylesheet.textS, ...stylesheet.textGrey, marginHorizontal: 12}}>
-                            若是您在UniLife看見不實資訊，請聯繫我們的
-                            <Text onPress={()=>WebBrowser.openBrowserAsync('https://supr.link/HjULp')} style={{...stylesheet.footerLink, ...stylesheet.textS, opacity: 1}}>
-                                檢舉受理單位
-                            </Text>
-                            ，或是點選
-                            <Text onPress={()=>WebBrowser.openBrowserAsync('https://supr.link/xltJy')} style={{...stylesheet.footerLink, ...stylesheet.textS, opacity: 1}}>
-                                聯絡客服
-                            </Text>
-                            洽客服人員尋求協助。UniLife團隊目前的人力無法審核所有的言論，懇請大家跟我們一起維護良好的社群風氣。
-                        </Text>
-                        <Text style={{...stylesheet.textS, ...stylesheet.textGrey, margin: 12}}>
-                            發文後，請按文章列表左上角的重新整理按鈕，這樣您的文章才會出現在您的列表。
-                        </Text>
                     </View>
+                    <Text style={{...stylesheet.textS, ...stylesheet.textGrey, margin: 12}}>
+                        請注意，您在網路上的發言須負法律上的責任。請在發布訊息前進行查證，假消息可能會危及他人的健康。
+                    </Text>
+                    <Text style={{...stylesheet.textS, ...stylesheet.textGrey, marginHorizontal: 12, marginBottom: 28}}>
+                        若是您在UniLife看見不實資訊，請聯繫我們的
+                        <Text onPress={()=>WebBrowser.openBrowserAsync('https://supr.link/HjULp')} style={{...stylesheet.footerLink, ...stylesheet.textS, opacity: 1}}>
+                            檢舉受理單位
+                        </Text>
+                        ，或是點選
+                        <Text onPress={()=>WebBrowser.openBrowserAsync('https://supr.link/xltJy')} style={{...stylesheet.footerLink, ...stylesheet.textS, opacity: 1}}>
+                            聯絡客服
+                        </Text>
+                        洽客服人員尋求協助。UniLife團隊目前的人力無法審核所有的言論，懇請大家跟我們一起維護良好的社群風氣。
+                    </Text>
+                    {/* <Text style={{...stylesheet.textS, ...stylesheet.textGrey, margin: 12}}>
+                        發文後，請按文章列表左上角的重新整理按鈕，這樣您的文章才會出現在您的列表。
+                    </Text> */}
                     <Button
                         style={stylesheet.bgBlue}
                         onPress={() => onRegisterPress()} 
