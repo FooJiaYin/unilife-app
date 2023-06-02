@@ -9,7 +9,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import * as Linking from 'expo-linking'
-import { LoginScreen, LineLoginScreen, ResetPasswordScreen } from './src/screens'
+import { LoginScreen, LineLoginScreen, EmailLoginScreen, ResetPasswordScreen } from './src/screens'
 import { RegistrationScreen, FillInfoScreen, TopicSelectScreen, SuccessScreen, VerificationScreen } from './src/screens'
 import { HomeScreen, IntroScreen } from './src/screens'
 import { ArticleListScreen, CommunityScreen, FilterScreen, ArticleScreen, CommentScreen, NewArticleScreen } from './src/screens'
@@ -335,6 +335,7 @@ export default function App() {
 							{props => <CommentScreen {...props} user={user} />}
 						</Stack.Screen>
 						<Stack.Screen name="Login" component={LoginScreen}/>
+						<Stack.Screen name="EmailLogin" component={EmailLoginScreen}/>
 						<Stack.Screen name="LineLogin" component={LineLoginScreen}/>
 						<Stack.Screen name="ResetPassword" component={ResetPasswordScreen}/>
 						<Stack.Screen name="Registration" component={RegistrationScreen} />
@@ -353,6 +354,7 @@ export default function App() {
 				(
 					<Stack.Navigator>
 						<Stack.Screen name="Login" component={LoginScreen}/>
+						<Stack.Screen name="EmailLogin" component={EmailLoginScreen}/>
 						<Stack.Screen name="LineLogin" component={LineLoginScreen}/>
 						<Stack.Screen name="ResetPassword" component={ResetPasswordScreen}/>
 						<Stack.Screen name="Registration" component={RegistrationScreen} />
