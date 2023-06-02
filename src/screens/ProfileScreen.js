@@ -276,7 +276,7 @@ export default function ProfileScreen(props) {
                         title='登出'
                     />
                     <View style={stylesheet.footerView}>
-                        <Text style={stylesheet.footerText}>如需變更email或刪除帳號，請<Text onPress={()=>WebBrowser.openBrowserAsync('https://supr.link/ldq2V')} style={stylesheet.footerLink}>洽詢客服</Text></Text>
+                        <Text style={stylesheet.footerText}>如需變更社群、email或刪除帳號，請<Text onPress={()=>WebBrowser.openBrowserAsync('https://supr.link/ldq2V')} style={stylesheet.footerLink}>洽詢客服</Text></Text>
                     </View>
                     
                 </View>
