@@ -27,6 +27,7 @@
     "firebase": "8.2.3",
     "firebase-admin": "^9.11.1",
     "marked": "^4.0.4",
+    "mixpanel-react-native": "^1.5.0",
     "moment": "^2.29.1",
     "node-fetch": "^3.0.0",
     "react": "17.0.1",

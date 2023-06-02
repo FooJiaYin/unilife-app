@@ -16,6 +16,7 @@ import { ArticleListScreen, CommunityScreen, FilterScreen, ArticleScreen, Commen
 import { ChatroomScreen, MessageScreen } from './src/screens'
 import { SettingScreen, ProfileScreen } from './src/screens'
 import { tabBarObject, tabBarOptions } from './src/components/navigation'
+import { Mixpanel } from 'mixpanel-react-native';
 import {decode, encode} from 'base-64'
 // import Test from './src/screens/text'
 if (!global.btoa) {  global.btoa = encode }
@@ -164,6 +165,8 @@ export default function App() {
 	}
 	
 	useEffect(() => {
+	const mixpanel = new Mixpanel("e985bf72659a9b73d6f907b7ac45f81b");
+	mixpanel.init();
 		Linking.addEventListener("url", (event) => {
 			if(!data) {
 				getInitialUrl();
