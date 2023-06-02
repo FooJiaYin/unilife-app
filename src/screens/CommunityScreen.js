@@ -162,6 +162,8 @@ export default function CommunityScreen(props) {
                     data={articles['all']}
                     renderItem={({item}) => <ArticleListItem item={item} {...props} />}
                     keyExtractor={(item) => item.id}
+                    removeClippedSubviews={true}
+                    maxToRenderPerBatch={5}
                     removeClippedSubExpandCards={true}
                     nestedScrollEnabled={true}
                     contentContainerStyle={{marginBottom: 0, paddingBottom: 150}}

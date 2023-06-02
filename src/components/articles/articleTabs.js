@@ -29,6 +29,10 @@ export function ArticleTabs({titles, articles, ...props}) {
             <FlatList
                     data={articles[categories[0]]}
                     renderItem={({item}) => <ArticleListItem item={item} {...props} />}
+                    // removeClippedSubviews={true}
+                    initialNumToRender={7}
+                    maxToRenderPerBatch={3}
+                    windowSize={3}
                     keyExtractor={(item) => item.id}
                     removeClippedSubExpandCards={true}
                     nestedScrollEnabled={true}
@@ -41,6 +45,10 @@ export function ArticleTabs({titles, articles, ...props}) {
             <FlatList
                     data={articles[categories[1]]}
                     renderItem={({item}) => <ArticleListItem item={item} {...props} />}
+                    // removeClippedSubviews={true}
+                    initialNumToRender={6}
+                    maxToRenderPerBatch={3}
+                    windowSize={3}
                     keyExtractor={(item) => item.id}
                     removeClippedSubExpandCards={true}
                     nestedScrollEnabled={true}
@@ -53,6 +61,10 @@ export function ArticleTabs({titles, articles, ...props}) {
             <FlatList
                     data={articles[categories[2]]}
                     renderItem={({item}) => <ArticleListItem item={item} {...props} />}
+                    // removeClippedSubviews={true}
+                    initialNumToRender={6}
+                    maxToRenderPerBatch={3}
+                    windowSize={3}
                     keyExtractor={(item) => item.id}
                     removeClippedSubExpandCards={true}
                     nestedScrollEnabled={true}
@@ -65,6 +77,10 @@ export function ArticleTabs({titles, articles, ...props}) {
             <FlatList
                     data={articles[categories[3]]}
                     renderItem={({item}) => <ArticleListItem item={item} {...props} />}
+                    removeClippedSubviews={true}
+                    initialNumToRender={6}
+                    maxToRenderPerBatch={3}
+                    windowSize={3}
                     keyExtractor={(item) => item.id}
                     removeClippedSubExpandCards={true}
                     nestedScrollEnabled={true}
