@@ -187,10 +187,11 @@ export default function ProfileScreen(props) {
         })
     }
 
-    useEffect(() => {
-        // loadOptions()
-        loadUserData()
-    }, [])
+    useFocusEffect(
+        React.useCallback(() => {
+            loadUserData()
+        }, [])
+    ) 
 
     return (
         <View style={stylesheet.container}>
