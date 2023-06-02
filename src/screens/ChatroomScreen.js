@@ -6,7 +6,7 @@ import { Chatroom } from '../components/messages'
 import { firebase } from '../firebase/config'
 import Carousel from 'react-native-snap-carousel'
 // import Carousel from 'react-native-ui-lib/carousel';
-import time from '../utils/time'
+import { checkAuthStatus } from '../utils/auth'
 // import moment from 'moment'
 
 export default function ChatroomScreen(props) {
@@ -56,7 +56,13 @@ export default function ChatroomScreen(props) {
                 if(userData.settings && userData.settings.inChat == false) {
                     let newChatrooms = chatrooms
                     setMatchCard([{
-                        link: community.lineChat,
+                        action: () => {
+                            if (checkAuthStatus(user)) {
+                                if (community.lineChat != '') {
+                                    WebBrowser.openBrowserAsync(community.lineChat);
+                                }
+                            } 
+                        },
                         active: true,
                         userNames: [],
                         id: '0',
@@ -139,6 +145,12 @@ export default function ChatroomScreen(props) {
         loadChatrooms()
         console.log('chatrooms', chatrooms)
     }, [])
+
+    useFocusEffect(
+        React.useCallback(() => {
+            checkAuthStatus(user, props)
+        }, [])
+    )  
 
     return (
         <View style={stylesheet.container}>

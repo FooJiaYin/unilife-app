@@ -102,6 +102,11 @@ export default function LoginScreen({navigation, ...props}) {
         }
     }
 
+    const startTrial = () => {
+        navigation.replace('Tabs')
+        navigation.navigate('Intro')
+    }
+
     React.useLayoutEffect(() => {
         navigation.setOptions({
             headerShown: false
@@ -119,6 +124,7 @@ export default function LoginScreen({navigation, ...props}) {
                 style={styles.logo}
                 source={Asset('logo_with_text.png')}
             />
+            <Button onPress={startTrial} style={[stylesheet.bgGreen, {marginHorizontal: 50, marginBottom: 10, marginTop: 180, height: 80}]} title="點擊試用，認識UniLife" />
             <Button onPress={lineLogin} style={[stylesheet.bgBlue, {marginHorizontal: 50, marginBottom: 10}]} title="LINE 註冊/登入" />
             <Button onPress={emailLogin} style={[stylesheet.bgBlue, {marginHorizontal: 50, marginBottom: 10}]} title="Email 註冊/登入" />
             {Platform.OS === 'ios' &&

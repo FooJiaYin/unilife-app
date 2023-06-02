@@ -172,6 +172,12 @@ export default function App() {
 			// setData(data);
 		})
 		const usersRef = firebase.firestore().collection('users')
+		usersRef.doc("anonymous")
+			.get()
+			.then((doc) => {
+				setLoading(false)
+				setUser(doc)
+			})
 		firebase.auth().onAuthStateChanged(user => {
 			if (user) {
 				usersRef
@@ -188,6 +194,12 @@ export default function App() {
 					})
 			} else {
 				setLoading(false)
+				usersRef.doc("anonymous")
+				.get()
+				.then((doc) => {
+					setLoading(false)
+					setUser(doc)
+				})
 			}
 			// alert('push token', expoPushToken)
 		})

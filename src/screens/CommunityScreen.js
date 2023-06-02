@@ -8,6 +8,7 @@ import { ScrollTags } from '../components/articles/tags'
 import { firebase } from '../firebase/config'
 import { featuredTags } from '../firebase/functions'
 import Asset from '../components/assets'
+import { checkAuthStatus } from '../utils/auth'
 
 function PostBar (props) {
     const [editIconColor, setEditIconColor] = useState(Color.grey1);
@@ -155,7 +156,12 @@ export default function CommunityScreen(props) {
             }
         })
     }
-
+    useFocusEffect(
+        React.useCallback(() => {
+            checkAuthStatus(user, props)
+            if (!user) loadUserData()
+        }, [])
+    )  
     useEffect(() => {
         console.log(articles)
         console.log(articles)
@@ -163,6 +169,11 @@ export default function CommunityScreen(props) {
             // setArticles(newArticles)
         })
     }, [])
+
+    useEffect(() => {
+        if (user) loadArticles()
+        checkAuthStatus(user, props)
+    }, [user])
 
     return (
         <View style={[stylesheet.container, {}]}>

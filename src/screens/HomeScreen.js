@@ -11,6 +11,7 @@ import { firebase } from '../firebase/config'
 import { StickedBg } from '../components/decorative'
 import { HomeShortcutItem, ShortcutEditModal } from '../components/shortcutItem'
 import * as copilot from '../components/guide'
+import { checkAuthStatus } from '../utils/auth';
 
 export function HomeScreen(props) {
     
@@ -30,9 +31,9 @@ export function HomeScreen(props) {
     async function loadShortcuts() {
         let snapshot = await props.user.ref.get()
         user = await snapshot.data()
-        if (!user.interests || user.interests.length == 0) props.navigation.navigate('FillInfo', {user: snapshot})
+        if (user.id != "anonymous" && (!user.interests || user.interests.length == 0)) props.navigation.navigate('FillInfo', {user: snapshot})
         setNickname(user.info.nickname)
-        if(!user.guide || !user.guide.intro || user.guide.intro == false) {
+        if (!user.guide || !user.guide.intro || user.guide.intro == false) {
             props.navigation.navigate('Intro', {user: props.user})
         }
         else if(user.guide.home == false) {
@@ -40,7 +41,7 @@ export function HomeScreen(props) {
         }
         let images = []
         let communityData
-        user.identity.communities.push('all')
+        if(user.id != "anonymous") user.identity.communities.push('all')
         for(let i = 0; i < user.identity.communities.length; i++) {
             let comm = user.identity.communities[i]
             let snapshot = await firebase.firestore().doc('communities/' + comm).get()
@@ -48,7 +49,13 @@ export function HomeScreen(props) {
             if(i == 0) communityData = data
             if(data.featuredImages) images = images.concat(data.featuredImages)
         }
-        if (!user.shortcuts) {
+        if (user.id == "anonymous") {
+            setMyShortcuts(communityData.shortcuts.map(shortcut => { return {
+                ...shortcut, 
+                action: () => checkAuthStatus(user, props),
+                onLongPress: () => checkAuthStatus(user, props),
+            }}))
+        } else if (!user.shortcuts) {
             setMyShortcuts(communityData.shortcuts)
         } else {
             setMyShortcuts(user.shortcuts)
