@@ -42,7 +42,7 @@ export const tagNames = {
     26: "失物",
     27: "徵求",
     28: "徵才",
-    29: "問卷",
+    29: "團購",
     30: "其他",
     31: "小攸報天氣",
     breakfast: '早餐',
@@ -68,18 +68,19 @@ export const tagNames = {
 }
 
 export const featuredTags = {
-    all: ['operation', '防疫須知', '確診經驗', '居家隔離', '快篩試劑', '醫療量能', '澄清闢謠'],
-    announcement: ['防疫須知', '校園停課', '疫苗藥物', '確診足跡', '醫療量能', '醫療器材'], 
-    local: [ '確診經驗', '居家隔離', '防疫保險', '遠距工作', '心理支持'],
-    news: ['pandemic', '4', '3', '10', '5'],
-    community: ['需要幫忙', '我來幫你', '外帶優惠', '遠距教學', '知識底＋']
+    all: ['operation', '導覽', '4', '20'],
+    announcement: ['20', '19', '22', '18'], 
+    local: [ '4', '16', '12', '5'],
+    news: ['3', '13', '0', '9'],
+    community: ['需要幫忙', '在地達人', '知識底＋', '好康']
 };
 
 // #天氣 #晚餐 #日式 #活動 #疫情 #生活 #學習資源 #獎助學金
 
-export const helpTags = ['需要幫忙', '我來幫你', '知識底＋']
-export const localTags = [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
+export const helpTags = ['需要幫忙', '在地達人', '知識底＋']
+export const localTags = [15, '好康', 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, '團購', 30]
 export const pandemicTags = ['居家隔離', '快篩試劑', '防疫物資', '醫療器材', '防疫保險', '確診足跡', '遠距工作', '遠距教學', '確診經驗']
+export const foodTags = ['breakfast', 'lunch', 'dinner', 'snack', 'dessert', 'gathering', 'supper', 'delivery']
 
 export const announcementTags = {
     resource: "學習資源",

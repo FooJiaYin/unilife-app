@@ -7,7 +7,7 @@ import { firebase } from '../firebase/config'
 import { Button, Select, PasswordInput } from '../components/forms'
 import RenderHtml from 'react-native-render-html'
 import { Chip } from '../components/chip'
-import { tagNames, helpTags, localTags, pandemicTags } from '../firebase/functions'
+import { tagNames, helpTags, localTags, foodTags } from '../firebase/functions'
 import Asset from '../components/assets'
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
@@ -294,7 +294,7 @@ export default function NewArticleScreen(props) {
                             contentContainerStyle={{alignItems: 'center'}} >
                             {article.tags.map(tag => <Chip 
                                 label={tagNames[tag] || tag} 
-                                color={pandemicTags.includes(tag) ? Color.red : Color.green} 
+                                color={foodTags.includes(tag) ? Color.red : helpTags.includes(tag) ? Color.blue : Color.green} 
                                 size={'large'} focused 
                                 action={() => setTagSelectModalVisibility(true)}
                             />)}
@@ -407,6 +407,7 @@ export function TagSelectModal ({visible, onClose, tags}) {
                     <Chip 
                         style={{marginVertical: 6}}
                         label={tagNames[item] || item} 
+                        color={Color.blue}
                         type={'tag'} size={'large'} 
                         focused={selectedTags.includes(item)}
                         action={()=>updateTags(item)} /> 
@@ -430,10 +431,9 @@ export function TagSelectModal ({visible, onClose, tags}) {
                 // horizontal={true}
                 keyExtractor={(item, index) => item}
             />
-            <Text style={{flex: 0, ...stylesheet.textDark}}>疫情資訊</Text>
-            {/* <Text style={{flex: 0, ...stylesheet.textDark}}>美食</Text> */}
+            <Text style={{flex: 0, ...stylesheet.textDark}}>三餐日常</Text>
             <FlatList
-                data={pandemicTags}
+                data={foodTags}
                 style={{ marginVertical: 10 }}
                 contentContainerStyle={{flexDirection : "row", flexWrap : "wrap", justifyContent : 'space-between'}} 
                 renderItem={({item}) => 
