@@ -76,8 +76,11 @@ export default function ArticleScreen(props) {
         if (source == '社群貼文') {
             firebase.firestore().doc('users/' + article.publishedBy).get().then(snapshot => {
                 setSource(snapshot.data().info.nickname)
-                setHeaderOptions(props.navigation, options)
             })
+            firebase.firestore().doc('communities/' + article.community).get().then(snapshot => {
+                setHeaderOptions(props.navigation, {...options, title: snapshot.name})
+            })
+
         }
     }
 
@@ -263,7 +266,7 @@ export default function ArticleScreen(props) {
                             contentWidth={useWindowDimensions().width - 40}
                         />
                     </View>
-                    {user.verification && user.verification.status == true ?
+                    {user.verification && user.verification.status == true &&
                     <View>
                         <View style={stylesheet.borderBottom}></View>
                         <Text style={{...stylesheet.headerText, marginVertical: 12}}>留言區</Text>
@@ -282,8 +285,7 @@ export default function ArticleScreen(props) {
                             }}
                             keyExtractor={(item, index) => index.toString()}
                         />
-                    </View>
-                    : null}
+                    </View>}
                 </ScrollView>
             }
        

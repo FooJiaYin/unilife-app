@@ -75,7 +75,10 @@ export default function LineLoginScreen({navigation, ...props}) {
                 style={styles.logo}
                 source={Asset('logo_with_text.png')}
             />
-            <Button onPress={() => onLoginPress()} style={[stylesheet.bgGreen, {margin: 60, marginTop: 200}]} title="LINE 登入" />
+            <Button onPress={() => {}} style={[stylesheet.bgLightGrey, {marginHorizontal: 50, marginBottom: 5, marginTop: 200}]} title="LINE 登入中..." />
+            <View style={stylesheet.footerView}>
+                <Text style={stylesheet.footerText}>遇到問題嗎？<Text onPress={()=>WebBrowser.openBrowserAsync("https://supr.link/kmc3i")} style={stylesheet.footerLink}>聯絡客服</Text></Text>
+            </View>
         </View>
     )
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react'
-import { ImageBackground, Image, Text, TextInput, Keyboard, View, Alert } from 'react-native'
+import { Platform, ImageBackground, Text, TextInput, Keyboard, View, Alert } from 'react-native'
 import { useFocusEffect } from "@react-navigation/native";
 import { setHeaderOptions } from '../components/navigation'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -118,6 +118,7 @@ export default function ProfileScreen(props) {
                 communities: [identity.district, identity.county],
             },
         })
+        Alert.alert('儲存成功', '您的資料已儲存。\n如果其他頁面資料未更新，請重啟UniLife應用程序。')
     }
 
     const onSavePress = () => {
@@ -238,7 +239,7 @@ export default function ProfileScreen(props) {
                         style={styles.input}
                         defaultValue={info.birthday? time(info.birthday).format('YYYY-MM-DD') : ''}
                         value={info.birthday? time(info.birthday).format('YYYY-MM-DD') : ''}
-                        placeholder='生日'
+                        placeholder={Platform.OS === 'android'?`生日（點選日曆上方${new Date().getFullYear()}即可快速選取年份）`: '生日'}
                         placeholderTextColor="#aaaaaa"
                         underlineColorAndroid="transparent"
                         autoCapitalize="none"
@@ -261,7 +262,7 @@ export default function ProfileScreen(props) {
                         title='登出'
                     />
                     <View style={stylesheet.footerView}>
-                            <Text onPress={()=>WebBrowser.openBrowserAsync('https://supr.link/znUbr')} style={stylesheet.footerLink}>聯繫客服</Text>
+                        <Text style={stylesheet.footerText}>如需變更email或刪除帳號，請<Text onPress={()=>WebBrowser.openBrowserAsync('https://supr.link/ldq2V')} style={stylesheet.footerLink}>洽詢客服</Text></Text>
                     </View>
                     
                 </View>

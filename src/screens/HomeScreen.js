@@ -158,7 +158,7 @@ export function HomeScreen(props) {
                         <Text style={homeCardStyle.time}>{time().format('LLLL')}</Text>
                     </View>
                     <View>
-                        <copilot.Step
+                        {/* <copilot.Step
                             text="這裡是收藏區，將喜歡的文章收藏後，就能隨時在這找到它囉～"
                             order={1}
                             name="save"
@@ -166,7 +166,7 @@ export function HomeScreen(props) {
                         <copilot.TouchableOpacity onPress={() => props.navigation.navigate('Filter', {type: 'saved'})}>
                             <Image style={homeCardStyle.icon}  source={Asset('bookmark')} />
                         </copilot.TouchableOpacity>
-                        </copilot.Step>
+                        </copilot.Step> */}
                         <copilot.TouchableOpacity onPress={() => props.navigation.navigate('Intro', {user: props.user})}>
                             <Image style={homeCardStyle.icon}  source={Asset('guide')} />
                         </copilot.TouchableOpacity>

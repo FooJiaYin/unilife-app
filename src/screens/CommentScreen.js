@@ -4,7 +4,7 @@ import { FlatList, Keyboard, Text, SafeAreaView, Image, View, TextInput, Touchab
 import { setHeaderOptions } from '../components/navigation'
 import { stylesheet } from '../styles/styles'
 import { firebase } from '../firebase/config'
-import { CommentBubble, ProfileImage, SendButton } from '../components/messages'
+import { CommentBubble, SendButton, Avatar } from '../components/messages'
 import Asset from '../components/assets'
 
 export default function MessageScreen(props) {
@@ -121,7 +121,7 @@ export default function MessageScreen(props) {
 
   const renderAvatar = ({currentMessage}) => {
     //   console.log(currentMessage)
-        return <ProfileImage url={currentMessage.user.avatar} />
+        return <Avatar source={currentMessage.user.avatar} />
   }
 
 //   const renderSend = ({text}) => <SendButton input={text} onSend={sendMessage}/>

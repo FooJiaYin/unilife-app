@@ -25,7 +25,14 @@ function PostBar (props) {
                 marginBottom: 0,
                 paddingHorizontal: 12,
             }]}>
-                <Image source={Asset('edit')} style={[stylesheet.iconColor, {tintColor: editIconColor, width: 28, height: 28}]} />
+                <TouchableHighlight 
+                    onPress={() => props.navigation.navigate('Filter', {type: 'history'})}
+                    onShowUnderlay={() => setHistoryIconColor(Color.blue)}
+                    onHideUnderlay={() => setHistoryIconColor(Color.grey1)}
+                    underlayColor={'#0000'}
+                >
+                    <Image source={Asset('history')} style={[stylesheet.iconColor, {tintColor: historyIconColor, width: 32, height: 32}]} />
+                </TouchableHighlight>
                 <TextInput
                     style={{...stylesheet.input, flex: 1, marginHorizontal: 12}}
                     editable={false}
@@ -35,15 +42,7 @@ function PostBar (props) {
                     autoCapitalize="none"
                     />
                 {/* <Button  style={{...stylesheet.bgLight, flex: 1}} title="分享您的想法..."  /> */}
-                
-                <TouchableHighlight 
-                    onPress={() => props.navigation.navigate('Filter', {type: 'history'})}
-                    onShowUnderlay={() => setHistoryIconColor(Color.blue)}
-                    onHideUnderlay={() => setHistoryIconColor(Color.grey1)}
-                    underlayColor={'#0000'}
-                >
-                    <Image source={Asset('history')} style={[stylesheet.iconColor, {tintColor: historyIconColor, width: 32, height: 32}]} />
-                </TouchableHighlight>
+                <Image source={Asset('edit')} style={[stylesheet.iconColor, {tintColor: editIconColor, width: 28, height: 28}]} />
             </View>
         </TouchableHighlight>
     )
@@ -89,8 +88,8 @@ export default function CommunityScreen(props) {
                 querySnapshot.forEach(async snapshot => {
                     console.log(snapshot.id)
                     const article = snapshot.data()
-                    if (article.community) {
-                        article.isSaved = savedArticles != undefined && savedArticles.includes(snapshot.id)
+                    article.isSaved = savedArticles != undefined && savedArticles.includes(snapshot.id)
+                    if (article.community && article.community != 'all') {
                         newArticles[article.community].push(article)
                     }
                     newArticles['all'].push(article)

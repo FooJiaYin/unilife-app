@@ -110,31 +110,29 @@ export default function VerificationScreen(props) {
                         style={stylesheet.textDark}
                     />
                     <Text style={formStyles.label}></Text>
-                    {verification.type == 'email' ?
-                        <View>
-                            <Text style={formStyles.label}>請使用以 {userData.identity.community}.edu.tw 為結尾的信箱</Text>
-                            <Input
-                                // style={[stylesheet.input, stylesheet.textDark]}
-                                value={verification.email}
-                                placeholder='學校信箱'
-                                onChangeText={(input) => setVerification({ ...verification, email: input })}
-                                right={
-                                    <TouchableOpacity onPress={verify}>
-                                        <Text style={[stylesheet.textBlue, {fontWeight: 'bold'}]}>驗證</Text>
-                                    </TouchableOpacity>
-                                }
-                            />
-                        </View>
-                    : verification.type == 'file' ?
-                        <View>
-                            <Button
-                                titleStyle={stylesheet.textBlue}
-                                onPress={verify} 
-                                title='前往LINE@ 上傳驗證文件'
-                            />
-                        </View>
-                    : null
-                    }
+                    {verification.type == 'email' &&
+                    <View>
+                        <Text style={formStyles.label}>請使用以 {userData.identity.community}.edu.tw 為結尾的信箱</Text>
+                        <Input
+                            // style={[stylesheet.input, stylesheet.textDark]}
+                            value={verification.email}
+                            placeholder='學校信箱'
+                            onChangeText={(input) => setVerification({ ...verification, email: input })}
+                            right={
+                                <TouchableOpacity onPress={verify}>
+                                    <Text style={[stylesheet.textBlue, {fontWeight: 'bold'}]}>驗證</Text>
+                                </TouchableOpacity>
+                            }
+                        />
+                    </View>}
+                    {verification.type == 'file' &&
+                    <View>
+                        <Button
+                            titleStyle={stylesheet.textBlue}
+                            onPress={verify} 
+                            title='前往LINE@ 上傳驗證文件'
+                        />
+                    </View>}
                     <View style={stylesheet.footerView}>
                     </View>
                     <Button

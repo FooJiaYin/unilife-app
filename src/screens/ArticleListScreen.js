@@ -4,6 +4,7 @@ import { setHeaderOptions } from '../components/navigation'
 import { stylesheet, Color } from '../styles'
 import { firebase } from '../firebase/config'
 import { ArticleTabs } from '../components/articles/articleTabs'
+import { getUnique } from '../utils/array'
 
 export default function ArticleListScreen(props) {
     
@@ -76,8 +77,10 @@ export default function ArticleListScreen(props) {
                 })
                 
                 for (const articleId of user.recommendation) {
-                    const article = { id: articleId }
-                    newArticles['all'].push(article)
+                    if (!newArticles.all.find(article => article.id === articleId)) {
+                        const article = { id: articleId }
+                        newArticles['all'].push(article)
+                    }
                 }
                 setArticles(newArticles)
             }).then(() => {
@@ -87,7 +90,7 @@ export default function ArticleListScreen(props) {
                         const article = snapshot.data()
                         article.isSaved = (savedArticles != undefined) && savedArticles.includes(articleId)
                         // newArticles['all'][i] = article
-                        if (article && article.category && ['announcement', 'local', 'news'].includes(article.category)) {
+                        if (article && article.category && ['announcement', 'local', 'news'].includes(article.category) && !article.pinned) {
                             newArticles[article.category].push(article)
                         }
                     })
@@ -154,7 +157,7 @@ export default function ArticleListScreen(props) {
                         recommendations.all.push(...temp)
                     }
                     // console.log('all', recommendations.all)
-                    recommendations.all = recommendations.all.concat(user.recommendation).slice(0, 500)
+                    recommendations.all = getUnique(recommendations.all.concat(user.recommendation).slice(0, 500))
                     // console.log('all', recommendations.all.length)
                     // Update user
                     // console.log("gg")

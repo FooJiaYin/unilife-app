@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { Image, ImageBackground, Text, TextInput, Modal, View, Keyboard, Alert, ScrollView } from 'react-native'
+import { Platform, ImageBackground, Text, TextInput, Modal, View, Keyboard, Alert, ScrollView } from 'react-native'
 import { setHeaderOptions } from '../components/navigation'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { stylesheet, Color } from '../styles'
@@ -62,7 +62,8 @@ export default function FillInfoScreen(props) {
         // ],
         gender: [
             {label: '男', value: '男'},
-            {label: '女', value: '女'}
+            {label: '女', value: '女'},
+            {label: '其他', value: '其他'}
         ]
     }) 
 
@@ -268,12 +269,12 @@ export default function FillInfoScreen(props) {
                         // value={info.gender} 
                         items={options.gender}
                         onChange={(input) => setInfo({ ...info, gender: input })}
-                        placeholder='請選擇生理性別...'
+                        placeholder='請選擇您的性別...'
                     />
                     <TextInput
                         style={stylesheet.input}
                         value={info.birthday? time(info.birthday).format('YYYY-MM-DD') : ''}
-                        placeholder='生日'
+                        placeholder={Platform.OS === 'android'?`生日（點選日曆上方${new Date().getFullYear()}即可快速選取年份）`: '生日'}
                         placeholderTextColor="#aaaaaa"
                         underlineColorAndroid="transparent"
                         autoCapitalize="none"

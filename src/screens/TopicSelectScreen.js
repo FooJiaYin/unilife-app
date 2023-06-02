@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { ToastAndroid, StyleSheet, Image, Text, TouchableOpacity, View, FlatList, useWindowDimensions } from 'react-native'
+import { Alert, StyleSheet, Image, Text, TouchableOpacity, View, FlatList, useWindowDimensions } from 'react-native'
 import { setHeaderOptions } from '../components/navigation'
 import Asset from '../components/assets'
 import { firebase } from '../firebase/config'
@@ -12,6 +12,7 @@ import { remove } from '../utils/array'
 
 export default function TopicSelectScreen(props) {
     const [selectedItems, setSelectedItems] = useState([])
+    const [count, setCount] = useState(0)
     const [proceed, setProceed] = useState(false)
     const [confirm, setConfirm] = useState(false)
     const width = useWindowDimensions().width
@@ -89,6 +90,7 @@ export default function TopicSelectScreen(props) {
                 setProceed(false)
             }
         }
+        setCount(array.length)
         console.log(array)
     }
     
@@ -212,7 +214,9 @@ export default function TopicSelectScreen(props) {
         // TODO: submit user input here
 
         // setInterest(selectedItems)
-        const user = 
+        Alert.alert('請耐心等待', "正在為您客制化在地資訊，需要約10秒...",
+            [], {cancelable: false}
+        )
         props.route.params.user.ref.get().then(snapshot => {
                 const data = snapshot.data()
                 // console.log(data.info.name, data.lastActive, data.score)
@@ -237,6 +241,13 @@ export default function TopicSelectScreen(props) {
                         recommendation: recommendations.slice(0,500),
                         lastActive: firebase.firestore.FieldValue.serverTimestamp()
                     })
+                    Alert.alert('完成！', "感謝您耐心等候！",
+                        [{
+                            text: "OK",
+                            // onPress: () => console.log("Cancel Pressed"),
+                            style: "cancel"
+                        }]
+                    )
                     return props.navigation.navigate('Success')
                 })
             })
@@ -245,8 +256,8 @@ export default function TopicSelectScreen(props) {
         <>
             <View style={[topicStyle.container, {flex: 1}]}>
                 <View style={topicStyle.hintMessage}>
-                    <Text style={stylesheet.text}>{confirm?'興趣主題':'選擇你最感興趣的5個主題'}</Text>
-                    <Text style={stylesheet.text}>{selectedItems.length}{!confirm&&'/5'}</Text>
+                    <Text style={stylesheet.text}>{confirm?'我們將根據以下主題，提供您感興趣的在地資訊':'選擇你最感興趣的5個主題'}</Text>
+                    {!confirm && <Text style={stylesheet.text}>{count}/5</Text> }
                 </View>
                 {!confirm
                     ?<FlatList
@@ -268,7 +279,7 @@ export default function TopicSelectScreen(props) {
                 {confirm?
                 <View style={[topicStyle.nextButtonContainer, {height: 60}]}>
                     <Button onPress={submit} title="完成"  style={[topicStyle.nextButton, {backgroundColor:Color.blue}]}></Button>
-                    <Button onPress={() => {setConfirm(false); setProceed(false); setSelectedItems([])}} title="重新選擇"  style={[topicStyle.nextButton, {backgroundColor:'transparent'}]} titleStyle={{ color: Color.blue}}></Button>
+                    <Button onPress={() => {setConfirm(false); setProceed(false); setSelectedItems([]); setCount(0)}} title="重新選擇"  style={[topicStyle.nextButton, {backgroundColor:'transparent'}]} titleStyle={{ color: Color.blue}}></Button>
                 </View>
                 :
                 <View style={topicStyle.nextButtonContainer}>
