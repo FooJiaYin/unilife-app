@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import { View, useWindowDimensions, Linking, Alert } from 'react-native'
+import { useFocusEffect } from "@react-navigation/native";
 import { setHeaderOptions } from '../components/navigation'
 import { stylesheet, Color, styles } from '../styles'
 import { Chatroom } from '../components/messages'
 import { firebase } from '../firebase/config'
 import Carousel from 'react-native-snap-carousel'
+import * as WebBrowser from 'expo-web-browser';
 // import Carousel from 'react-native-ui-lib/carousel';
 import { checkAuthStatus } from '../utils/auth'
 // import moment from 'moment'
 
 export default function ChatroomScreen(props) {
     
-    const user = props.user.data()
+    let user = props.user.data()
     const storageRef = firebase.storage().ref()
     const chatroomsRef = props.user.ref.collection('chatHistory')
 
@@ -40,20 +42,20 @@ export default function ChatroomScreen(props) {
 
     async function loadSetting() {
         let snapshot = await props.user.ref.get()
-        let userData = snapshot.data()
+        let user = snapshot.data()
 
         firebase.firestore().doc('config/matching').onSnapshot(snapshot => {
             // console.log('onSnapshot', snapshot)
             let matchConfig = snapshot.data()
             setMatchState({
                 ...matchConfig,
-                waiting: (userData.settings && userData.settings.chat) ? userData.settings.chat : false,
-                inChat: (userData.settings && userData.settings.inChat) ? userData.settings.inChat : false,
-                verified: (userData.verification && userData.verification.status) ? userData.verification.status : false,
+                waiting: (user.settings && user.settings.chat) ? user.settings.chat : false,
+                inChat: (user.settings && user.settings.inChat) ? user.settings.inChat : false,
+                verified: (user.verification && user.verification.status) ? user.verification.status : false,
             });
-            firebase.firestore().doc(`communities/${userData.identity.community}`).onSnapshot(snapshot => {
+            firebase.firestore().doc(`communities/${user.identity.district || user.identity.community}`).onSnapshot(snapshot => {
                 let community = snapshot.data()
-                if(userData.settings && userData.settings.inChat == false) {
+                if(user.settings && user.settings.inChat == false) {
                     let newChatrooms = chatrooms
                     setMatchCard([{
                         action: () => {
