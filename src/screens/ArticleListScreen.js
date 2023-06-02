@@ -5,6 +5,7 @@ import { stylesheet, Color } from '../styles'
 import { firebase } from '../firebase/config'
 import { ArticleTabs } from '../components/articles/articleTabs'
 import { getUnique } from '../utils/array'
+import { checkAuthStatus } from '../utils/auth'
 
 export default function ArticleListScreen(props) {
     
@@ -222,6 +223,20 @@ export default function ArticleListScreen(props) {
             // setArticles(newArticles)
         })
     }, [])
+
+    useEffect(() => {
+        checkAuthStatus(user, props)
+        if (user) loadArticles()
+    }, [user])
+
+    useFocusEffect(
+        React.useCallback(() => {
+            console.log("focus", user)
+            checkAuthStatus(user, props)
+            if (user) recommendation()
+            else loadUserData()
+        }, [])
+    )
 
     setHeaderOptions(props.navigation, options)
 

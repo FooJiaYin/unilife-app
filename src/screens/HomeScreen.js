@@ -11,6 +11,7 @@ import { firebase } from '../firebase/config'
 import { StickedBg } from '../components/decorative'
 import { HomeShortcutItem, ShortcutEditModal } from '../components/shortcutItem'
 import * as copilot from '../components/guide'
+import { checkAuthStatus } from '../utils/auth';
 
 export function HomeScreen(props) {
     
@@ -48,7 +49,13 @@ export function HomeScreen(props) {
             if(i == 0) communityData = data
             if(data.featuredImages) images = images.concat(data.featuredImages)
         }
-        if (!user.shortcuts) {
+        if (user.id == "anonymous") {
+            setMyShortcuts(communityData.shortcuts.map(shortcut => { return {
+                ...shortcut, 
+                action: () => checkAuthStatus(user, props),
+                onLongPress: () => checkAuthStatus(user, props),
+            }}))
+        } else if (!user.shortcuts) {
             setMyShortcuts(communityData.shortcuts)
         } else {
             setMyShortcuts(user.shortcuts)

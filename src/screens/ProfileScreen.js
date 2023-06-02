@@ -13,6 +13,7 @@ import { firebase } from '../firebase/config'
 import Asset from '../components/assets'
 import time from '../utils/time'
 import { stylesheet, Color } from '../styles'
+import { checkAuthStatus } from '../utils/auth';
 
 export default function ProfileScreen(props) {
     const [info, setInfo] = useState({})
@@ -106,6 +107,7 @@ export default function ProfileScreen(props) {
         let districts = county && county.districts? county.districts.map(district => ({value: county.name + district, label: district})) : [];
         setOptions({...options, districts: districts})
         setIdentity(user.identity)
+        checkAuthStatus(user, props)
     }
 
     const updateUserData = async () => {
