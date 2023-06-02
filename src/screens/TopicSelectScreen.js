@@ -8,6 +8,7 @@ import { TopicItem } from '../components/topicItem'
 import { Button } from '../components/forms'
 import { Color } from '../styles'
 import { color } from '../styles/color'
+import { remove } from '../utils/array'
 
 export default function TopicSelectScreen(props) {
     const [selectedItems, setSelectedItems] = useState([])
@@ -81,21 +82,14 @@ export default function TopicSelectScreen(props) {
                 // TODO: show overlay hint   
             }
         }else{
-            var l=array.length
-            for(var i=0; i<l&&l==array.length; i++){
-                if (array[i]==index){
-                    // console.log(array)
-                    array.splice(i, 1)
-                    // console.log(array)
-                    setSelectedItems(array)
-                    onSelected(false)
-                    if(array.length<5){
-                        setProceed(false)
-                    }             
-                }
+            array = remove(array, index)
+            setSelectedItems(array)
+            onSelected(false)
+            if(array.length < 5){
+                setProceed(false)
             }
         }
-        // console.log(array)
+        console.log(array)
     }
     
     const topicItem = ({item, index}) => {
@@ -218,40 +212,34 @@ export default function TopicSelectScreen(props) {
         // TODO: submit user input here
 
         // setInterest(selectedItems)
-        
-        props.route.params.user.ref.update({
-            interests: selectedItems,
-            score: getScore(selectedItems)
-        })
+        const user = 
         props.route.params.user.ref.get().then(snapshot => {
                 const data = snapshot.data()
                 // console.log(data.info.name, data.lastActive, data.score)
                 var recommendations = []
                 firebase.firestore().collection('articles')
-                .where('community', '==', data.identity.community)
-                .where('status', '==', 'published')
-                .where('pinned', '==', false)
-                // .where('publishedAt', '<', data.lastActive.toDate())
-                .orderBy('publishedAt', 'desc').get().then(article_querySnapshot => {
+                .where("community", "in", data.identity.communities.concat(["all"]))
+                .orderBy("pinned", 'desc')
+                .where("status", "==", "published")
+                .orderBy('publishedAt', 'desc')
+                .get().then(article_querySnapshot => {
                     article_querySnapshot.forEach(articleSnapshot => {
                         const data = articleSnapshot.data()
+                        if (data.category && data.category != "posts") {
+                            recommendations.push(articleSnapshot.id)
+                        }
                         // console.log(data.title, data.publishedAt.toDate(), data.topic)
-                        recommendations.push(articleSnapshot.id)
                     })
                 }).finally(() => {
-                    snapshot.ref.update({
+                    snapshot.ref.update({   
+                        interests: selectedItems,
+                        score: getScore(selectedItems),
                         recommendation: recommendations.slice(0,500),
                         lastActive: firebase.firestore.FieldValue.serverTimestamp()
                     })
                     return props.navigation.navigate('Success')
                 })
-            // else {
-            //     snapshot.ref.update({
-            //         lastActive: admin.firestore.Timestamp.fromMillis(1633977297000)
-            //     })
-            // }
             })
-        // return props.navigation.navigate('Tabs')
     }
     return(
         <>

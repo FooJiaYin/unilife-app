@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react'
 import { StyleSheet, View, Image, TouchableOpacity, Text, TextInput, useWindowDimensions } from 'react-native'
 // import { InputToolbar } from 'react-native-gifted-chat'
 import * as GiftedChat from 'react-native-gifted-chat'
+import * as WebBrowser from 'expo-web-browser';
 import { styles, stylesheet } from '../styles'
 import Asset from './assets'
 import { Button } from './forms'
+import { ProfileImage } from './profileImage'
 import time from '../utils/time'
 import { firebase } from '../firebase/config'
 
@@ -21,7 +23,8 @@ const messageStyle = StyleSheet.create({
         marginBottom: 0,
         marginTop: 6,
         marginLeft: 0,
-        marginRight: 0
+        marginRight: 0,
+        borderRadius: 50,
     },
     messageRight: {
         flexDirection: 'column',
@@ -69,22 +72,6 @@ const messageStyle = StyleSheet.create({
         flexDirection: 'row-reverse',
         textAlign: 'right',
         marginRight: 8,
-    },
-    inputBar: {
-        ...styles.borderTop,
-        backgroundColor: 'white',
-        flexDirection: 'row',
-        // position: 'absolute',
-        zIndex: 1,
-        // height: 80,
-        // marginTop: 40,
-        // bottom: 0,
-        // flex: 1,
-        paddingTop: 2,
-        paddingBottom: 4,
-        paddingLeft: 16,
-        // justifyContent: 'center',
-        alignItems: 'center'
     },
 })
 
@@ -180,15 +167,9 @@ export function Comment(message) {
     // console.log(message.content)
     return (
         <View style={messageStyle.message}>
-             <ProfileImage url={message.profileImage} />
+             <ProfileImage source={message.profileImage} style={messageStyle.profileImage} />
              <CommentBubble {...message} />
          </View>
-    )
-}
-
-export function ProfileImage({url}) {
-    return (
-        <Image source={Asset(url)} style={messageStyle.profileImage} />
     )
 }
 
@@ -213,7 +194,7 @@ export function InputBar({sendMessage, like, setLike}, ...props) {
     //   <View style={{ height: 80}}>
      //   <TextInput style={{ height: 100, backgroundColor: 'blue' }}/>
     // </View>
-        <View style={messageStyle.inputBar}>
+        <View style={[stylesheet.borderTop, stylesheet.inputBar]}>
             <TouchableOpacity onPress={() => setLike(!like)}>
                 <Image source={like? Asset('like-active') : Asset('like')} style={[stylesheet.iconColor, {width: 36, height: 36, marginRight: 14}]} />
             </TouchableOpacity>
@@ -319,29 +300,35 @@ export function Chatroom({item, size, navigation, matchState = {}, toggleWaiting
     }) 
     // console.log('item', item)
     // console.log('matchConfig', matchState)
+    const openUrl = (url) => {
+        if (url && url != '') {
+            WebBrowser.openBrowserAsync(url);
+            // Linking.openURL(item.url)
+        }
+    }
+    
     return (
-        item.id == 0 && matchState.inChat == true? <></> :
         <View style={cardStyle.fullHeight}>
             {/* <Text>{ item.id }</Text> */}
             {item.id == 0?
-                <View style={[cardStyle.card, matchState.waiting? stylesheet.bgBlue : stylesheet.bgLight,]}>
-                    <Text style={cardStyle.text}>
-                        <Text style={cardStyle.textL}>{'下次配對\n'}</Text>
-                        <Text>{matchState.text + '\n' + (matchState.waiting? '等待配對中...' : '') }</Text>
-                    </Text>
-                    <Button style={cardStyle.button} title={(matchState.waiting? '關閉配對' : '開啟配對')} onPress={() => toggleWaiting()}/>
+                <View style={[cardStyle.card, stylesheet.bgBlue]}>
+                    <View style={cardStyle.text}>
+                        <Text style={[cardStyle.text, cardStyle.textL]}>{"在地聊天室"}</Text>
+                        <Text style={[cardStyle.text]}>{matchState.text}</Text>
+                    </View>
+                    <Button style={cardStyle.button} title={'開啟LINE'} onPress={() => openUrl(item.link)}/>
                     {/* <Text style={[stylesheet.textWhite, stylesheet.textCenter]}>{time().getNextDayofWeek(matchState.day, matchState.time).fromNow('倒數計時 %d %H %M')}</Text> */}
                     {/* <Text style={cardStyle.text}>{active ? 'Active' : 'Inactive'}</Text> */}
                 </View>
                 :
-                (<View style={[cardStyle.card, item.style]}>
+                <View style={[cardStyle.card, item.style]}>
                     <Text style={cardStyle.text}>
                         <Text style={cardStyle.textL}>{users.join('\n')}</Text>
                     </Text>
                     <Button style={cardStyle.button} title={(chatroom.active == true)? '繼續聊天' : '查看記錄'} onPress={() => navigation.navigate('Message', {chatroom: chatroom, messagesRef: messagesRef}) } />
                     <Text style={[stylesheet.textWhite, stylesheet.textCenter]}>{(chatroom.active == true)? time(item.startedAt).toNow('累計聊天 %d %H') : time(item.startedAt).format('yyyy/M/D')}</Text>
                     {/* <Text style={cardStyle.text}>{item.active ? 'Active' : 'Inactive'}</Text> */}
-                </View>)
+                </View>
             } 
         </View>
     )

@@ -1,4 +1,4 @@
-import 'react-native-gesture-handler'
+// import 'react-native-gesture-handler'
 import React, { useEffect, useState, useRef } from 'react'
 import { Platform } from 'react-native';
 import Constants from 'expo-constants';
@@ -7,20 +7,71 @@ import { firebase } from './src/firebase/config'
 import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs' 
-import { LoginScreen, ResetPasswordScreen } from './src/screens'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import * as Linking from 'expo-linking'
+import { LoginScreen, LineLoginScreen, ResetPasswordScreen } from './src/screens'
 import { RegistrationScreen, FillInfoScreen, TopicSelectScreen, SuccessScreen, VerificationScreen } from './src/screens'
-import { HomeScreen, IntroScreen, FilterScreen, ArticleScreen, CommentScreen, NewArticleScreen } from './src/screens'
+import { HomeScreen, IntroScreen } from './src/screens'
+import { ArticleListScreen, CommunityScreen, FilterScreen, ArticleScreen, CommentScreen, NewArticleScreen } from './src/screens'
 import { ChatroomScreen, MessageScreen } from './src/screens'
 import { SettingScreen, ProfileScreen } from './src/screens'
 import { tabBarObject, tabBarOptions } from './src/components/navigation'
 import {decode, encode} from 'base-64'
-import Test from './src/screens/text'
+// import Test from './src/screens/text'
 if (!global.btoa) {  global.btoa = encode }
 if (!global.atob) { global.atob = decode }
 
 const Stack = createStackNavigator()
-const Tab = createBottomTabNavigator()
+const Tab = createBottomTabNavigator();
+
+const prefix = Linking.makeUrl('/');
+
+const linking = {
+	prefixes: [prefix],
+	config: {
+		screens: {
+			LineLogin: "login/:token",
+			Tabs: {
+				screens: {
+					ArticleStack: {
+						screens: {
+							Articles: "articles",
+							Article: "article/:id",
+							Filter: "articles/filter/:type/:data?",
+							// Article: {
+							// 	path: 'article/:id',
+							// 	parse: {
+							// 	  article: (id) => ({id: id}),
+							// 	},
+							// 	stringify: {
+							// 	  id: (id) => id.replace(/^user-/, ''),
+							// 	},
+							// }
+						}
+					},
+					CommunityStack: {
+						screens: {
+							Community: "community",
+						}
+					},
+					ChatStack: {
+						screens: {
+							Chatroom: "chatrooms",
+						}
+					},
+					SettingStack: {
+						screens: {
+							Profile: "profile",
+						}
+					}
+				}
+			},
+			Intro: "intro"
+			// Home: "home",
+			// Settings: "settings",
+		}
+	}
+}
 
 // Notifications.setNotificationHandler({
 // 	handleNotification: async () => ({
@@ -103,8 +154,23 @@ export default function App() {
 			Notifications.removeNotificationSubscription(responseListener.current);
 		};
 	}
+
+	async function getInitialUrl() {
+		const initialURL = await Linking.getInitialURL()
+		if (initialURL) {
+			console.log('initialURL', initialURL)
+			// setData(Linking.parse(initialURL));
+		}
+	}
 	
 	useEffect(() => {
+		Linking.addEventListener("url", (event) => {
+			if(!data) {
+				getInitialUrl();
+			}
+			let data = Linking.parse(event.url);
+			// setData(data);
+		})
 		const usersRef = firebase.firestore().collection('users')
 		firebase.auth().onAuthStateChanged(user => {
 			if (user) {
@@ -156,6 +222,35 @@ export default function App() {
 				<Stack.Screen name="Filter">
 					{props => <FilterScreen {...props} user={user} />}
 				</Stack.Screen>
+			</Stack.Navigator>
+		)
+	}
+
+	function ArticleStackScreen(props) {
+		return (
+			<Stack.Navigator>		
+				<Stack.Screen name="Articles">
+					{props => <ArticleListScreen {...props} user={user} />}
+				</Stack.Screen>
+				<Stack.Screen name="Filter">
+					{props => <FilterScreen {...props} user={user} />}
+				</Stack.Screen>
+				<Stack.Screen name="Article">
+					{props => <ArticleScreen {...props} user={user} />}
+				</Stack.Screen>
+			</Stack.Navigator>
+		)
+	}
+
+	function CommunityStackScreen(props) {
+		return (
+			<Stack.Navigator>	
+				<Stack.Screen name="Community">
+					{props => <CommunityScreen {...props} user={user} />}
+				</Stack.Screen>
+				<Stack.Screen name="Filter">
+					{props => <FilterScreen {...props} user={user} />}
+				</Stack.Screen>
 				<Stack.Screen name="Article">
 					{props => <ArticleScreen {...props} user={user} />}
 				</Stack.Screen>
@@ -189,7 +284,7 @@ export default function App() {
 		const insets = useSafeAreaInsets();
 		return (
 			props.user ? (
-			<Tab.Navigator lazy={false} tabBarOptions={{...tabBarOptions, 
+			<Tab.Navigator lazy={true} tabBarOptions={{...tabBarOptions, 
 				keyboardHidesTabBar: Platform.OS === "android",
 				style: {
 					paddingBottom: insets.bottom,
@@ -200,10 +295,16 @@ export default function App() {
 				<Tab.Screen name="HomeStack" options={tabBarObject('主頁', 'home')}>
 					{props => <HomeStackScreen {...props} user={user} />}
 				</Tab.Screen>
+				<Tab.Screen name="ArticleStack" options={tabBarObject('資訊', 'news')}>
+					{props => <ArticleStackScreen {...props} user={user} />}
+				</Tab.Screen>
+				<Tab.Screen name="CommunityStack" options={tabBarObject('社群', 'community')}>
+					{props => <CommunityStackScreen {...props} user={user} />}
+				</Tab.Screen>
 				<Tab.Screen name="ChatStack" options={tabBarObject('聊天室', 'chat')}>
 					{props => <ChatStackScreen {...props} user={user} />}
 				</Tab.Screen>
-				<Tab.Screen name="SettingStack" options={tabBarObject('帳戶', 'profile')}>
+				<Tab.Screen name="SettingStack" options={tabBarObject('設定', 'profile')}>
 					{props => <SettingStackScreen {...props} user={user} />}
 				</Tab.Screen>
 			</Tab.Navigator>
@@ -215,7 +316,7 @@ export default function App() {
 
 	return (
 		<SafeAreaProvider>
-			<NavigationContainer>
+			<NavigationContainer linking={linking}>
 				{ firebase.auth().currentUser ? (
 					<Stack.Navigator>	
 						{/* <Stack.Screen name="Chatroom">
@@ -233,7 +334,8 @@ export default function App() {
 						<Stack.Screen name="Comment">
 							{props => <CommentScreen {...props} user={user} />}
 						</Stack.Screen>
-						<Stack.Screen name="Login2" component={LoginScreen}/>
+						<Stack.Screen name="Login" component={LoginScreen}/>
+						<Stack.Screen name="LineLogin" component={LineLoginScreen}/>
 						<Stack.Screen name="ResetPassword" component={ResetPasswordScreen}/>
 						<Stack.Screen name="Registration" component={RegistrationScreen} />
 						<Stack.Screen name="FillInfo" component={FillInfoScreen} user={user}/>
@@ -251,6 +353,7 @@ export default function App() {
 				(
 					<Stack.Navigator>
 						<Stack.Screen name="Login" component={LoginScreen}/>
+						<Stack.Screen name="LineLogin" component={LineLoginScreen}/>
 						<Stack.Screen name="ResetPassword" component={ResetPasswordScreen}/>
 						<Stack.Screen name="Registration" component={RegistrationScreen} />
 						<Stack.Screen name="FillInfo" component={FillInfoScreen}/>

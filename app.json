@@ -2,18 +2,18 @@
   "expo": {
     "name": "UniLife",
     "slug": "unilife",
+    "scheme": "unilife",
     "platforms": [
       "ios",
       "android",
       "web"
     ],
-    "version": "1.6.2",
+    "version": "2.0.1",
     "orientation": "portrait",
     "icon": "./assets/logo.png",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#0f355c"
+      "resizeMode": "cover"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -24,11 +24,11 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "cc.UniLife.UniLife",
-      "buildNumber": "1.6.2"
+      "buildNumber": "2.0.1"
     },
     "android": {
       "package": "cc.unilife.unilife",
-      "versionCode": 14,
+      "versionCode": 20,
       "googleServicesFile": "./google-services.json"
     },
     "userInterfaceStyle": "automatic",

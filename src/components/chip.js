@@ -1,5 +1,5 @@
-import React, { useState, useCallback, useEffect } from 'react'
-import { Text, TouchableOpacity, View, StyleSheet} from 'react-native'
+import React from 'react'
+import { Text, TouchableOpacity, StyleSheet } from 'react-native'
 import { styles, Color } from '../styles'
 
 export function Chip({ label, type, focused = false, size = 'small', action, style, color }) {
@@ -40,7 +40,7 @@ export function Chip({ label, type, focused = false, size = 'small', action, sty
             },
             text: {
                 fontSize: 16,
-                // lineHeight: 18,
+                lineHeight: 20,
             }
         })
     }

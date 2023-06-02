@@ -68,17 +68,18 @@ export const tagNames = {
 }
 
 export const featuredTags = {
-    all: ['31', 'pandemic', 'dinner', '20', 'resource', 'scholarship', '4', 'guide'],
-    announcement: ['resource', 'scholarship', 'activity', 'job'],
-    local: ['31', '20', 'lunch', 'dinner', 'japanese', 'drinks', 'snack'],
-    news: ['pandemic', '4', '6', '10', '7']
-}
+    all: ['operation', '防疫須知', '確診經驗', '居家隔離', '快篩試劑', '醫療量能', '澄清闢謠'],
+    announcement: ['防疫須知', '校園停課', '疫苗藥物', '確診足跡', '醫療量能', '醫療器材'], 
+    local: [ '確診經驗', '居家隔離', '防疫保險', '遠距工作', '心理支持'],
+    news: ['pandemic', '4', '3', '10', '5'],
+    community: ['快篩互助', '需要幫忙', '我來幫你', '外帶優惠', '遠距教學']
+};
 
 // #天氣 #晚餐 #日式 #活動 #疫情 #生活 #學習資源 #獎助學金
 
+export const helpTags = ['快篩互助', '需要幫忙', '我來幫你']
 export const localTags = [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
-
-export const foodTags = ['breakfast', 'lunch', 'dinner', 'snack', 'dessert', 'cafe', 'gathering', 'supper', 'delivery', 'drinks', 'western', 'hongkong', 'japanese', 'korean', 'italian', 'taiwanese', 'chinese', 'SEA', 'vegetarian', 'healthy']
+export const pandemicTags = ['居家隔離', '快篩試劑', '防疫物資', '醫療器材', '防疫保險', '確診足跡', '遠距工作', '遠距教學', '確診經驗']
 
 export const announcementTags = {
     resource: "學習資源",

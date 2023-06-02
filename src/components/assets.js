@@ -24,6 +24,7 @@ export default function Asset(name) {
     if (name == 'chat') return require('../../assets/icons/chat.png')
     if (name == 'circle-cross') return require('../../assets/icons/circle-cross.png')
     if (name == 'circle-left') return require('../../assets/icons/circle-left.png')
+    if (name == 'community') return require('../../assets/icons/community.png')
     if (name == 'delete') return require('../../assets/icons/delete.png')
     if (name == 'down') return require('../../assets/icons/down.png')
     if (name == 'drag') return require('../../assets/icons/drag.png')
@@ -35,6 +36,7 @@ export default function Asset(name) {
     if (name == 'item-small') return require('../../assets/icons/item-small.png')
     if (name == 'left') return require('../../assets/icons/left.png')
     if (name == 'mail') return require('../../assets/icons/mail.png')
+    if (name == 'news') return require('../../assets/icons/news.png')
     if (name == 'notification') return require('../../assets/icons/notification.png')
     if (name == 'open') return require('../../assets/icons/open.png')
     if (name == 'option') return require('../../assets/icons/option.png')
@@ -59,6 +61,7 @@ export default function Asset(name) {
     if (name == 'love') return require('../../assets/icons/love.png')
     if (name == 'love-active') return require('../../assets/icons/love-active.png')
     if (name == 'edit') return require('../../assets/icons/edit.png')
+    if (name == 'history') return require('../../assets/icons/history.png')
 
     /* Topics */
     if (name == 'topic-1') return require('../../assets/topics/cover_1.jpg')

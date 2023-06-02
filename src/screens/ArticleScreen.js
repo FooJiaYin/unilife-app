@@ -16,7 +16,7 @@ import { tagNames } from '../firebase/functions'
 
 export default function ArticleScreen(props) {
 
-    const article = props.route.params.article
+    let article = props.route.params.article
     let user = props.user.data()
     const storageRef = firebase.storage().ref()
     const commentsRef = firebase.firestore().collection('articles').doc(article.id).collection('comments')
@@ -201,8 +201,8 @@ export default function ArticleScreen(props) {
         })
     }
 
-    function like(liked) {
-        setLiked(liked)
+    function like(_liked) {
+        setLiked(_liked)
         firebase.firestore().collection('behavior').where('user','==', user.id).where('article', '==', article.id).get().then(querySnapshot => {
             let behaviorRef = querySnapshot.docs[0].ref
             console.log(behaviorRef.id)
@@ -210,19 +210,20 @@ export default function ArticleScreen(props) {
             behaviorRef.update({
                 stats: {
                     ...data.stats,
-                    like: liked,
+                    like: _liked,
                 },
                 logs: firebase.firestore.FieldValue.arrayUnion({
-                    action: liked? 'like' : 'unlike',
+                    action: _liked? 'like' : 'unlike',
                     time: firebase.firestore.Timestamp.now()
                 })
             })
         })
-        let likeCount = article.stats.like? article.stats.like : 0
+        article.stats.like = article.stats.like || 0
+        article.stats.like = _liked ? article.stats.like + 1 : article.stats.like - 1
         firebase.firestore().collection('articles').doc(article.id).update({
             stats: {
                 ...article.stats,
-                like: liked?  firebase.firestore.FieldValue.increment(1) : firebase.firestore.FieldValue.increment(-1),
+                like: article.stats.like
             }
         })
     }
@@ -234,7 +235,7 @@ export default function ArticleScreen(props) {
 
     const Chips = []
     for (const tag of (article.tags || [])) {
-        Chips.push(<Chip label={tagNames[tag]} type={'tag'} action={()=>props.navigation.navigate('Filter', {type: 'tag', data: tag}) } />)
+        Chips.push(<Chip label={tagNames[tag] || tag} type={'tag'} action={()=>props.navigation.navigate('Filter', {type: 'tag', data: tag}) } />)
     }
 
     const Wrapper = (props) => Platform.OS === "ios" ? <KeyboardAwareScrollView>{props.children}</KeyboardAwareScrollView> : <View>{props.children}</View>

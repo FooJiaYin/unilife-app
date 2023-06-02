@@ -7,7 +7,7 @@ import { firebase } from '../firebase/config'
 import { Button, Select, PasswordInput } from '../components/forms'
 import RenderHtml from 'react-native-render-html'
 import { Chip } from '../components/chip'
-import { tagNames, localTags, foodTags } from '../firebase/functions'
+import { tagNames, helpTags, localTags, pandemicTags } from '../firebase/functions'
 import Asset from '../components/assets'
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
@@ -19,7 +19,7 @@ export default function NewArticleScreen(props) {
     let user = props.user
     let userData = user.data()
     const [article, setArticle] = useState({
-        category: 'local',
+        category: 'posts',
         community: userData.identity.community,
         title: '',
         content: '',
@@ -49,7 +49,7 @@ export default function NewArticleScreen(props) {
         topic: '',
         tags: [],
         type: 'article',
-        status: 'submitted'
+        status: 'published'
     })
     const [images, setImages] = useState([])
     const [termsAndConditions, setTermsAndConditions] = useState(false)
@@ -140,7 +140,7 @@ export default function NewArticleScreen(props) {
             console.log(error)
         }
         setUploading(false)
-        props.navigation.navigate('Home')
+        props.navigation.navigate('Community')
     }
 
     const updateTags = (tags) => {
@@ -267,7 +267,7 @@ export default function NewArticleScreen(props) {
                     <TextInput
                         style={stylesheet.input}
                         defaultValue={article.title}
-                        placeholder='標題'
+                        placeholder='輸入你的文章標題'
                         placeholderTextColor="#aaaaaa"
                         underlineColorAndroid="transparent"
                         autoCapitalize="none"
@@ -278,7 +278,7 @@ export default function NewArticleScreen(props) {
                         <TextInput
                             style={{...stylesheet.inputText, flexGrow: 0}}
                             defaultValue={article.rawContent}
-                            placeholder='內文'
+                            placeholder="發布貼文，跟大家分享你的在地生活日常！或是提出問題？讓大家一起幫你解決！"
                             multiline={true}
                             // textAlignVertical='top'
                             placeholderTextColor="#aaaaaa"
@@ -293,8 +293,8 @@ export default function NewArticleScreen(props) {
                             style={{flexDirection: 'row', paddingTop: 14, paddingBottom: 5, flexGrow: 0}}
                             contentContainerStyle={{alignItems: 'center'}} >
                             {article.tags.map(tag => <Chip 
-                                label={tagNames[tag]} 
-                                color={foodTags.includes(tag) ? Color.red : Color.green} 
+                                label={tagNames[tag] || tag} 
+                                color={pandemicTags.includes(tag) ? Color.red : Color.green} 
                                 size={'large'} focused 
                                 action={() => setTagSelectModalVisibility(true)}
                             />)}
@@ -324,9 +324,18 @@ export default function NewArticleScreen(props) {
                                 style={stylesheet.footerLink}>發文規範</Text>
                         </Text>
                         <Text style={{...stylesheet.textS, ...stylesheet.textGrey, margin: 12}}>
-                            為維護社群品質，初期所有文章皆需經過審核才會發布於「社群資訊」區塊，審核工作將於發文後一天內完成，如需查詢審核進度請點選
-                            <Text onPress={()=>WebBrowser.openBrowserAsync('https://supr.link/znUbr')} style={{...stylesheet.footerLink, ...stylesheet.textS, opacity: 1}}>聯繫客服</Text>
-                            洽客服人員協助。
+                            請注意，您在網路上的發言須負法律上的責任。請在發布訊息前進行查證，尤其在疫情期間，假消息可能會危及他人的健康。
+                        </Text>
+                        <Text style={{...stylesheet.textS, ...stylesheet.textGrey, marginHorizontal: 12}}>
+                            若是您在UniLife看見不實的資訊，請聯繫我們的
+                            <Text onPress={()=>WebBrowser.openBrowserAsync('https://supr.link/HjULp')} style={{...stylesheet.footerLink, ...stylesheet.textS, opacity: 1}}>
+                                檢舉受理窗口
+                            </Text>
+                            ，或是點選
+                            <Text onPress={()=>WebBrowser.openBrowserAsync('https://supr.link/HjULp')} style={{...stylesheet.footerLink, ...stylesheet.textS, opacity: 1}}>
+                                檢舉受理窗口
+                            </Text>
+                            洽客服人員尋求協助。UniLife團隊目前的人力無法審核所有的言論，懇請大家跟我們一起維護良好的社群風氣。
                         </Text>
                     </View>
                     <Button
@@ -363,8 +372,8 @@ export function TagSelectModal ({visible, onClose, tags}) {
 
     function updateTags(tag) {
         let tags = selectedTags.includes(tag)? selectedTags.filter(e => e !== tag) : [...selectedTags, tag]
-        if (tags.length > 3) {
-            Alert.alert('標籤數量已達上限', '目前最多只能選擇三個標籤喔！')
+        if (tags.length > 2) {
+            Alert.alert('標籤數量已達上限', '目前最多只能選擇兩個標籤喔！')
             return
         }
         setSelectedTags(tags)
@@ -386,6 +395,22 @@ export function TagSelectModal ({visible, onClose, tags}) {
                             </Button> */}
                             
                         </Text>
+            <Text style={{flex: 0, ...stylesheet.textDark}}>鄰里互助</Text>
+            <FlatList
+                data={helpTags}
+                style={{ marginVertical: 10 }}
+                contentContainerStyle={{flexDirection : "row", flexWrap : "wrap", justifyContent : 'space-between'}} 
+                renderItem={({item}) => 
+                    <Chip 
+                        style={{marginVertical: 6}}
+                        label={tagNames[item] || item} 
+                        type={'tag'} size={'large'} 
+                        focused={selectedTags.includes(item)}
+                        action={()=>updateTags(item)} /> 
+                }
+                // horizontal={true}
+                keyExtractor={(item, index) => item}
+            />
             <Text style={{flex: 0, ...stylesheet.textDark}}>在地生活</Text>
             <FlatList
                 data={localTags}
@@ -394,7 +419,7 @@ export function TagSelectModal ({visible, onClose, tags}) {
                 renderItem={({item}) => 
                     <Chip 
                         style={{marginVertical: 6}}
-                        label={tagNames[item]} 
+                        label={tagNames[item] || item} 
                         type={'tag'} size={'large'} 
                         focused={selectedTags.includes(item)}
                         action={()=>updateTags(item)} /> 
@@ -402,16 +427,16 @@ export function TagSelectModal ({visible, onClose, tags}) {
                 // horizontal={true}
                 keyExtractor={(item, index) => item}
             />
-            <Text style={{flex: 0, ...stylesheet.textDark}}>三餐日常（請選擇一個用餐時段ex.午餐，和一個食物類型ex.中式）</Text>
+            <Text style={{flex: 0, ...stylesheet.textDark}}>疫情消息</Text>
             {/* <Text style={{flex: 0, ...stylesheet.textDark}}>美食</Text> */}
             <FlatList
-                data={foodTags}
+                data={pandemicTags}
                 style={{ marginVertical: 10 }}
                 contentContainerStyle={{flexDirection : "row", flexWrap : "wrap", justifyContent : 'space-between'}} 
                 renderItem={({item}) => 
                     <Chip 
                         style={{marginVertical: 6}}
-                        label={tagNames[item]} 
+                        label={tagNames[item] || item} 
                         color={Color.red}
                         size={'large'} 
                         focused={selectedTags.includes(item)}
