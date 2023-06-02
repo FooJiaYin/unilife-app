@@ -158,7 +158,7 @@ export default function CommunityScreen(props) {
     }
     useFocusEffect(
         React.useCallback(() => {
-            checkAuthStatus(user, props)
+            checkAuthStatus(user, props, "馬上完成註冊，解鎖社群功能。\n看看你的鄰居都在討論那些在地大小事！")
             if (!user) loadUserData()
         }, [])
     )  
@@ -172,7 +172,7 @@ export default function CommunityScreen(props) {
 
     useEffect(() => {
         if (user) loadArticles()
-        checkAuthStatus(user, props)
+        checkAuthStatus(user, props, "馬上完成註冊，解鎖社群功能。\n看看你的鄰居都在討論那些在地大小事！")
     }, [user])
 
     return (

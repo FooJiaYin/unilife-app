@@ -52,8 +52,8 @@ export function HomeScreen(props) {
         if (user.id == "anonymous") {
             setMyShortcuts(communityData.shortcuts.map(shortcut => { return {
                 ...shortcut, 
-                action: () => checkAuthStatus(user, props),
-                onLongPress: () => checkAuthStatus(user, props),
+                action: () => checkAuthStatus(user, props, "馬上完成註冊，解鎖快捷功能。\n 一鍵直達每日常用連結！"),
+                onLongPress: () => checkAuthStatus(user, props, "馬上完成註冊，解鎖快捷功能。\n 一鍵直達每日常用連結！"),
             }}))
         } else if (!user.shortcuts) {
             setMyShortcuts(communityData.shortcuts)

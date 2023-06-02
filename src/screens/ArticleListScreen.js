@@ -225,14 +225,14 @@ export default function ArticleListScreen(props) {
     }, [])
 
     useEffect(() => {
-        checkAuthStatus(user, props)
+        checkAuthStatus(user, props, "馬上完成註冊，解鎖資訊列表。\n取得專屬於你的在地新聞與活動！")
         if (user) loadArticles()
     }, [user])
 
     useFocusEffect(
         React.useCallback(() => {
             console.log("focus", user)
-            checkAuthStatus(user, props)
+            checkAuthStatus(user, props, "馬上完成註冊，解鎖資訊列表。\n取得專屬於你的在地新聞與活動！")
             if (user) recommendation()
             else loadUserData()
         }, [])

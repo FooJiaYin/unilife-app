@@ -148,7 +148,7 @@ export default function ChatroomScreen(props) {
 
     useFocusEffect(
         React.useCallback(() => {
-            checkAuthStatus(user, props)
+            checkAuthStatus(user, props, "馬上完成註冊，解鎖在地聊天室。\n與你的鄰居們即時開啟話題交流！")
         }, [])
     )  
 

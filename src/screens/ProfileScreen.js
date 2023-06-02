@@ -107,7 +107,7 @@ export default function ProfileScreen(props) {
         let districts = county && county.districts? county.districts.map(district => ({value: county.name + district, label: district})) : [];
         setOptions({...options, districts: districts})
         setIdentity(user.identity)
-        checkAuthStatus(user, props)
+        checkAuthStatus(user, props, "馬上完成註冊，開啟設定頁面。\n點擊「切換頭像」解鎖更多小攸！")
     }
 
     const updateUserData = async () => {
