@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { Image, Text, TextInput, Modal, View, Keyboard, Alert, ScrollView } from 'react-native'
+import { Platform, ImageBackground, Text, TextInput, Modal, View, Keyboard, Alert, ScrollView } from 'react-native'
 import { setHeaderOptions } from '../components/navigation'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { stylesheet, htmlStyles } from '../styles/styles'
+import { stylesheet, Color } from '../styles'
+import * as Linking from 'expo-linking'
 import { firebase } from '../firebase/config'
 import { Button, Select, PasswordInput } from '../components/forms'
 import RenderHtml from 'react-native-render-html'
 import DateTimePickerModal from "react-native-modal-datetime-picker"
 import time from '../utils/time'
+import { LineLoginUrl } from '../api/linelogin';
 
 export default function RegistrationScreen(props) {
     const [info, setInfo] = useState({})
@@ -20,23 +22,48 @@ export default function RegistrationScreen(props) {
     const [isModalVisible, setModalVisibility] = useState(false)
     const [currentHTML, setCurrentHTML] = useState("")
     const [options, setOptions] = useState({
-        grade: [
-            {label: '一年級', value: 1},
-            {label: '二年級', value: 2},
-            {label: '三年級', value: 3},
-            {label: '四年級', value: 4},
-            {label: '五年級', value: 5},
-            {label: '六年級', value: 6},
-            {label: '七年級', value: 7},
+        counties: [
+            {label: '基隆市', value: 'keelung'},
+            {label: '臺北市', value: 'taipei'},
+            {label: '新北市', value: 'newtaipei'},
+            {label: '桃園市', value: 'taoyuan'},
+            {label: '新竹市', value: 'hsinchuCity'},
+            {label: '新竹縣', value: 'hsinchuCounty'},
+            {label: '苗栗縣', value: 'miaoli'},
+            {label: '臺中市', value: 'taichung'},
+            {label: '彰化縣', value: 'changhua'},
+            {label: '南投縣', value: 'nantou'},
+            {label: '雲林縣', value: 'yunlin'},
+            {label: '嘉義市', value: 'chiayiCity'},
+            {label: '嘉義縣', value: 'chiayiCounty'},
+            {label: '臺南市', value: 'tainan'},
+            {label: '高雄市', value: 'kaohsiung'},
+            {label: '屏東縣', value: 'pintung'},
+            {label: '臺東縣', value: 'taitung'},
+            {label: '花蓮縣', value: 'hualien'},
+            {label: '宜蘭縣', value: 'yilan'},
+            {label: '澎湖縣', value: 'penghu'},
+            {label: '金門縣', value: 'kinmen'},
+            {label: '連江縣', value: 'matsu'},
         ],
-        degree: [
-            {label: '大學部', value: 'bachelor'},
-            {label: '碩士班', value: 'master'},
-            {label: '博士班', value: 'phd'},
-        ],
+        // grade: [
+        //     {label: '一年級', value: 1},
+        //     {label: '二年級', value: 2},
+        //     {label: '三年級', value: 3},
+        //     {label: '四年級', value: 4},
+        //     {label: '五年級', value: 5},
+        //     {label: '六年級', value: 6},
+        //     {label: '七年級', value: 7},
+        // ],
+        // degree: [
+        //     {label: '大學部', value: 'bachelor'},
+        //     {label: '碩士班', value: 'master'},
+        //     {label: '博士班', value: 'phd'},
+        // ],
         gender: [
             {label: '男', value: '男'},
-            {label: '女', value: '女'}
+            {label: '女', value: '女'},
+            {label: '其他', value: '其他'}
         ]
     }) 
 
@@ -47,44 +74,36 @@ export default function RegistrationScreen(props) {
     setHeaderOptions(props.navigation, headerOptions)
 
     async function loadTermsAndConditions() {
-        // console.log(firebase.auth().currentUser)
-        // console.log("community", user.community)
-        // console.log("identity", user.identity.community)
         let snapshot = await firebase.firestore().doc('config/terms').get()
         let termsData = await snapshot.data()
-        // console.log(termsData)
         setTermsAndConditions(termsData)
         setCurrentHTML(termsData.terms)
     }
 
-    async function loadCommunities(community) {
-        let querySnapshot = await firebase.firestore().collection('communities').get()
-        let newCommunities = await[]
-        querySnapshot.forEach(snapshot => {
-			if (snapshot.id != 'test' && snapshot.id != 'all' && snapshot.id != 'demo') {
-				newCommunities.push({
-					value: snapshot.id,
-					label: snapshot.data().name
-				})
-			}
-        })
-        setOptions({...options, communities: newCommunities})
-        // console.log(newCommunities)
-        // console.log(departments)
+    async function loadUserData() {
+        let snapshot = await user.ref.get()
+        let userData = await snapshot.data()
+        if(userData.info) {
+            setInfo(userData.info)
+        }
+        if(userData.identity) {
+            // userData.identity.communities = [undefined, undefined]
+            setIdentity(userData.identity)
+        }
     }
 
-    async function loadDepartments(community) {
-        let querySnapshot = await firebase.firestore().doc('communities/' + community).collection('departments').get()
-        let newDepartments = []
-        querySnapshot.forEach(snapshot => {
-            newDepartments.push({
-                value: snapshot.id,
-                label: snapshot.data().name
+    async function setCounty(county) {
+        if (county != identity.county) {
+            setIdentity({ 
+                ...identity, 
+                county: county, 
+                district: undefined,
             })
-        })
-        setOptions({...options, departments: newDepartments})
-        // console.log(newDepartments)
-        // console.log(departments)
+        }
+        let snapshot = await firebase.firestore().doc('communities/' + county).get()
+        let data = await snapshot.data()
+        let districts = data && data.districts? data.districts.map(district => ({value: (data.name + district), label: district})) : [];
+        setOptions({...options, districts: districts})
     }
 
     async function createUser() {
@@ -94,15 +113,31 @@ export default function RegistrationScreen(props) {
 				const data = {
 					id: uid,
 					info: info,
-					identity: identity,
+					identity: {
+                        ...identity,
+                        community: identity.district,
+                        communities: [identity.district, identity.county],
+                        // grade: Number(identity.grade),
+                    },
+                    guide: {
+                        home: false,
+                        intro: false,
+                        notification: false,
+                    },
+                    interests: [],
+                    recommendation: [],
+                    bookmarks: [],
+                    score: {},
 					settings: {
 						chat: false,
 						inChat: false,
 					},
 					verification: {
-						type: "",
-						status: false,
+						type: "email",
+						status: true,
 					},
+                    createdTime: firebase.firestore.Timestamp.now(),
+                    lastActive: firebase.firestore.Timestamp.now()
 				}
 				console.log('data', data)
 				firebase.firestore().collection('users')
@@ -146,46 +181,22 @@ export default function RegistrationScreen(props) {
     }
 
     const onRegisterPress = () => {
-        if (!info.email || info.email == '') {
-            Alert.alert('', "請設定Email")
+        if (!info.nickname || info.nickname == '') {
+            Alert.alert('', "請設定暱稱")
             return
         }
-        if (!info.email.includes('@')) {
-            Alert.alert('', "Email格式不符合")
+        if (!info.gender || info.gender == '') {
+            Alert.alert('', "請設定性別")
             return
         }
-        if (!info.name || info.name == '') {
-            Alert.alert('', "請設定姓名")
+        if (!identity.county || identity.county == '') {
+            Alert.alert('', "請選擇縣市")
             return
         }
-        // if (!info.nickname || info.nickname == '') {
-        //     Alert.alert('', "請設定暱稱")
-        //     return
-        // }
-        // if (!info.birthday) {
-        //     Alert.alert('', "請設定生日日期")
-        //     return
-        // }
-        // if (!info.gender || info.gender == '') {
-        //     Alert.alert('', "請選擇性別")
-        //     return
-        // }
-        if (!identity.community || identity.community == '') {
-            Alert.alert('', "請選擇學校")
+        if (!identity.district || identity.district == '') {
+            Alert.alert('', "請選擇行政區")
             return
         }
-        // if (!identity.department || identity.department == '') {
-        //     Alert.alert('', "請選擇系所")
-        //     return
-        // }
-        // if (!identity.degree || identity.degree == '') {
-        //     Alert.alert('', "請選擇學位")
-        //     return
-        // }
-        // if (!identity.grade || identity.grade == '') {
-        //     Alert.alert('', "請選擇年級")
-        //     return
-        // }
         if (password.length < 6) {
             Alert.alert('', "密碼長度不足")
             return
@@ -199,9 +210,7 @@ export default function RegistrationScreen(props) {
             setModalVisibility(true)
             return
         }
-		console.log(info)
-		console.log(identity)
-		createUser()
+        createUser()
     }
 
     const PopupModal = ({html}) => {
@@ -242,12 +251,8 @@ export default function RegistrationScreen(props) {
     }
 
     useEffect(() => {
-		loadCommunities()
+        loadUserData()
         loadTermsAndConditions()
-        setInfo({
-            email: '',//firebase.auth().currentUser.email,
-            profileImage: info.profileImage || 'profile-image-0.png'
-        })
     }, [])
 
     return (
@@ -256,79 +261,68 @@ export default function RegistrationScreen(props) {
             <KeyboardAwareScrollView
                 style={{ flex: 1, width: '100%', height:'100%'}}
                 keyboardShouldPersistTaps="always">
-                <View style={{padding: 16}}>
+                <View style={{padding: 16, paddingTop: 0}} >
+                    
+                <Button
+                    style={stylesheet.bgGreen}
+                    onPress={() => Linking.openURL(LineLoginUrl)} 
+                    title='LINE 註冊'
+                />
+                    
+                    <View style={stylesheet.footerView}>
+                        <Text style={stylesheet.footerText}>                            
+                            或
+                        </Text>
+                    </View>
                     <TextInput
                         style={stylesheet.input}
-                        placeholder='Email'
-                        placeholderTextColor="#aaaaaa"
-						onChangeText={(input) => setInfo({ ...info, email: input })}
-                        underlineColorAndroid="transparent"
-                        autoCapitalize="none"
-                    />
-                    <TextInput
-                        style={stylesheet.input}
-                        placeholder='姓名'
-                        placeholderTextColor="#aaaaaa"
-                        underlineColorAndroid="transparent"
-                        autoCapitalize="none"
-                        onChangeText={(input) => setInfo({ ...info, name: input, nickname: input })}
-                    />
-                    {/* <TextInput
-                        style={stylesheet.input}
-                        placeholder='暱稱'
+                        defaultValue={info.nickname}
+                        placeholder='暱稱（必填）'
                         placeholderTextColor="#aaaaaa"
                         underlineColorAndroid="transparent"
                         autoCapitalize="none"
                         onChangeText={(input) => setInfo({ ...info, nickname: input })}
-					/> 
+                    />
                     <TextInput
                         style={stylesheet.input}
-                        // defaultValue={time(info.birthday).format('YYYY-MM-DD') || ''}
-                        value={info.birthday? time(info.birthday).format('YYYY-MM-DD') : ''}
-                        placeholder='生日'
+                        value={info.email}
+                        placeholder='Email'
                         placeholderTextColor="#aaaaaa"
+                        onChangeText={(input) => setInfo({ ...info, email: input })}
                         underlineColorAndroid="transparent"
                         autoCapitalize="none"
-                        showSoftInputOnFocus={false}
-                        // onChangeText={(input) => setInfo({ ...info, birthday: input })}
-                        onFocus={()=>{
-                            setDatePickerVisibility(true)
-                            Keyboard.dismiss()}
-                        }
+                    />
+                    <Select 
+                        value={identity.county} 
+                        items={options.counties}
+                        onChange={(input) => setCounty(input)}
+                        placeholder='請選擇縣市（必填）...'
+                    />
+                    <Select 
+                        value={identity.district} 
+                        items={options.districts}
+                        onChange={(input) => setIdentity({ ...identity, district: input })}
+                        placeholder='請選擇行政區（必填）...'
                     />
                     <Select 
                         // value={info.gender} 
                         items={options.gender}
                         onChange={(input) => setInfo({ ...info, gender: input })}
-                        placeholder='請選擇生理性別...'
-                    /> */}
-                    <Select 
-                        // value={identity.department} 
-                        items={options.communities}
-                        onChange={(input) => {
-							setIdentity({ ...identity, community: input })
-							loadDepartments(input)
-						}}
-                        placeholder='請選擇學校...'
+                        placeholder='請選擇您的性別（必填）...'
                     />
-                    {/* <Select 
-                        // value={identity.department} 
-                        items={options.departments}
-                        onChange={(input) => setIdentity({ ...identity, department: input })}
-                        placeholder='請選擇系所...'
+                    <TextInput
+                        style={stylesheet.input}
+                        value={info.birthday? time(info.birthday).format('YYYY-MM-DD') : ''}
+                        placeholder={Platform.OS === 'android'?`生日（點選日曆上方${new Date().getFullYear()}即可快速選取年份）`: '生日'}
+                        placeholderTextColor="#aaaaaa"
+                        underlineColorAndroid="transparent"
+                        autoCapitalize="none"
+                        showSoftInputOnFocus={false}
+                        onFocus={()=>{
+                            setDatePickerVisibility(true)
+                            Keyboard.dismiss()}
+                        }
                     />
-                    <Select 
-                        // value={identity.degree} 
-                        items={options.degree}
-                        onChange={(input) => setIdentity({ ...identity, degree: input })}
-                        placeholder='請選擇學位...'
-                    />
-                    <Select 
-                        // value={identity.grade} 
-                        items={options.grade}
-                        onChange={(input) => setIdentity({ ...identity, grade: input })}
-                        placeholder='請選擇年級...'
-                    />  */}
                     <PasswordInput
                         placeholder='密碼（至少6字元）'
                         onChangeText={(text) => setPassword(text)}
@@ -339,22 +333,15 @@ export default function RegistrationScreen(props) {
                         onChangeText={(text) => setConfirmPassword(text)}
                         value={confirmPassword}
                     />
-                    {/* <View style={{height:70}} /> */}
                     <View style={stylesheet.footerView}>
-                        <Text style={stylesheet.footerText}>
-                        {/* <Button
-                            onPress={()=>setAgree(true)}
-                            color={agree?'#00aebb':'#e2e3e4'}>
-                                    v
-                            </Button> */}
-                            
+                        <Text style={stylesheet.footerText}>                            
                             請閲讀並同意
                             <Text onPress={()=>setModalVisibility(true)}
                                 style={stylesheet.footerLink}>UniLife服務條款</Text>
                         </Text>
                     </View>
                     <Button
-                        style={stylesheet.bgGreen}
+                        style={stylesheet.bgBlue}
                         onPress={() => onRegisterPress()} 
                         title='註冊'
                     />
