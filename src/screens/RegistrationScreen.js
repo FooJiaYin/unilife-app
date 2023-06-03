@@ -5,6 +5,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { stylesheet, Color } from '../styles'
 import * as Linking from 'expo-linking'
 import { firebase } from '../firebase/config'
+import { defaultOptions } from '../utils/options'
 import { Button, Select, PasswordInput } from '../components/forms'
 import RenderHtml from 'react-native-render-html'
 import DateTimePickerModal from "react-native-modal-datetime-picker"
@@ -21,51 +22,7 @@ export default function RegistrationScreen(props) {
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false)
     const [isModalVisible, setModalVisibility] = useState(false)
     const [currentHTML, setCurrentHTML] = useState("")
-    const [options, setOptions] = useState({
-        counties: [
-            {label: '基隆市', value: 'keelung'},
-            {label: '臺北市', value: 'taipei'},
-            {label: '新北市', value: 'newtaipei'},
-            {label: '桃園市', value: 'taoyuan'},
-            {label: '新竹市', value: 'hsinchuCity'},
-            {label: '新竹縣', value: 'hsinchuCounty'},
-            {label: '苗栗縣', value: 'miaoli'},
-            {label: '臺中市', value: 'taichung'},
-            {label: '彰化縣', value: 'changhua'},
-            {label: '南投縣', value: 'nantou'},
-            {label: '雲林縣', value: 'yunlin'},
-            {label: '嘉義市', value: 'chiayiCity'},
-            {label: '嘉義縣', value: 'chiayiCounty'},
-            {label: '臺南市', value: 'tainan'},
-            {label: '高雄市', value: 'kaohsiung'},
-            {label: '屏東縣', value: 'pintung'},
-            {label: '臺東縣', value: 'taitung'},
-            {label: '花蓮縣', value: 'hualien'},
-            {label: '宜蘭縣', value: 'yilan'},
-            {label: '澎湖縣', value: 'penghu'},
-            {label: '金門縣', value: 'kinmen'},
-            {label: '連江縣', value: 'matsu'},
-        ],
-        // grade: [
-        //     {label: '一年級', value: 1},
-        //     {label: '二年級', value: 2},
-        //     {label: '三年級', value: 3},
-        //     {label: '四年級', value: 4},
-        //     {label: '五年級', value: 5},
-        //     {label: '六年級', value: 6},
-        //     {label: '七年級', value: 7},
-        // ],
-        // degree: [
-        //     {label: '大學部', value: 'bachelor'},
-        //     {label: '碩士班', value: 'master'},
-        //     {label: '博士班', value: 'phd'},
-        // ],
-        gender: [
-            {label: '男', value: '男'},
-            {label: '女', value: '女'},
-            {label: '其他', value: '其他'}
-        ]
-    }) 
+    const [options, setOptions] = useState(defaultOptions) 
 
     const headerOptions = {
         title: '註冊',
