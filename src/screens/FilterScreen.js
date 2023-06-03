@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList, Text, TouchableOpacity, TouchableHighlight, View } from 'react-native'
+import { View } from 'react-native'
 import { setHeaderOptions } from '../components/navigation'
 import { stylesheet } from '../styles'
-import { ListItem } from '../components/articles/listsItem'
 import { firebase } from '../firebase/config'
 import { tagNames } from '../firebase/functions'
+import { ArticleList } from "../components/articles/articleList";
 
 export default function FilterScreen({type, ...props}) {
     // console.log(props)
@@ -115,48 +115,15 @@ export default function FilterScreen({type, ...props}) {
         }
     }
 
-    function toggleSaveArticle(article) {
-     // console.log(article)
-        if (article.isSaved) {
-            props.user.ref.update({
-                bookmarks: firebase.firestore.FieldValue.arrayRemove(article.id)
-            });
-        } else {
-            props.user.ref.update({
-                bookmarks: firebase.firestore.FieldValue.arrayUnion(article.id)
-            });
-        }
-        article.isSaved = !article.isSaved
-    }
-
     setHeaderOptions(props.navigation, options)
 
     useEffect(() => {
         loadArticles(filter)
     }, [])
 
-    const articleListItem = (itemProps) => 
-        <ListItem {...itemProps} props={props}
-            onPress={() => props.navigation.navigate('Article', {article: itemProps.item}) } 
-            onButtonPress={() => toggleSaveArticle(itemProps.item)}
-            chipAction={(type, data) => {
-                loadArticles({type, data})
-                props.navigation.setOptions({
-                    title: '#' + tagNames[data] || data
-                })
-            }}
-        />
-
     return (
         <View style={stylesheet.container}>
-            { articles && (
-                <FlatList
-                    data={articles}
-                    renderItem={articleListItem}
-                    keyExtractor={(item) => item.id}
-                    removeClippedSubviews={true}
-                />
-            )}
+            { articles && <ArticleList articles={articles} {...props} /> }
         </View>
     )
 }

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { useFocusEffect } from "@react-navigation/native";
-import { FlatList, TextInput, Alert, TouchableOpacity, View, StyleSheet,Image, TouchableHighlight } from 'react-native'
+import { TextInput, Alert, View, Image, TouchableHighlight } from 'react-native'
 import { setHeaderOptions } from '../components/navigation'
 import { stylesheet, Color } from '../styles'
-import { ArticleListItem } from '../components/articles/listsItem'
 import { ScrollTags } from '../components/articles/tags'
 import { firebase } from '../firebase/config'
 import Asset from '../components/assets'
 import { checkAuthStatus } from '../utils/auth'
+import { ArticleList } from "../components/articles/articleList";
 
 function PostBar (props) {
     const [editIconColor, setEditIconColor] = useState(Color.grey1);
@@ -166,17 +166,7 @@ export default function CommunityScreen(props) {
         <View style={[stylesheet.container, {}]}>
             <ScrollTags {...props} tags={featuredTags['community']} />
             <View style={{flex: 1}}>
-
-            <FlatList
-                    data={articles['all']}
-                    renderItem={({item}) => <ArticleListItem item={item} {...props} />}
-                    keyExtractor={(item) => item.id}
-                    removeClippedSubviews={true}
-                    maxToRenderPerBatch={5}
-                    removeClippedSubExpandCards={true}
-                    nestedScrollEnabled={true}
-                    contentContainerStyle={{marginBottom: 0, paddingBottom: 150}}
-                /> 
+                <ArticleList articles={articles['all']} maxToRenderPerBatch {...props} />
             </View>
             {/* <ArticleTabs titles={['所有貼文', ...communitiesName, '我的貼文']} articles={articles} {...props} /> */}
             <PostBar {...props} />
