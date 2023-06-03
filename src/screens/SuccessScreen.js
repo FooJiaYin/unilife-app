@@ -132,7 +132,7 @@ export default function SuccessScreen(props) {
                 <>
                     <Text style={[stylesheet.text, {flex:1, flexGrow: 1}]}>恭喜！你已成功註冊UniLife帳號！</Text>
                     <Button 
-                        title='觀看使用導覽' 
+                        title='開始使用' 
                         style={screenStyle.bottomButton}
                         onPress={() => onStartPress()} 
                     /> 
