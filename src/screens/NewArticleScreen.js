@@ -386,7 +386,7 @@ export function TagSelectModal ({visible, onClose, tags}) {
         animationType="slide"
         transparent={true}
         visible={visible}
-        onRequestClose={() => onRequestClose()}
+        onRequestClose={() => onClose()}
     >
         <View style={[stylesheet.modal, stylesheet.centerSelf]}>
             <View style={{paddingHorizontal: 30}}>
