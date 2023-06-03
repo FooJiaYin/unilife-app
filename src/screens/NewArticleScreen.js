@@ -7,7 +7,7 @@ import { firebase } from '../firebase/config'
 import { Button, Select, PasswordInput } from '../components/forms'
 import RenderHtml from 'react-native-render-html'
 import { Chip } from '../components/chip'
-import { tagNames, helpTags, localTags, foodTags } from '../firebase/functions'
+import { tagNames } from '../firebase/functions'
 import Asset from '../components/assets'
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
@@ -57,6 +57,7 @@ export default function NewArticleScreen(props) {
     const [isTagSelectModalVisible, setTagSelectModalVisibility] = useState(false)
     const [isUploading, setUploading] = useState(false)
     const [currentHTML, setCurrentHTML] = useState("")
+    const [userTags, setUserTags] = useState()
     const [options, setOptions] = useState({
         type: [
             {label: '文章', value: 'article'},
@@ -88,6 +89,15 @@ export default function NewArticleScreen(props) {
         let snapshot = await user.ref.get()
         userData = await snapshot.data()
         // console.log(userData)
+    }
+
+    // TODO: Refactor loadTags()
+    function loadTags() {
+        // load tags from firestore 'config/tags['userTags']
+        firebase.firestore().doc('config/tags').get().then(snapshot => {
+            let data = snapshot.data()
+            setUserTags(data.userTags)
+        })  
     }
 
     async function uploadArticle() {
@@ -236,6 +246,7 @@ export default function NewArticleScreen(props) {
     useEffect(() => {
         loadUserData()
         loadTermsAndConditions()
+        loadTags()
         if (Platform.OS !== 'web') {
             requestPermission()  
         }
@@ -292,9 +303,9 @@ export default function NewArticleScreen(props) {
                         <ScrollView horizontal showsHorizontalScrollIndicator={false} 
                             style={{flexDirection: 'row', paddingTop: 14, paddingBottom: 5, flexGrow: 0}}
                             contentContainerStyle={{alignItems: 'center'}} >
-                            {article.tags.map(tag => <Chip 
+                            {article?.tags && article.tags.map(tag => <Chip 
                                 label={tagNames[tag] || tag} 
-                                color={foodTags.includes(tag) ? Color.red : helpTags.includes(tag) ? Color.blue : Color.green} 
+                                color={userTags.foodTags.includes(tag) ? Color.red : userTags.helpTags.includes(tag) ? Color.blue : Color.green} 
                                 size={'large'} focused 
                                 action={() => setTagSelectModalVisibility(true)}
                             />)}
@@ -346,7 +357,7 @@ export default function NewArticleScreen(props) {
                         onPress={() => onRegisterPress()} 
                         title='發布貼文'
                     />
-                    <TagSelectModal visible={isTagSelectModalVisible} onClose={updateTags} tags={article.tags} />
+                    <TagSelectModal visible={isTagSelectModalVisible} onClose={updateTags} tags={article.tags} userTags={userTags} />
                     <LoadingModal visible={isUploading} />
                 </ScrollView>
             </KeyboardAwareScrollView>
@@ -369,7 +380,7 @@ export function LoadingModal({visible}) {
     )
 }
 
-export function TagSelectModal ({visible, onClose, tags}) {
+export function TagSelectModal ({visible, onClose, tags, userTags}) {
     const [selectedTags, setSelectedTags] = useState(tags)
     const storageRef = firebase.storage().ref()
 
@@ -382,12 +393,14 @@ export function TagSelectModal ({visible, onClose, tags}) {
         setSelectedTags(tags)
     }
 
+    // TODO: Loading UI
     return <Modal
         animationType="slide"
         transparent={true}
         visible={visible}
         onRequestClose={() => onClose()}
     >
+        {!userTags ? <div></div> :
         <View style={[stylesheet.modal, stylesheet.centerSelf]}>
             <View style={{paddingHorizontal: 30}}>
                 <Text style={stylesheet.headerText}>
@@ -400,7 +413,7 @@ export function TagSelectModal ({visible, onClose, tags}) {
                         </Text>
             <Text style={{flex: 0, ...stylesheet.textDark}}>鄰里互助</Text>
             <FlatList
-                data={helpTags}
+                data={userTags.helpTags}
                 style={{ marginVertical: 10 }}
                 contentContainerStyle={{flexDirection : "row", flexWrap : "wrap", justifyContent : 'space-between'}} 
                 renderItem={({item}) => 
@@ -417,7 +430,7 @@ export function TagSelectModal ({visible, onClose, tags}) {
             />
             <Text style={{flex: 0, ...stylesheet.textDark}}>在地生活</Text>
             <FlatList
-                data={localTags}
+                data={userTags.localTags}
                 style={{ marginVertical: 10 }}
                 contentContainerStyle={{flexDirection : "row", flexWrap : "wrap", justifyContent : 'space-between'}} 
                 renderItem={({item}) => 
@@ -433,7 +446,7 @@ export function TagSelectModal ({visible, onClose, tags}) {
             />
             <Text style={{flex: 0, ...stylesheet.textDark}}>三餐日常</Text>
             <FlatList
-                data={foodTags}
+                data={userTags.foodTags}
                 style={{ marginVertical: 10 }}
                 contentContainerStyle={{flexDirection : "row", flexWrap : "wrap", justifyContent : 'space-between'}} 
                 renderItem={({item}) => 
@@ -454,6 +467,6 @@ export function TagSelectModal ({visible, onClose, tags}) {
                 title='確認'
             />
             </View>
-        </View>
+        </View>}
     </Modal>
 }
