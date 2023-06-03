@@ -11,6 +11,7 @@ import * as WebBrowser from 'expo-web-browser';
 import styles from '../styles/profileStyles'
 import { firebase } from '../firebase/config'
 import Asset from '../components/assets'
+import { defaultOptions } from '../utils/options'
 import time from '../utils/time'
 import { stylesheet, Color } from '../styles'
 import { checkAuthStatus } from '../utils/auth';
@@ -21,32 +22,7 @@ export default function ProfileScreen(props) {
     const [user, setUser] = useState({})
     const [lineImage, setLineImage] = useState(undefined)
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false)
-    const [options, setOptions] = useState({
-        counties: [
-            {label: '基隆市', value: 'keelung'},
-            {label: '臺北市', value: 'taipei'},
-            {label: '新北市', value: 'newtaipei'},
-            {label: '桃園市', value: 'taoyuan'},
-            {label: '新竹市', value: 'hsinchuCity'},
-            {label: '新竹縣', value: 'hsinchuCounty'},
-            {label: '苗栗縣', value: 'miaoli'},
-            {label: '臺中市', value: 'taichung'},
-            {label: '彰化縣', value: 'changhua'},
-            {label: '南投縣', value: 'nantou'},
-            {label: '雲林縣', value: 'yunlin'},
-            {label: '嘉義市', value: 'chiayiCity'},
-            {label: '嘉義縣', value: 'chiayiCounty'},
-            {label: '臺南市', value: 'tainan'},
-            {label: '高雄市', value: 'kaohsiung'},
-            {label: '屏東縣', value: 'pintung'},
-            {label: '臺東縣', value: 'taitung'},
-            {label: '花蓮縣', value: 'hualien'},
-            {label: '宜蘭縣', value: 'yilan'},
-            {label: '澎湖縣', value: 'penghu'},
-            {label: '金門縣', value: 'kinmen'},
-            {label: '連江縣', value: 'matsu'},
-        ],
-    }) 
+    const [options, setOptions] = useState(defaultOptions) 
 
     const headerOptions = {
         title: '編輯帳戶',
