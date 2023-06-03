@@ -6,7 +6,7 @@ import { Chip } from '../chip'
 
 export const ScrollTags = ({tags, ...props}) => <ScrollView horizontal showsHorizontalScrollIndicator={false} 
     style={{flexDirection: 'row', paddingHorizontal: 10, paddingVertical: 5, height: 56, flexGrow: 0}}>
-    {tags.map(tag => <Chip 
+    {tags && tags.map(tag => <Chip 
         key={tag}
         label={'#' + (tagNames[tag] || tag)} 
         color={Color.green} 
