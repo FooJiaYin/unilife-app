@@ -141,11 +141,9 @@ export function HomeScreen(props) {
 
     const featuredCard = ({item}) => 
         <TouchableOpacity onPress={
-            item.url && (
-                item.url == "" ? () => {} :
-                item.url.startsWith("unilife://") || item.url.startsWith("exp://")? ()=>Linking.openURL(item.url) :
-                ()=>WebBrowser.openBrowserAsync(item.url)
-            )
+            !(item?.url) || item.url == "" ? () => {console.log("empty")} :
+            item.url.startsWith("unilife://") || item.url.startsWith("exp://")? ()=>Linking.openURL(item.url) :
+            ()=>WebBrowser.openBrowserAsync(item.url)
         }>
             <Image source={{uri: item.src}} style={homeCardStyle.card} />
         </TouchableOpacity>
