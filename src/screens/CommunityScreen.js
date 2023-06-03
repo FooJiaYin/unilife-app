@@ -6,7 +6,6 @@ import { stylesheet, Color } from '../styles'
 import { ArticleListItem } from '../components/lists'
 import { ScrollTags } from '../components/articles/tags'
 import { firebase } from '../firebase/config'
-import { featuredTags } from '../firebase/functions'
 import Asset from '../components/assets'
 import { checkAuthStatus } from '../utils/auth'
 
@@ -54,6 +53,7 @@ export default function CommunityScreen(props) {
     
     const articlesRef = firebase.firestore().collection('articles')
     const [user, setUser] = useState()
+    const [featuredTags, setFeaturedTags] = useState({})
     const [articles, setArticles] = useState({
         all: [],
         announcement: [],
@@ -122,6 +122,14 @@ export default function CommunityScreen(props) {
             })
     }
     // console.log("Ref", firebase.firestore().doc('articles/9qAFUBpb7n0U1bzylreO'))
+    
+    function loadTags() {
+        // load tags from firestore 'config/tags['featuredTags']
+        firebase.firestore().doc('config/tags').get().then(snapshot => {
+            let data = snapshot.data()
+            setFeaturedTags(data.featuredTags)
+        })  
+    }
 
     const options = {
         title: '在地社群',
@@ -146,6 +154,7 @@ export default function CommunityScreen(props) {
 
     useEffect(() => {
         loadUserData()
+        loadTags()
     }, [])
 
     useEffect(() => {

@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { FlatList, View, useWindowDimensions } from 'react-native'
+import { firebase } from '../../firebase/config'
 import { stylesheet, Color } from '../../styles'
 import { ArticleListItem } from '../lists'
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view'
 import { ScrollTags } from './tags'
-import { featuredTags } from '../../firebase/functions'
 
 export function ArticleTabs({titles, articles, ...props}) {
     const layout = useWindowDimensions();
-  
+    const [featuredTags, setFeaturedTags] = useState({})
     const [index, setIndex] = React.useState(0);
     const [routes] = React.useState([
         { key: 'tab1', title: titles? titles[0] : "" },
@@ -18,6 +18,19 @@ export function ArticleTabs({titles, articles, ...props}) {
     ]);
 
     const categories = Object.keys(articles)
+
+    useEffect(() => {
+        loadTags()
+    }, [])
+
+    function loadTags() {
+        // load tags from firestore 'config/tags['featuredTags']
+        firebase.firestore().doc('config/tags').get().then(snapshot => {
+            let data = snapshot.data()
+            setFeaturedTags(data.featuredTags)
+        })  
+    }
+
         
     const renderScene = SceneMap({
         
