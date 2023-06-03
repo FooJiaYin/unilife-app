@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { FlatList, View, useWindowDimensions } from 'react-native'
 import { firebase } from '../../firebase/config'
 import { stylesheet, Color } from '../../styles'
-import { ArticleListItem } from '../lists'
+import { ArticleListItem } from './listsItem'
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view'
 import { ScrollTags } from './tags'
 

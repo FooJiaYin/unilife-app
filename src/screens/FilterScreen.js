@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { FlatList, Text, TouchableOpacity, TouchableHighlight, View } from 'react-native'
 import { setHeaderOptions } from '../components/navigation'
 import { stylesheet } from '../styles'
-import { ListItem } from '../components/lists'
+import { ListItem } from '../components/articles/listsItem'
 import { firebase } from '../firebase/config'
 import { tagNames } from '../firebase/functions'
 

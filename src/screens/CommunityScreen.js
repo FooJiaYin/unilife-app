@@ -3,7 +3,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { FlatList, TextInput, Alert, TouchableOpacity, View, StyleSheet,Image, TouchableHighlight } from 'react-native'
 import { setHeaderOptions } from '../components/navigation'
 import { stylesheet, Color } from '../styles'
-import { ArticleListItem } from '../components/lists'
+import { ArticleListItem } from '../components/articles/listsItem'
 import { ScrollTags } from '../components/articles/tags'
 import { firebase } from '../firebase/config'
 import Asset from '../components/assets'
