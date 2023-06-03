@@ -8,7 +8,7 @@
       "android",
       "web"
     ],
-    "version": "2.1.3",
+    "version": "2.2.0",
     "orientation": "portrait",
     "icon": "./assets/logo.png",
     "splash": {
@@ -25,7 +25,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "cc.UniLife.UniLife",
-      "buildNumber": "2.1.3",
+      "buildNumber": "2.2.0",
       "usesAppleSignIn": true,
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "我們需要取用您的相片，讓您在撰寫貼文時可以選取照片",
@@ -34,7 +34,7 @@
     },
     "android": {
       "package": "cc.unilife.unilife",
-      "versionCode": 25,
+      "versionCode": 26,
       "googleServicesFile": "./google-services.json"
     },
     "notification": {
@@ -43,6 +43,7 @@
     },
     "userInterfaceStyle": "automatic",
     "githubUrl": "https://github.com/Unilife-App/unilife-app",
-    "description": ""
+    "description": "",
+    "runtimeVersion": "2.2.0"
   }
 }
