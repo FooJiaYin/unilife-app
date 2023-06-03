@@ -158,10 +158,10 @@
 			};
 			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "myapp" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = en;
+			developmentRegion = Chinese;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				en,
+				"zh-Hant",
 				Base,
 			);
 			mainGroup = 83CBB9F61A601CBA00E9B192;
@@ -309,7 +309,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.name.myapp;
+				PRODUCT_BUNDLE_IDENTIFIER = cc.UniLife.UniLife;
 				PRODUCT_NAME = myapp;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -332,7 +332,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.name.myapp;
+				PRODUCT_BUNDLE_IDENTIFIER = cc.UniLife.UniLife;
 				PRODUCT_NAME = myapp;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";

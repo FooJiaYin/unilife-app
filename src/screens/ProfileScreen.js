@@ -13,6 +13,7 @@ import { firebase } from '../firebase/config'
 import Asset from '../components/assets'
 import time from '../utils/time'
 import { stylesheet, Color } from '../styles'
+import { checkAuthStatus } from '../utils/auth';
 
 export default function ProfileScreen(props) {
     const [info, setInfo] = useState({})
@@ -106,6 +107,7 @@ export default function ProfileScreen(props) {
         let districts = county && county.districts? county.districts.map(district => ({value: county.name + district, label: district})) : [];
         setOptions({...options, districts: districts})
         setIdentity(user.identity)
+        checkAuthStatus(user, props, "馬上完成註冊，開啟設定頁面。\n點擊「切換頭像」解鎖更多小攸！")
     }
 
     const updateUserData = async () => {
@@ -180,15 +182,19 @@ export default function ProfileScreen(props) {
         }).then(() => {
             firebase.auth().signOut().then(() => {
                 console.log( firebase.auth().currentUser)
-                props.navigation.navigate('Login')
+                props.navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'Login' }],
+                })
             })
         })
     }
 
-    useEffect(() => {
-        // loadOptions()
-        loadUserData()
-    }, [])
+    useFocusEffect(
+        React.useCallback(() => {
+            loadUserData()
+        }, [])
+    ) 
 
     return (
         <View style={stylesheet.container}>
@@ -203,6 +209,7 @@ export default function ProfileScreen(props) {
                         <Button style={[stylesheet.outlineWhite, styles.editButton]} title="切換頭像" onPress={() => changeProfileImage()}/>
                     </ImageBackground>
                 </View>
+                {user && user.verification && user.verification.type != "anonymous" &&
                 <View style={styles.container}>
                     <TextInput
                         style={styles.input}
@@ -213,7 +220,15 @@ export default function ProfileScreen(props) {
                         autoCapitalize="none"
                         onChangeText={(input) => setInfo({ ...info, nickname: input })}
                     />
-                    <Select 
+                    <TextInput
+                        style={[styles.input, stylesheet.textGrey]}
+                        value={identity.district} 
+                        placeholderTextColor="#aaaaaa"
+                        underlineColorAndroid="transparent"
+                        autoCapitalize="none"
+                        editable={false}
+                    />
+                    {/* <Select 
                         value={identity.county} 
                         items={options.counties}
                         onChange={(input) => setCounty(input)}
@@ -224,13 +239,12 @@ export default function ProfileScreen(props) {
                         items={options.districts}
                         onChange={(input) => setIdentity({ ...identity, district: input })}
                         placeholder='請選擇行政區...'
-                    />
+                    /> */}
                     <TextInput
-                        style={[styles.input]}
+                        style={[styles.input, stylesheet.textGrey]}
                         value={info.email}
                         placeholder='Email'
-                        placeholderTextColor="#aaaaaa"
-                        onChangeText={(text) => setEmail(text)}
+                        // onChangeText={(text) => setEmail(text)}
                         underlineColorAndroid="transparent"
                         autoCapitalize="none"
                         editable={false}
@@ -262,10 +276,11 @@ export default function ProfileScreen(props) {
                         title='登出'
                     />
                     <View style={stylesheet.footerView}>
-                        <Text style={stylesheet.footerText}>如需變更email或刪除帳號，請<Text onPress={()=>WebBrowser.openBrowserAsync('https://supr.link/ldq2V')} style={stylesheet.footerLink}>洽詢客服</Text></Text>
+                        <Text style={stylesheet.footerText}>如需變更社群、email或刪除帳號，請<Text onPress={()=>WebBrowser.openBrowserAsync('https://supr.link/ldq2V')} style={stylesheet.footerLink}>洽詢客服</Text></Text>
                     </View>
                     
                 </View>
+                }
                 <DateTimePickerModal
                     isVisible={isDatePickerVisible}
                     mode="date"
@@ -273,7 +288,6 @@ export default function ProfileScreen(props) {
                     onConfirm={(date)=>setBirthday(date)}
                     onCancel={()=>setDatePickerVisibility(false)}
                 />
-                 
             </KeyboardAwareScrollView>
         </View>
     )

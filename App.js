@@ -9,7 +9,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import * as Linking from 'expo-linking'
-import { LoginScreen, LineLoginScreen, ResetPasswordScreen } from './src/screens'
+import { LoginScreen, LineLoginScreen, EmailLoginScreen, ResetPasswordScreen } from './src/screens'
 import { RegistrationScreen, FillInfoScreen, TopicSelectScreen, SuccessScreen, VerificationScreen } from './src/screens'
 import { HomeScreen, IntroScreen } from './src/screens'
 import { ArticleListScreen, CommunityScreen, FilterScreen, ArticleScreen, CommentScreen, NewArticleScreen } from './src/screens'
@@ -30,6 +30,7 @@ const linking = {
 	prefixes: [prefix],
 	config: {
 		screens: {
+			Login: "login",
 			LineLogin: "login/:token",
 			Tabs: {
 				screens: {
@@ -172,6 +173,12 @@ export default function App() {
 			// setData(data);
 		})
 		const usersRef = firebase.firestore().collection('users')
+		usersRef.doc("anonymous")
+			.get()
+			.then((doc) => {
+				setLoading(false)
+				setUser(doc)
+			})
 		firebase.auth().onAuthStateChanged(user => {
 			if (user) {
 				usersRef
@@ -188,6 +195,12 @@ export default function App() {
 					})
 			} else {
 				setLoading(false)
+				usersRef.doc("anonymous")
+				.get()
+				.then((doc) => {
+					setLoading(false)
+					setUser(doc)
+				})
 			}
 			// alert('push token', expoPushToken)
 		})
@@ -335,6 +348,7 @@ export default function App() {
 							{props => <CommentScreen {...props} user={user} />}
 						</Stack.Screen>
 						<Stack.Screen name="Login" component={LoginScreen}/>
+						<Stack.Screen name="EmailLogin" component={EmailLoginScreen}/>
 						<Stack.Screen name="LineLogin" component={LineLoginScreen}/>
 						<Stack.Screen name="ResetPassword" component={ResetPasswordScreen}/>
 						<Stack.Screen name="Registration" component={RegistrationScreen} />
@@ -353,6 +367,7 @@ export default function App() {
 				(
 					<Stack.Navigator>
 						<Stack.Screen name="Login" component={LoginScreen}/>
+						<Stack.Screen name="EmailLogin" component={EmailLoginScreen}/>
 						<Stack.Screen name="LineLogin" component={LineLoginScreen}/>
 						<Stack.Screen name="ResetPassword" component={ResetPasswordScreen}/>
 						<Stack.Screen name="Registration" component={RegistrationScreen} />
@@ -368,6 +383,9 @@ export default function App() {
 						</Stack.Screen>
 						<Stack.Screen name="Tabs" options={{headerShown: false}}>
 							{props => <Tabs {...props} user={user} />}
+						</Stack.Screen>
+						<Stack.Screen name="Intro">
+							{props => <IntroScreen {...props} user={user} />}
 						</Stack.Screen>
 					</Stack.Navigator>
 				)} 

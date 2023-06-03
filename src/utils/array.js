@@ -6,6 +6,19 @@ export function remove(array, item) {
     return array;
 }
 
+/**
+ * Concat obj values into array. Example: 
+    ```
+    var obj = {a: [1, 2], b: [1, 2]}; 
+    var res = concat(obj); // res = [1, 2, 1, 2] 
+    ```
+ */ 
+export function concat(obj) {
+    return Object.keys(obj).reduce(function(res, v) {
+        return res.concat(obj[v]);
+    }, []);
+}
+
 export function getUnique(array) {
     return array.filter((item, index) => array.indexOf(item) === index);
 }

@@ -74,8 +74,9 @@ export default function FilterScreen({type, ...props}) {
                 articlesRef = articlesRef.where("publishedBy", "==", user.id)
                                 // .orderBy('publishedAt', 'desc')
             } else {
+                console.log(filter.data)
                 articlesRef = articlesRef
-                                .where("community", "in", ["all", user.identity.community])
+                                .where("community", "in", [...user.identity.communities, "all"])
                                 .where("status", "==", "published")
                                 .where("tags", "array-contains", filter.data)
                                 .orderBy('pinned', 'desc')
@@ -84,7 +85,6 @@ export default function FilterScreen({type, ...props}) {
             const newArticles = []
             articlesRef.get().then(querySnapshot => {
                 let promises = []
-                console.log(filter)
                 querySnapshot.forEach(async snapshot => {
                     const id = newArticles.push(snapshot.data()) -1
                     // const article = snapshot.data()

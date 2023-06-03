@@ -49,7 +49,9 @@ export function HomeShortcutItem ({item, onLongPress}){
     
     function openLink(){
         console.log('openlink', item)
-        if (item.share && item.share == true) {
+        if (item.action) {
+            item.action();
+        } else if (item.share && item.share == true) {
             share(item)
         } else {
         // open url in browser
@@ -72,7 +74,7 @@ export function HomeShortcutItem ({item, onLongPress}){
     }
 
     return(
-        <TouchableOpacity style={homeStyle.item} onPress={()=>openLink()} onLongPress={()=>onLongPress()}>
+        <TouchableOpacity style={homeStyle.item} onPress={()=>openLink()} onLongPress={item.onLongPress || onLongPress}>
             <View style={homeStyle.round}>
                 {item.icon&&<Image style={[homeStyle.icon]} source={{uri: imageUrl}}/>}
             </View>

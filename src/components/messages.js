@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { StyleSheet, View, Image, TouchableOpacity, Text, TextInput, useWindowDimensions } from 'react-native'
 // import { InputToolbar } from 'react-native-gifted-chat'
 import * as GiftedChat from 'react-native-gifted-chat'
-import * as WebBrowser from 'expo-web-browser';
 import { styles, stylesheet } from '../styles'
 import Asset from './assets'
 import { Button } from './forms'
@@ -304,12 +303,6 @@ export function Chatroom({item, size, navigation, matchState = {}, toggleWaiting
     }) 
     // console.log('item', item)
     // console.log('matchConfig', matchState)
-    const openUrl = (url) => {
-        if (url && url != '') {
-            WebBrowser.openBrowserAsync(url);
-            // Linking.openURL(item.url)
-        }
-    }
     
     return (
         <View style={cardStyle.fullHeight}>
@@ -320,8 +313,8 @@ export function Chatroom({item, size, navigation, matchState = {}, toggleWaiting
                         <Text style={[cardStyle.text, cardStyle.textL]}>{"在地聊天室"}</Text>
                         <Text style={[cardStyle.text]}>{matchState.text}</Text>
                     </View>
-                    <Button style={cardStyle.button} title={'前往LINE社群'} onPress={() => openUrl(item.link)}/>
-                    {/* <Text style={[stylesheet.textWhite, stylesheet.textCenter]}>{time().getNextDayofWeek(matchState.day, matchState.time).fromNow('倒數計時 %d %H %M')}</Text> */}
+                    <Button style={cardStyle.button} title={'前往LINE社群'} onPress={item.action}/>
+                    {/* <Text style={[stylesheet.textWhite, stylesheet.textCenter]}>{time.getNextDayofWeek(matchState.day, matchState.time).fromNow('倒數計時 %d %H %M')}</Text> */}
                     {/* <Text style={cardStyle.text}>{active ? 'Active' : 'Inactive'}</Text> */}
                 </View>
                 :

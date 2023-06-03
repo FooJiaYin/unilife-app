@@ -1,0 +1,30 @@
+{
+  "cli": {
+    "version": ">= 0.52.0"
+  },
+  "build": {
+    "development": {
+      "distribution": "internal",
+      "android": {
+        "gradleCommand": ":app:assembleDebug"
+      },
+      "ios": {
+        "buildConfiguration": "Debug"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "channel": "v2.1.0",
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "production": {
+      "channel": "v2.1.0"
+    }
+  },
+  "submit": {
+    "production": {
+    }
+  }
+}

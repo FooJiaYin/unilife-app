@@ -21,7 +21,7 @@ export default function LineLoginScreen({navigation, ...props}) {
     const onLoginPress = () => {
         // WebBrowser.openBrowserAsync(LineLoginUrl)
         Linking.openURL(LineLoginUrl)
-        console.log("hello hello")
+        // console.log("hello hello")
     }
 
     const login = (token) => {
