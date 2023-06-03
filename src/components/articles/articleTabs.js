@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList, View, useWindowDimensions } from 'react-native'
+import { View, useWindowDimensions } from 'react-native'
+import { firebase } from '../../firebase/config'
 import { stylesheet, Color } from '../../styles'
-import { ArticleListItem } from '../lists'
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view'
 import { ScrollTags } from './tags'
-import { featuredTags } from '../../firebase/functions'
+import { ArticleList } from "./articleList";
 
 export function ArticleTabs({titles, articles, ...props}) {
     const layout = useWindowDimensions();
-  
+    const [featuredTags, setFeaturedTags] = useState({})
     const [index, setIndex] = React.useState(0);
     const [routes] = React.useState([
         { key: 'tab1', title: titles? titles[0] : "" },
@@ -18,6 +18,19 @@ export function ArticleTabs({titles, articles, ...props}) {
     ]);
 
     const categories = Object.keys(articles)
+
+    useEffect(() => {
+        loadTags()
+    }, [])
+
+    function loadTags() {
+        // load tags from firestore 'config/tags['featuredTags']
+        firebase.firestore().doc('config/tags').get().then(snapshot => {
+            let data = snapshot.data()
+            setFeaturedTags(data.featuredTags)
+        })  
+    }
+
         
     const renderScene = SceneMap({
         
@@ -26,66 +39,22 @@ export function ArticleTabs({titles, articles, ...props}) {
         tab1: () => 
         <View>
             <ScrollTags {...props} tags={featuredTags[categories[0]]? featuredTags[categories[0]]: []} />
-            <FlatList
-                    data={articles[categories[0]]}
-                    renderItem={({item}) => <ArticleListItem item={item} {...props} />}
-                    // removeClippedSubviews={true}
-                    initialNumToRender={7}
-                    maxToRenderPerBatch={3}
-                    windowSize={3}
-                    keyExtractor={(item) => item.id}
-                    removeClippedSubExpandCards={true}
-                    nestedScrollEnabled={true}
-                    contentContainerStyle={{marginBottom: 0, paddingBottom: 150}}
-                />
+            <ArticleList articles={articles[categories[0]]} {...props} />
         </View>,
         tab2: () =>  
         <View>
             <ScrollTags {...props} tags={featuredTags[categories[1]]? featuredTags[categories[1]]: []} />
-            <FlatList
-                    data={articles[categories[1]]}
-                    renderItem={({item}) => <ArticleListItem item={item} {...props} />}
-                    // removeClippedSubviews={true}
-                    initialNumToRender={6}
-                    maxToRenderPerBatch={3}
-                    windowSize={3}
-                    keyExtractor={(item) => item.id}
-                    removeClippedSubExpandCards={true}
-                    nestedScrollEnabled={true}
-                    contentContainerStyle={{marginBottom: 0, paddingBottom: 150}}
-                />
+            <ArticleList articles={articles[categories[1]]} {...props} />
         </View>,
         tab3: () =>  
         <View>
             <ScrollTags {...props} tags={featuredTags[categories[2]]? featuredTags[categories[2]]: []} />
-            <FlatList
-                    data={articles[categories[2]]}
-                    renderItem={({item}) => <ArticleListItem item={item} {...props} />}
-                    // removeClippedSubviews={true}
-                    initialNumToRender={6}
-                    maxToRenderPerBatch={3}
-                    windowSize={3}
-                    keyExtractor={(item) => item.id}
-                    removeClippedSubExpandCards={true}
-                    nestedScrollEnabled={true}
-                    contentContainerStyle={{marginBottom: 0, paddingBottom: 150}}
-                />
+            <ArticleList articles={articles[categories[2]]} {...props} />
         </View>,
         tab4: () =>  
         <View>
             <ScrollTags {...props} tags={featuredTags[categories[3]]? featuredTags[categories[3]]: []} />
-            <FlatList
-                    data={articles[categories[3]]}
-                    renderItem={({item}) => <ArticleListItem item={item} {...props} />}
-                    removeClippedSubviews={true}
-                    initialNumToRender={6}
-                    maxToRenderPerBatch={3}
-                    windowSize={3}
-                    keyExtractor={(item) => item.id}
-                    removeClippedSubExpandCards={true}
-                    nestedScrollEnabled={true}
-                    contentContainerStyle={{marginBottom: 0, paddingBottom: 150}}
-                />
+            <ArticleList articles={articles[categories[3]]} {...props} />
         </View>,
       });
 

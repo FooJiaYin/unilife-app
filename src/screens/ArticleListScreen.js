@@ -104,7 +104,6 @@ export default function ArticleListScreen(props) {
                     }
                 })
             }
-            console.log("fin")
             setArticles(newArticles)
         })
     }
@@ -176,7 +175,6 @@ export default function ArticleListScreen(props) {
                         }
                     }
                     temp = temp.sort((a, b) => b.score - a.score).map(recommendation => recommendation.id)
-                    console.log(temp)
                     recommendations.all.push(...temp)
                 }
                 // console.log('all', recommendations.all)
@@ -235,20 +233,19 @@ export default function ArticleListScreen(props) {
 
     useEffect(() => {
         loadUserData()
-    }, [])
+    }, [props.user?.id])
 
     useEffect(() => {
         checkAuthStatus(user, props, "馬上完成註冊，解鎖資訊列表。\n取得專屬於你的在地新聞與活動！")
         if (user) loadArticles()
-    }, [user])
+    }, [user?.id])
 
     useFocusEffect(
         React.useCallback(() => {
             console.log("focus", user)
             checkAuthStatus(user, props, "馬上完成註冊，解鎖資訊列表。\n取得專屬於你的在地新聞與活動！")
             if (user) recommendation()
-            else loadUserData()
-        }, [])
+        }, [user?.id])
     )
 
     setHeaderOptions(props.navigation, options)
