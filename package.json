@@ -4,7 +4,8 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "web": "expo start --web",
-    "start": "react-native start"
+    "start": "expo start",
+    "build": "eas build -p android --profile preview"
   },
   "dependencies": {
     "@react-native-community/datetimepicker": "3.5.2",
@@ -46,7 +47,6 @@
     "react-native-snap-carousel": "FooJiaYin/react-native-snap-carousel#master",
     "react-native-svg": "12.1.1",
     "react-native-tab-view": "^3.1.1",
-    "react-native-unimodules": "~0.15.0",
     "react-native-web": "0.17.1",
     "react-native-webview": "11.13.0"
   },
