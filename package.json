@@ -5,7 +5,7 @@
     "ios": "react-native run-ios",
     "web": "expo start --web",
     "start": "expo start",
-    "build": "eas build -p android --profile preview"
+    "build": "expo prebuild && eas build -p android --profile preview"
   },
   "dependencies": {
     "@react-native-community/datetimepicker": "3.5.2",
@@ -51,7 +51,11 @@
     "react-native-webview": "11.13.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9"
+    "@babel/core": "^7.12.9",
+    "jest-expo": "~43.0.1",
+    "react-test-renderer": "17.0.1"
   },
-  "private": true
+  "private": true,
+  "name": "unilife-app",
+  "version": "2.2.0"
 }
