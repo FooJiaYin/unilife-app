@@ -44,6 +44,7 @@
     "userInterfaceStyle": "automatic",
     "githubUrl": "https://github.com/Unilife-App/unilife-app",
     "description": "",
-    "runtimeVersion": "2.2.0"
+    // TODO: Comment this for expo start to debug with Expo Go app
+    "runtimeVersion": "1.0.0"
   }
 }
