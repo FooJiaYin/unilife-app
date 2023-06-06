@@ -331,7 +331,7 @@ export default function App() {
 
 	return (
 		<SafeAreaProvider>
-			<StatusBar backgorundColor="transparent" translucent />
+			<StatusBar style="dark" backgroundColor="transparent" />
 			<NavigationContainer linking={linking}>
 				{ firebase.auth().currentUser ? (
 					<Stack.Navigator>	

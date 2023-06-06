@@ -5,10 +5,12 @@
     "scheme": "unilife",
     "version": "2.2.0",
     "orientation": "portrait",
+    "primaryColor": "#00AEBB",
     "icon": "./assets/logo.png",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "cover"
+      "resizeMode": "cover",
+      "backgroundColor": "#00000000"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -30,6 +32,10 @@
       "package": "cc.unilife.unilife",
       "versionCode": 26,
       "googleServicesFile": "./google-services.json"
+    },
+    "androidStatusBar": {
+      "barStyle": "dark-content",
+      "backgroundColor": "#00000000"
     },
     "notification": {
       "icon": "./assets/android-notification.png",
