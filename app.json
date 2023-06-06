@@ -13,7 +13,8 @@
       "backgroundColor": "#00000000"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/8056de9e-2c29-48ec-afd0-fe9f2e5ff125"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -26,12 +27,16 @@
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "我們需要取用您的相片，讓您在撰寫貼文時可以選取照片",
         "CFBundleAllowMixedLocalizations": true
+      },
+      "runtimeVersion": {
+        "policy": "sdkVersion"
       }
     },
     "android": {
       "package": "cc.unilife.unilife",
       "versionCode": 26,
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "runtimeVersion": "1.0.0"
     },
     "androidStatusBar": {
       "barStyle": "dark-content",
@@ -45,7 +50,10 @@
       "favicon": "./assets/logo.png"
     },
     "githubUrl": "https://github.com/Unilife-App/unilife-app",
-    // TODO: Comment this for expo start to debug with Expo Go app
-    // "runtimeVersion": "1.0.0"
+    "extra": {
+      "eas": {
+        "projectId": "8056de9e-2c29-48ec-afd0-fe9f2e5ff125"
+      }
+    }
   }
 }
