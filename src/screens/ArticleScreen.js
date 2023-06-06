@@ -87,7 +87,7 @@ export default function ArticleScreen(props) {
     function loadMessages() {
         firebase.firestore().collection('behavior').where('user','==', user.id).where('article', '==', article.id).get().then(querySnapshot => {
             let data = querySnapshot.docs[0].data()
-            console.log(data.stats.like)
+            // console.log(data.stats.like)
             setLiked(data.stats.like)
         })
         commentsRef.orderBy('timestamp').onSnapshot(querySnapshot => {
@@ -208,7 +208,7 @@ export default function ArticleScreen(props) {
         setLiked(_liked)
         firebase.firestore().collection('behavior').where('user','==', user.id).where('article', '==', article.id).get().then(querySnapshot => {
             let behaviorRef = querySnapshot.docs[0].ref
-            console.log(behaviorRef.id)
+            // console.log(behaviorRef.id)
             let data = querySnapshot.docs[0].data()
             behaviorRef.update({
                 stats: {

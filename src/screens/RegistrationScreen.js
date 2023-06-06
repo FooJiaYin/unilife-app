@@ -96,7 +96,7 @@ export default function RegistrationScreen(props) {
                     createdTime: firebase.firestore.Timestamp.now(),
                     lastActive: firebase.firestore.Timestamp.now()
 				}
-				console.log('data', data)
+				// console.log('data', data)
 				firebase.firestore().collection('users')
 					.doc(uid)
 					.set(data)
@@ -105,7 +105,7 @@ export default function RegistrationScreen(props) {
 					})
 					.then(async () => { 
 						let snapshot = await firebase.firestore().doc('users/' + uid).get()
-						console.log(snapshot)
+						// console.log(snapshot)
 						props.navigation.navigate('Topic', {user: snapshot})})
 			})
 			.catch(function(error) {

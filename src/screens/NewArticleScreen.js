@@ -129,7 +129,7 @@ export default function NewArticleScreen(props) {
             if (images.length > 0) {
                 let storageRef = firebase.storage().ref()
                 for (let i = 0; i < images.length; i++) {
-                    console.log(images[i])
+                    // console.log(images[i])
                     let imageRef = storageRef.child(`articles/${articleId}/images/${i}`)
                     let blob = await fetchImageFromUri(images[i])
                     let snapshot = await imageRef.put(blob)
@@ -168,7 +168,7 @@ export default function NewArticleScreen(props) {
     
         if (result.cancelled) return;
 
-        console.log(result);
+        // console.log(result);
 
         if (result.width > 800) {
             const compressedResult = await ImageManipulator.manipulateAsync(

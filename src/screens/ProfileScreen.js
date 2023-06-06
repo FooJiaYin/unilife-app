@@ -61,7 +61,7 @@ export default function ProfileScreen(props) {
         let data = await snapshot.data()
         let districts = data && data.districts? data.districts.map(district => ({value: data.name + district, label: district})) : [];
         setOptions({...options, districts: districts})
-        console.log(options)
+        // console.log(options)
     }
 
     async function loadUserData() {
@@ -157,7 +157,7 @@ export default function ProfileScreen(props) {
             pushToken: null
         }).then(() => {
             firebase.auth().signOut().then(() => {
-                console.log( firebase.auth().currentUser)
+                // console.log( firebase.auth().currentUser)
                 props.navigation.reset({
                     index: 0,
                     routes: [{ name: 'Login' }],

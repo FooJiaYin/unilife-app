@@ -66,7 +66,7 @@ export default function SuccessScreen(props) {
         // console.log("identity", user.identity.community)
         let snapshot = await user.ref.get()
         let data = await snapshot.data()
-     // console.log(user)
+        // console.log(user)
         setInfo(data.info)
         if(data.info.profileImage && data.info.profileImage.startsWith("https://")) {
             setLineImage(data.info.profileImage)
@@ -83,8 +83,8 @@ export default function SuccessScreen(props) {
 
     
     function changeProfileImage() {
-        console.log(info.profileImage)
-        console.log(lineImage)
+        // console.log(info.profileImage)
+        // console.log(lineImage)
         let currentId = (info.profileImage == "profile-image-0.png")? 0 : 
                         (info.profileImage == "profile-image-1.png")? 1 : 
                         (info.profileImage == "profile-image-2.png")? 2 : 3

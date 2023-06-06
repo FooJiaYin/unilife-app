@@ -91,7 +91,7 @@ export default function TopicSelectScreen(props) {
             }
         }
         setCount(array.length)
-        console.log(array)
+        // console.log(array)
     }
     
     const topicItem = ({item, index}) => {
@@ -195,18 +195,18 @@ export default function TopicSelectScreen(props) {
         // console.log(dictTtlCateCount)
         let score = {'娛樂': 0, '生活': 0, '體育': 0, '教育': 0, '情感': 0, '藝文': 0, 'ACG': 0, '財經': 0, '時事': 0, '議題': 0, '科技': 0, '職場': 0}
         for(var interest of interests) {
-            console.log(interest)
+            // console.log(interest)
             let relatedTopic = dictInterestCate[dictIntestMap[interest]]
-            console.log(relatedTopic)
+            // console.log(relatedTopic)
             for(var topic of relatedTopic) {
-                console.log(topic)
+                // console.log(topic)
                 score[topic] += 1
             }
         }
         for(var topic in score) {
             score[topic] = score[topic]/dictTtlCateCount[topic]*7
         }
-        console.log(score)
+        // console.log(score)
         return score;
     }
 

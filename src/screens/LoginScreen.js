@@ -13,7 +13,7 @@ import { LineLoginUrl } from '../api/linelogin';
 export default function LoginScreen({navigation, ...props}) {
     const usersRef = firebase.firestore().collection('users')
     const authToken = props.route.params && props.route.params.token
-    console.log(props.route.params)
+    // console.log(props.route.params)
 
     setHeaderOptions(navigation)
 
@@ -34,14 +34,14 @@ export default function LoginScreen({navigation, ...props}) {
                     AppleAuthentication.AppleAuthenticationScope.EMAIL,
                 ],
             });
-            console.log(appleCredential);
+            // console.log(appleCredential);
             const provider = new firebase.auth.OAuthProvider('apple.com');
             const credential = provider.credential({
                 idToken: appleCredential.identityToken, 
                 rawNonce: '123456789'
             });
             const response = await firebase.auth().signInWithCredential(credential);
-            console.log(response);
+            // console.log(response);
             const uid = response.user.uid
             usersRef.doc(uid).get().then(async snapshot => {
                 if (!snapshot.exists) {

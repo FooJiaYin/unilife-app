@@ -27,7 +27,7 @@ export default function MessageScreen(props) {
                 let promises = []
                 querySnapshot.forEach(async doc => {
                     const id = messageList.push(doc.data()) -1
-                 // console.log(messageList)
+                    // console.log(messageList)
                     const message = doc.data()
                     // console.log(message.user.id)
                     messageList[id].id = doc.id
@@ -51,7 +51,7 @@ export default function MessageScreen(props) {
                                     name: snapshot.data().info.nickname,
                                     avatar: snapshot.data().info.profileImage
                                 }
-                             // console.log(messageList[id].user._id, user.id)
+                                // console.log(messageList[id].user._id, user.id)
                             })
                     )
                     // const snapshot = await message.user.get()
@@ -98,7 +98,7 @@ export default function MessageScreen(props) {
                     // Keyboard.dismiss()
                     chatroom.users.forEach(u => {
                         if (u != user.id) {
-                            console.log('send notification')
+                            // console.log('send notification')
                             firebase.firestore().doc('users/' + u).get()
                                 .then(userSnapshot => 
                                     sendPushNotification(userSnapshot.data().pushToken, inputText)

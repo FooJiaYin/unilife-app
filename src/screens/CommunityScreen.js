@@ -70,7 +70,7 @@ export default function CommunityScreen(props) {
     }
     
     async function loadArticles() {
-        console.log(user.identity.communities.concat(["all"]))
+        // console.log(user.identity.communities.concat(["all"]))
         articlesRef
             .where("community", "in", user.identity.communities.concat(["all"]))
             .where("category", "==", 'posts')
@@ -88,7 +88,7 @@ export default function CommunityScreen(props) {
                 let savedArticles = user.bookmarks || []
 
                 querySnapshot.forEach(async snapshot => {
-                    console.log(snapshot.id)
+                    // console.loglog(snapshot.id)
                     const article = snapshot.data()
                     article.isSaved = savedArticles != undefined && savedArticles.includes(snapshot.id)
                     // if (article.community && article.community != 'all') {

@@ -244,7 +244,7 @@ export function Chatroom({item, size, navigation, matchState = {}, toggleWaiting
                     firebase.firestore().doc('users/' + user).get()
                         .then(userSnapshot => newUsers.push(userSnapshot.data().info.nickname))
                         .finally(() => {
-                            console.log('userNames', newUsers)
+                        // console.log('userNames', newUsers)
                             if(newUsers.length == 3) setUsers(newUsers)
                             // console.log(get_user_promises)
                         })
