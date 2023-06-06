@@ -3,11 +3,6 @@
     "name": "UniLife",
     "slug": "unilife",
     "scheme": "unilife",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
     "version": "2.2.0",
     "orientation": "portrait",
     "icon": "./assets/logo.png",
@@ -16,8 +11,7 @@
       "resizeMode": "cover"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0,
-      "url": "https://u.expo.dev/8056de9e-2c29-48ec-afd0-fe9f2e5ff125"
+      "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": [
       "**/*"
@@ -33,6 +27,9 @@
       }
     },
     "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#00AEBB"
+      },
       "package": "cc.unilife.unilife",
       "versionCode": 26,
       "googleServicesFile": "./google-services.json"
@@ -41,10 +38,11 @@
       "icon": "./assets/android-notification.png",
       "color": "#00aebb"
     },
-    "userInterfaceStyle": "automatic",
+    "web": {
+      "favicon": "./assets/logo.png"
+    },
     "githubUrl": "https://github.com/Unilife-App/unilife-app",
-    "description": "",
     // TODO: Comment this for expo start to debug with Expo Go app
-    "runtimeVersion": "1.0.0"
+    // "runtimeVersion": "1.0.0"
   }
 }
