@@ -37,18 +37,6 @@ export default function RegistrationScreen(props) {
         setCurrentHTML(termsData.terms)
     }
 
-    async function loadUserData() {
-        let snapshot = await user.ref.get()
-        let userData = await snapshot.data()
-        if(userData.info) {
-            setInfo(userData.info)
-        }
-        if(userData.identity) {
-            // userData.identity.communities = [undefined, undefined]
-            setIdentity(userData.identity)
-        }
-    }
-
     async function setCounty(county) {
         if (county != identity.county) {
             setIdentity({ 
@@ -208,7 +196,6 @@ export default function RegistrationScreen(props) {
     }
 
     useEffect(() => {
-        loadUserData()
         loadTermsAndConditions()
     }, [])
 
