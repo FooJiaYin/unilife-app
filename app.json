@@ -27,9 +27,6 @@
       }
     },
     "android": {
-      "adaptiveIcon": {
-        "backgroundColor": "#00AEBB"
-      },
       "package": "cc.unilife.unilife",
       "versionCode": 26,
       "googleServicesFile": "./google-services.json"
