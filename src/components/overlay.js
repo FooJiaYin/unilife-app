@@ -69,8 +69,7 @@ export function OptionOverlay({ visible=false, onBackCB , options=[], style=null
             animationType="none"
             transparent={true}
             visible={visible}
-            onRequestClose={()=>{onBackCB()
-            console.log(visible)}}
+            onRequestClose={()=>{onBackCB()}}
         >
             <View style={{flex:1, justifyContent: 'center'}}>
             <View style={{

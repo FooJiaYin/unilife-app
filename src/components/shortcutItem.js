@@ -48,13 +48,13 @@ export function HomeShortcutItem ({item, onLongPress}){
     })
     
     function openLink(){
-        console.log('openlink', item)
+        // console.log('openlink', item)
         if (item.action) {
             item.action();
         } else if (item.share && item.share == true) {
             share(item)
         } else {
-        // open url in browser
+            // open url in browser
             if (item.url && item.url != '') {
                 WebBrowser.openBrowserAsync(item.url);
                 // Linking.openURL(item.url)
@@ -93,7 +93,7 @@ export function ShortcutEditModal ({visible, onClose, shortcut, setShortcut, upd
 
     async function getIcons() {
         let result = await storageRef.child('icons').listAll()
-            // console.log(result.items)
+        // console.log(result.items)
         const icons_ = []
         const blankUrl = ''
         for (let i = 0; i < result.items.length; i++) {

@@ -99,7 +99,7 @@ async function registerForPushNotificationsAsync() {
 
 		let experienceId = '@foojiayin/unilife';
 		token = (await Notifications.getExpoPushTokenAsync({experienceId: '@foojiayin/unilife'})).data;
-		console.log(token);
+		// console.log(token);
 	} else {
 		alert('Must use physical device for Push Notifications');
 	}
@@ -126,14 +126,14 @@ export default function App() {
 	// console.log(user)
 
 	function setupNotification(uid) {
-		console.log('uid', uid)
+		// console.log('uid', uid)
 		registerForPushNotificationsAsync().then(token => {
 			console.log('token', token)
 			setExpoPushToken(token)
 			console.log('user token', token)
 			// alert(token)
 			if (uid) {
-				console.log('user token', token)
+				// console.log('user token', token)
 				firebase.firestore().doc('users/' + uid).update({
 					pushToken: token
 				})
@@ -144,6 +144,7 @@ export default function App() {
 		})
 
 		notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+			console.log(notification);
 			setNotification(notification);
 		});
 
@@ -160,7 +161,7 @@ export default function App() {
 	async function getInitialUrl() {
 		const initialURL = await Linking.getInitialURL()
 		if (initialURL) {
-			console.log('initialURL', initialURL)
+			// console.log('initialURL', initialURL)
 			// setData(Linking.parse(initialURL));
 		}
 	}
@@ -188,7 +189,7 @@ export default function App() {
 					.then((doc) => {
 						setLoading(false)
 						setUser(doc)
-						console.log('auth', user.uid)
+						// console.log('auth', user.uid)
 						setupNotification(user.uid)
 					})
 					.catch((error) => {

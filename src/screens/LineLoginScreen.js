@@ -14,7 +14,7 @@ import { LineLoginUrl } from '../api/linelogin';
 export default function LineLoginScreen({navigation, ...props}) {
     const usersRef = firebase.firestore().collection('users')
     const authToken = props.route.params && props.route.params.token
-    console.log(props.route.params)
+    // console.loglog(props.route.params)
 
     setHeaderOptions(navigation)
 
@@ -25,7 +25,7 @@ export default function LineLoginScreen({navigation, ...props}) {
     }
 
     const login = (token) => {
-        console.log(token)
+        // console.log(token)
         firebase
             .auth()
             .signInWithCustomToken(token)

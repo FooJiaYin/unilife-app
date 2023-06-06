@@ -17,7 +17,7 @@ export default function EmailLoginScreen({navigation, ...props}) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const authToken = props.route.params && props.route.params.token
-    console.log(props.route.params)
+    // console.log(props.route.params)
 
     setHeaderOptions(navigation)
 
@@ -28,12 +28,12 @@ export default function EmailLoginScreen({navigation, ...props}) {
     }
 
     const onLoginPress = () => {
-        console.log("Login")
+        // console.log("Login")
         firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
         .then((response) => {
-            console.log(response)
+            // console.log(response)
             const uid = response.user.uid
             usersRef
                 .doc(uid)

@@ -89,7 +89,7 @@ export default function ChatroomScreen(props) {
                 //     displayChatrooms(newChatrooms)
                 // }
                 querySnapshot.forEach(async snapshot => {
-                    console.log(snapshot.data())
+                    // console.log(snapshot.data())
                     // snapshot.data().then(data => {
                     const id = newChatrooms.push(snapshot.data()) -1
                     // console.log(id, querySnapshot.length)
@@ -107,7 +107,7 @@ export default function ChatroomScreen(props) {
                         //     }) 
                         // }
                         setChatrooms(newChatrooms.reverse())
-                        console.log('chatrooms', newChatrooms)
+                        // console.log('chatrooms', newChatrooms)
                         // })
                     }
                 })
@@ -145,7 +145,7 @@ export default function ChatroomScreen(props) {
     useEffect(() => {
         // if(databaseSnapshot.exists) 
         loadChatrooms()
-        console.log('chatrooms', chatrooms)
+        // console.log('chatrooms', chatrooms)
     }, [])
 
     useFocusEffect(

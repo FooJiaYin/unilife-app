@@ -76,14 +76,14 @@ export function HomeScreen(props) {
     function changeIcon(index) {
         setModalVisibility(true)
         setCurrentShortcut({index: index, ...myShortcuts[index]})
-        console.log('long press')
+        // console.log('long press')
     }
 
     function closeShortcutEditModal(update) {
         setModalVisibility(false)
         if (!update) return
         myShortcuts[currentShortcut.index] = currentShortcut
-        console.log(props.user.id)
+        // console.log(props.user.id)
         firebase.firestore().doc('users/' + props.user.id).update({
             shortcuts: myShortcuts
         })

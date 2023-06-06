@@ -56,7 +56,7 @@ export function OptionModal({ visible=false, onBackCB , options=null, style=null
             transparent={true}
             visible={visible}
             onRequestClose={()=>{onBackCB()}}
-         // console.log(visible)}}
+            // console.log(visible)}}
         >
             <View style={style?style:modalStyle.option}>
                 {options.map((option, i)=>{

@@ -32,7 +32,7 @@ export default function FilterScreen({type, ...props}) {
         user = await snapshot.data()
         const savedArticles = user.bookmarks? user.bookmarks.reverse() : []
         let promises = []
-     // console.log("bookmarks", savedArticles)
+        // console.log("bookmarks", savedArticles)
         for (var id of savedArticles) {
             const snapshot = await articlesRef.doc(id).get()
             const article = snapshot.data()
@@ -70,11 +70,11 @@ export default function FilterScreen({type, ...props}) {
             user = await snapshot.data()
             const savedArticles = user.bookmarks || []
             if (filter.type == 'history') {
-                console.log("history", user.id)
+                // console.loglog("history", user.id)
                 articlesRef = articlesRef.where("publishedBy", "==", user.id)
                                 // .orderBy('publishedAt', 'desc')
             } else {
-                console.log(filter.data)
+                // console.log(filter.data)
                 articlesRef = articlesRef
                                 .where("community", "in", [...user.identity.communities, "all"])
                                 .where("status", "==", "published")
@@ -89,7 +89,7 @@ export default function FilterScreen({type, ...props}) {
                     const id = newArticles.push(snapshot.data()) -1
                     // const article = snapshot.data()
                     newArticles[id].id = snapshot.id
-                    console.log("article", snapshot.id)
+                    // console.loglog("article", snapshot.id)
                     // console.log(storageRef.child('articles/' + article.id + '/images/' + article.coverImage))
                     /* Get Images */
                     if(savedArticles!= undefined){
@@ -105,7 +105,7 @@ export default function FilterScreen({type, ...props}) {
                     // )
                 })
                 Promise.all(promises).finally(() => {
-                 console.log("End promises", newArticles)
+                    // console.log("End promises", newArticles)
                     setArticles(newArticles)
                 })
             }).finally(() => {

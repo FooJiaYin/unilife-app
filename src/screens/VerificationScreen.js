@@ -73,7 +73,7 @@ export default function VerificationScreen(props) {
         } else {
             firebase.firestore().doc('users/' + user.id).get().then(snapshot => {
                 const status = snapshot.data().verification.status
-                console.log(status)
+                // console.log(status)
                 if (status == true) {
                     props.navigation.navigate('Tabs', {user: user})
                 } else {
