@@ -1,6 +1,6 @@
+package cc.unilife.unilife;
 import android.content.res.Configuration;
 import android.content.Intent;
-package cc.unilife.unilife;
 
 import android.os.Bundle;
 
