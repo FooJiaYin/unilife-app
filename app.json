@@ -14,6 +14,7 @@
     },
     "updates": {
       "fallbackToCacheTimeout": 0,
+      // TODO: Comment out the below line to run on expo go
       "url": "https://u.expo.dev/8056de9e-2c29-48ec-afd0-fe9f2e5ff125"
     },
     "assetBundlePatterns": [
@@ -28,6 +29,7 @@
         "NSPhotoLibraryUsageDescription": "我們需要取用您的相片，讓您在撰寫貼文時可以選取照片",
         "CFBundleAllowMixedLocalizations": true
       },
+      // TODO: Comment out the below line to run on expo go
       "runtimeVersion": {
         "policy": "sdkVersion"
       }
@@ -36,6 +38,7 @@
       "package": "cc.unilife.unilife",
       "versionCode": 26,
       "googleServicesFile": "./google-services.json",
+      // TODO: Comment out the below line to run on expo go
       "runtimeVersion": "1.0.0"
     },
     "androidStatusBar": {
