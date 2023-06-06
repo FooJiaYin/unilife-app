@@ -104,7 +104,6 @@ dist
 
 # TernJS port file
 .tern-port
-yarn.lock
 node_modules/**/*
 .expo/*
 npm-debug.*
