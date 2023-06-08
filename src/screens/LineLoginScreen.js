@@ -41,7 +41,10 @@ export default function LineLoginScreen({navigation, ...props}) {
                         }
                         const user = snapshot.data()
                         if(user.interests && user.interests.length == 5 && user.identity.communities) {
-                            navigation.navigate('Tabs')
+                            navigation.reset({
+                                index: 0,
+                                routes: [{ name: 'Tabs' }],
+                            })
                         } else {
                             navigation.navigate('FillInfo', {user: snapshot})
                         }
