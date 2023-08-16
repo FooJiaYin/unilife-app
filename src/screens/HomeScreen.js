@@ -13,7 +13,7 @@ import { HomeShortcutItem, ShortcutEditModal } from '../components/shortcutItem'
 import * as copilot from '../components/guide'
 import { checkAuthStatus } from '../utils/auth';
 import { concat } from '../utils/array';
-import { interpolateNode } from 'react-native-reanimated';
+import { interpolateNode, set } from 'react-native-reanimated';
 
 export function HomeScreen(props) {
     
@@ -42,35 +42,34 @@ export function HomeScreen(props) {
             // props.start()
         }
         let images = {}
-        let communityData
-        // console.log(communityData)
         snapshot = await firebase.firestore().doc('config/text').get()
         let data = await snapshot.data()
         setText(data.home)
         if(user.id != "anonymous") user.identity.communities.push('all')
+        if (user.shortcuts) setMyShortcuts(user.shortcuts)
+        let hasShortcut = user.shortcuts?.length > 0
         for(let i = 0; i < user.identity.communities.length; i++) {
             let comm = user.identity.communities[i]
             firebase.firestore().doc('communities/' + comm).onSnapshot(async snapshot => {
                 let data = await snapshot.data()
-                if(i == 0) {
-                    communityData = data
-                    if (user.id == "anonymous") {
-                        setMyShortcuts(communityData.shortcuts.map(shortcut => { return {
-                            ...shortcut, 
-                            action: () => checkAuthStatus(user, props, "馬上完成註冊，解鎖快捷功能。\n 一鍵直達每日常用連結！"),
-                            onLongPress: () => checkAuthStatus(user, props, "馬上完成註冊，解鎖快捷功能。\n 一鍵直達每日常用連結！"),
-                        }}))
-                    } else if (!user.shortcuts) {
-                        setMyShortcuts(communityData.shortcuts)
-                    } else {
-                        setMyShortcuts(user.shortcuts)
-                    }
-                }
-                // console.log(communityData)
+                
                 if(data.featuredImages) images[comm] = data.featuredImages
                 setfeaturedImages(concat(images))
+                
+                if (!hasShortcut && data.shortcuts && data.shortcuts.length > 0) {
+                    setMyShortcuts(data.shortcuts)
+                    hasShortcut = true
+                }
             })
         }
+        
+        if (user.id == "anonymous") {
+            setMyShortcuts(lastShortcut.map(shortcut => { return {
+                ...shortcut, 
+                action: () => checkAuthStatus(user, props, "馬上完成註冊，解鎖快捷功能。\n 一鍵直達每日常用連結！"),
+                onLongPress: () => checkAuthStatus(user, props, "馬上完成註冊，解鎖快捷功能。\n 一鍵直達每日常用連結！"),
+            }}))
+        } 
     }
 
     function changeIcon(index) {
