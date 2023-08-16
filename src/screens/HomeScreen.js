@@ -56,7 +56,7 @@ export function HomeScreen(props) {
                 if(data.featuredImages) images[comm] = data.featuredImages
                 setfeaturedImages(concat(images))
                 
-                if (!hasShortcut && data.shortcuts && data.shortcuts.length > 0) {
+                if (user.id != "anonymous" && !hasShortcut && data.shortcuts && data.shortcuts.length > 0) {
                     setMyShortcuts(data.shortcuts)
                     hasShortcut = true
                 }
