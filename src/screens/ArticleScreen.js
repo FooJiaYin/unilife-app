@@ -9,6 +9,7 @@ import { WebView } from 'react-native-webview';
 import { GiftedChat } from 'react-native-gifted-chat'
 import { Chip } from '../components/chip'
 import { InputBar, Comment } from '../components/messages'
+import { ReportModal } from '../components/report'
 // import HTMLView from 'react-native-htmlview';
 // import CommentScreen from './CommentScreen'
 import time from '../utils/time'
@@ -25,11 +26,23 @@ export default function ArticleScreen(props) {
     const [liked, setLiked] = useState(false)
     const [messages, setMessages] = useState([])
     const [source, setSource] = useState(article.meta.source)
+    const [isModalVisible, setModalVisibility] = useState(false)
 
     const options = {
         title: source,
         headerLeft: 'back',
-        headerRight: {
+        headerRight: source == '社群貼文'? 
+        {
+            icon: 'report',
+            size: 20,
+            onPress: () => {
+                setModalVisibility(true)
+                // firebase.firestore().doc('users/' + user.id).get().then(snapshot => {
+                //     user = snapshot.data()
+                // })
+            }
+        } :
+        {
             icon: 'chat',
             size: 18,
             onPress: () => {
@@ -80,7 +93,6 @@ export default function ArticleScreen(props) {
             firebase.firestore().doc('communities/' + article.community).get().then(snapshot => {
                 setHeaderOptions(props.navigation, {...options, title: snapshot.name})
             })
-
         }
     }
 
@@ -245,6 +257,7 @@ export default function ArticleScreen(props) {
 
     return (
         <SafeAreaView style={stylesheet.container}>
+            <ReportModal visible={isModalVisible} onClose={()=>setModalVisibility(false)} article={{...article, source}} user={user} />
             <View style={{ flex: 1, }}>{(article.meta.url && article.meta.url != '') ? 
                 <WebView source={{ uri: article.meta.url }} />
                 :
