@@ -94,7 +94,9 @@ export default function CommunityScreen(props) {
                     // if (article.community && article.community != 'all') {
                     //     newArticles[article.community].push(article)
                     // }
-                    newArticles['all'].push(article)
+                    if (! user.hiddenArticles?.includes(snapshot.id) && ! user.hiddenSources?.includes(article.publishedBy)) {
+                        newArticles['all'].push(article)
+                    }
                     // firebase.firestore().collection('behavior').where('user','==', props.user.id).where('article', '==', snapshot.id).get().then(querySnapshot => {
                     //     if(querySnapshot.docs.length == 0) {
                     //         firebase.firestore().collection('behavior').add({
