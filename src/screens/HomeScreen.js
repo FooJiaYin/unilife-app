@@ -56,20 +56,19 @@ export function HomeScreen(props) {
                 if(data.featuredImages) images[comm] = data.featuredImages
                 setfeaturedImages(concat(images))
                 
-                if (user.id != "anonymous" && !hasShortcut && data.shortcuts && data.shortcuts.length > 0) {
+                if (!hasShortcut && data.shortcuts && data.shortcuts.length > 0) {
+                    if (user.id == "anonymous") {
+                        data.shortcuts = data.shortcuts.map(shortcut => { return {
+                            ...shortcut, 
+                            action: () => checkAuthStatus(user, props, "馬上完成註冊，解鎖快捷功能。\n 一鍵直達每日常用連結！"),
+                            onLongPress: () => checkAuthStatus(user, props, "馬上完成註冊，解鎖快捷功能。\n 一鍵直達每日常用連結！"),
+                        }})
+                    }
                     setMyShortcuts(data.shortcuts)
                     hasShortcut = true
                 }
             })
         }
-        
-        if (user.id == "anonymous") {
-            setMyShortcuts(lastShortcut.map(shortcut => { return {
-                ...shortcut, 
-                action: () => checkAuthStatus(user, props, "馬上完成註冊，解鎖快捷功能。\n 一鍵直達每日常用連結！"),
-                onLongPress: () => checkAuthStatus(user, props, "馬上完成註冊，解鎖快捷功能。\n 一鍵直達每日常用連結！"),
-            }}))
-        } 
     }
 
     function changeIcon(index) {
