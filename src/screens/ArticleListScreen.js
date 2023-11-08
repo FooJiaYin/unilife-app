@@ -21,9 +21,9 @@ export default function ArticleListScreen(props) {
     })
 
     async function loadUserData() {
-        console.log("loadUserData")
+        // console.log"loadUserData")
         props.user.ref.onSnapshot(async snapshot => {
-            console.log("userData received")
+            // console.log("userData received")
             let userData = await snapshot.data()
             if (!user) {
                 setUser(userData)
@@ -35,7 +35,7 @@ export default function ArticleListScreen(props) {
     }
     
     async function loadArticles() {
-        console.log("loadArticles", user.recommendation[0])
+        // console.log("loadArticles", user.recommendation[0])
         // console.log(time().diff(time(user.lastActive), 'minutes'))
         articlesRef
         .where("community", "in", user.identity.communities.concat(["all"]))
@@ -53,7 +53,7 @@ export default function ArticleListScreen(props) {
             // console.log(savedArticles)
             // newArticles.all = user.recommendation.map(articleId => {id: articleId}) || []
             // setArticles(newArticles)
-            console.log("articles received")
+            // console.log("articles received")
             // let promises = []
             querySnapshot.forEach(async snapshot => {
                 const article = snapshot.data()
@@ -104,13 +104,12 @@ export default function ArticleListScreen(props) {
                     }
                 })
             }
-            console.log("fin")
             setArticles(newArticles)
         })
     }
 
     async function recommendation(user) {
-        console.log("recommendation", user.id)
+        // console.loglog("recommendation", user.id)
         let recommendations = {
             all: [],
             announcement: [],
@@ -118,9 +117,9 @@ export default function ArticleListScreen(props) {
             news: [],
             none: [],
         }
-        console.log("recommendation", time().diff(time(user.lastActive), 'minutes'))
+        // console.log("recommendation", time().diff(time(user.lastActive), 'minutes'))
         if (user.id != "anonymous" && time().diff(time(user.lastActive), 'minutes') > 3) {
-            console.log("recommendation", time().diff(time(user.lastActive), 'minutes'))
+            // console.log("recommendation", time().diff(time(user.lastActive), 'minutes'))
             var lastRenewed = new Date((new Date()).valueOf() - 3000*60*60*24);
             lastRenewed = (lastRenewed < user.lastActive.toDate()) ? lastRenewed : user.lastActive.toDate()
             firebase.firestore().collection('articles')
@@ -164,7 +163,7 @@ export default function ArticleListScreen(props) {
                     ratio[key] = Math.ceil(count[key] / minCount)
                     if (ratio[key] > 10) ratio[key] = 10
                 }
-                console.log(ratio)
+                // console.log(ratio)
                 for (let i = 0; i < 20; i++) {
                     let temp = []
                     for (const key in recommendations) {
@@ -176,7 +175,6 @@ export default function ArticleListScreen(props) {
                         }
                     }
                     temp = temp.sort((a, b) => b.score - a.score).map(recommendation => recommendation.id)
-                    console.log(temp)
                     recommendations.all.push(...temp)
                 }
                 // console.log('all', recommendations.all)
@@ -235,20 +233,19 @@ export default function ArticleListScreen(props) {
 
     useEffect(() => {
         loadUserData()
-    }, [])
+    }, [props.user?.id])
 
     useEffect(() => {
         checkAuthStatus(user, props, "馬上完成註冊，解鎖資訊列表。\n取得專屬於你的在地新聞與活動！")
         if (user) loadArticles()
-    }, [user])
+    }, [user?.id])
 
     useFocusEffect(
         React.useCallback(() => {
-            console.log("focus", user)
+            // console.log("focus", user)
             checkAuthStatus(user, props, "馬上完成註冊，解鎖資訊列表。\n取得專屬於你的在地新聞與活動！")
             if (user) recommendation()
-            else loadUserData()
-        }, [])
+        }, [user?.id])
     )
 
     setHeaderOptions(props.navigation, options)

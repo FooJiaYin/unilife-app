@@ -1,10 +1,10 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { StyleSheet, View, TouchableOpacity, Text, Image, Modal } from 'react-native'
-import { styles, Color } from '../styles'
-import Asset, { Icon } from './assets'
-import time from '../utils/time'
-import { SmallTags } from './articles/tags'
-import { firebase } from '../firebase/config'
+import { styles, Color } from '../../styles'
+import Asset, { Icon } from '../assets'
+import time from '../../utils/time'
+import { SmallTags } from './tags'
+import { firebase } from '../../firebase/config'
 import { NavigationContainer, CommonActions } from '@react-navigation/native';
 
 export function ListItem({ item, onPress, style, onButtonPress, chipAction, ...props }) {

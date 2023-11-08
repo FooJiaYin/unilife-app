@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList, Text, TouchableOpacity, TouchableHighlight, View } from 'react-native'
+import { View } from 'react-native'
 import { setHeaderOptions } from '../components/navigation'
 import { stylesheet } from '../styles'
-import { ListItem } from '../components/lists'
 import { firebase } from '../firebase/config'
 import { tagNames } from '../firebase/functions'
+import { ArticleList } from "../components/articles/articleList";
 
 export default function FilterScreen({type, ...props}) {
     // console.log(props)
@@ -32,7 +32,7 @@ export default function FilterScreen({type, ...props}) {
         user = await snapshot.data()
         const savedArticles = user.bookmarks? user.bookmarks.reverse() : []
         let promises = []
-     // console.log("bookmarks", savedArticles)
+        // console.log("bookmarks", savedArticles)
         for (var id of savedArticles) {
             const snapshot = await articlesRef.doc(id).get()
             const article = snapshot.data()
@@ -70,11 +70,11 @@ export default function FilterScreen({type, ...props}) {
             user = await snapshot.data()
             const savedArticles = user.bookmarks || []
             if (filter.type == 'history') {
-                console.log("history", user.id)
+                // console.loglog("history", user.id)
                 articlesRef = articlesRef.where("publishedBy", "==", user.id)
                                 // .orderBy('publishedAt', 'desc')
             } else {
-                console.log(filter.data)
+                // console.log(filter.data)
                 articlesRef = articlesRef
                                 .where("community", "in", [...user.identity.communities, "all"])
                                 .where("status", "==", "published")
@@ -89,7 +89,7 @@ export default function FilterScreen({type, ...props}) {
                     const id = newArticles.push(snapshot.data()) -1
                     // const article = snapshot.data()
                     newArticles[id].id = snapshot.id
-                    console.log("article", snapshot.id)
+                    // console.loglog("article", snapshot.id)
                     // console.log(storageRef.child('articles/' + article.id + '/images/' + article.coverImage))
                     /* Get Images */
                     if(savedArticles!= undefined){
@@ -105,7 +105,7 @@ export default function FilterScreen({type, ...props}) {
                     // )
                 })
                 Promise.all(promises).finally(() => {
-                 console.log("End promises", newArticles)
+                    // console.log("End promises", newArticles)
                     setArticles(newArticles)
                 })
             }).finally(() => {
@@ -115,48 +115,15 @@ export default function FilterScreen({type, ...props}) {
         }
     }
 
-    function toggleSaveArticle(article) {
-     // console.log(article)
-        if (article.isSaved) {
-            props.user.ref.update({
-                bookmarks: firebase.firestore.FieldValue.arrayRemove(article.id)
-            });
-        } else {
-            props.user.ref.update({
-                bookmarks: firebase.firestore.FieldValue.arrayUnion(article.id)
-            });
-        }
-        article.isSaved = !article.isSaved
-    }
-
     setHeaderOptions(props.navigation, options)
 
     useEffect(() => {
         loadArticles(filter)
     }, [])
 
-    const articleListItem = (itemProps) => 
-        <ListItem {...itemProps} props={props}
-            onPress={() => props.navigation.navigate('Article', {article: itemProps.item}) } 
-            onButtonPress={() => toggleSaveArticle(itemProps.item)}
-            chipAction={(type, data) => {
-                loadArticles({type, data})
-                props.navigation.setOptions({
-                    title: '#' + tagNames[data] || data
-                })
-            }}
-        />
-
     return (
         <View style={stylesheet.container}>
-            { articles && (
-                <FlatList
-                    data={articles}
-                    renderItem={articleListItem}
-                    keyExtractor={(item) => item.id}
-                    removeClippedSubviews={true}
-                />
-            )}
+            { articles && <ArticleList articles={articles} {...props} /> }
         </View>
     )
 }

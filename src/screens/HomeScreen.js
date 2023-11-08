@@ -76,14 +76,14 @@ export function HomeScreen(props) {
     function changeIcon(index) {
         setModalVisibility(true)
         setCurrentShortcut({index: index, ...myShortcuts[index]})
-        console.log('long press')
+        // console.log('long press')
     }
 
     function closeShortcutEditModal(update) {
         setModalVisibility(false)
         if (!update) return
         myShortcuts[currentShortcut.index] = currentShortcut
-        console.log(props.user.id)
+        // console.log(props.user.id)
         firebase.firestore().doc('users/' + props.user.id).update({
             shortcuts: myShortcuts
         })
@@ -141,11 +141,9 @@ export function HomeScreen(props) {
 
     const featuredCard = ({item}) => 
         <TouchableOpacity onPress={
-            item.url && (
-                item.url == "" ? () => {} :
-                item.url.startsWith("unilife://") || item.url.startsWith("exp://")? ()=>Linking.openURL(item.url) :
-                ()=>WebBrowser.openBrowserAsync(item.url)
-            )
+            !(item?.url) || item.url == "" ? () => {console.log("empty")} :
+            item.url.startsWith("unilife://") || item.url.startsWith("exp://")? ()=>Linking.openURL(item.url) :
+            ()=>WebBrowser.openBrowserAsync(item.url)
         }>
             <Image source={{uri: item.src}} style={homeCardStyle.card} />
         </TouchableOpacity>

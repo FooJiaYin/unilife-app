@@ -83,7 +83,7 @@ export default function MessageScreen(props) {
                 .catch((error) => {
                     alert(error)
                 })
-            console.log(user.id, article.id)
+            // console.log(user.id, article.id)
             firebase.firestore().collection('behavior').where('user','==', user.id).where('article', '==', article.id).get().then(querySnapshot => {
                 let behaviorRef = querySnapshot.docs[0].ref
                 let data = querySnapshot.docs[0].data()
