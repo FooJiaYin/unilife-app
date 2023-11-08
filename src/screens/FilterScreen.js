@@ -38,7 +38,7 @@ export default function FilterScreen({type, ...props}) {
             const article = snapshot.data()
             article.id = snapshot.id
             /* Get Images */
-            article.isSaved = savedArticles.includes(article.id)
+            article.isSaved = savedArticles.includes(article.id) && ! user.hiddenArticles?.includes(article.id) && ! user.hiddenSources?.includes(article.publishedBy)
             // promises.push(
             //     // storageRef.child('articles/' + article.id + '/images/' + article.meta.coverImage).getDownloadURL()
             //     storageRef.child('articles/9qAFUBpb7n0U1bzylreO/images/' + article.meta.coverImage).getDownloadURL()
@@ -72,6 +72,7 @@ export default function FilterScreen({type, ...props}) {
             if (filter.type == 'history') {
                 // console.loglog("history", user.id)
                 articlesRef = articlesRef.where("publishedBy", "==", user.id)
+                                .where("status", "==", "published")
                                 // .orderBy('publishedAt', 'desc')
             } else {
                 // console.log(filter.data)
@@ -86,23 +87,25 @@ export default function FilterScreen({type, ...props}) {
             articlesRef.get().then(querySnapshot => {
                 let promises = []
                 querySnapshot.forEach(async snapshot => {
-                    const id = newArticles.push(snapshot.data()) -1
-                    // const article = snapshot.data()
-                    newArticles[id].id = snapshot.id
-                    // console.loglog("article", snapshot.id)
-                    // console.log(storageRef.child('articles/' + article.id + '/images/' + article.coverImage))
-                    /* Get Images */
-                    if(savedArticles!= undefined){
-                        newArticles[id].isSaved = savedArticles.includes(newArticles[id].id)
+                    if (! user.hiddenArticles?.includes(snapshot.id) && ! user.hiddenSources?.includes(snapshot.data().publishedBy)) {
+                        const id = newArticles.push(snapshot.data()) -1
+                        // const article = snapshot.data()
+                        newArticles[id].id = snapshot.id
+                        // console.loglog("article", snapshot.id)
+                        // console.log(storageRef.child('articles/' + article.id + '/images/' + article.coverImage))
+                        /* Get Images */
+                        if(savedArticles!= undefined){
+                            newArticles[id].isSaved = savedArticles.includes(newArticles[id].id)
+                        }
+                        if(newArticles[id].isSaved) console.log(newArticles[id].id, "is saved")
+                        // promises.push(
+                        //     storageRef.child('articles/' + newArticles[id].id + '/images/' + article.meta.coverImage).getDownloadURL()
+                        //     // storageRef.child('articles/9qAFUBpb7n0U1bzylreO/images/' + newArticles[id].meta.coverImage).getDownloadURL()
+                        //         .then((url) => {
+                        //             newArticles[id].imageUrl = url
+                        //         })
+                        // )
                     }
-                    if(newArticles[id].isSaved) console.log(newArticles[id].id, "is saved")
-                    // promises.push(
-                    //     storageRef.child('articles/' + newArticles[id].id + '/images/' + article.meta.coverImage).getDownloadURL()
-                    //     // storageRef.child('articles/9qAFUBpb7n0U1bzylreO/images/' + newArticles[id].meta.coverImage).getDownloadURL()
-                    //         .then((url) => {
-                    //             newArticles[id].imageUrl = url
-                    //         })
-                    // )
                 })
                 Promise.all(promises).finally(() => {
                     // console.log("End promises", newArticles)
