@@ -6,7 +6,7 @@ import { styles, Color, stylesheet} from '../styles'
 import Asset from './assets'
 import { useScrollToTop } from '@react-navigation/native';
 import { headerIcon } from './headerIcon'
-import * as copilot from '../components/guide'
+// import * as copilot from '../components/guide'
 // import { PanListenerView,
 //   PanningProvider,
 //   PanResponderView } from 'react-native-ui-lib'
@@ -166,19 +166,19 @@ export function ExpandCard({height = 300, ...props}){
         )}
         scrollEventThrottle={16}
         style={[curveStyles.scrollable,{zIndex:(scrolling?3:1)}]}>
-            <copilot.Step
+            {/* <copilot.Step
                 text="報你知與你有關的校園資訊，或是你可能會感興趣的資訊～"
                 order={3}
                 name="article"
-                >
-            <copilot.View style={[curveStyles.card]}>
+                > */}
+            <View style={[curveStyles.card]}>
             {/* {fixHeader && <SafeAreaView />} */}
-                <copilot.Step
+                {/* <copilot.Step
                     text="往上滑可以開啟文章列表；按住Uni資訊往下滑就會回到首頁囉～"
                     order={4}
                     name="articletab"
-                    >
-                <copilot.AnimatedView style={[curveStyles.header, {marginTop: scrollY.interpolate({
+                    > */}
+                <AnimatedView style={[curveStyles.header, {marginTop: scrollY.interpolate({
                     inputRange: [0, height - 80, height],
                     outputRange: [0, 0, insets.top],
                 }) }]}>
@@ -189,11 +189,11 @@ export function ExpandCard({height = 300, ...props}){
                     <TouchableOpacity onPress={() => props.add()}>
                         <Image style={cardStyle.icon}  source={Asset('edit')} />
                     </TouchableOpacity>
-                </copilot.AnimatedView>
-                </copilot.Step>
+                </AnimatedView>
+                {/* </copilot.Step> */}
                     {props.children}
-            </copilot.View>
-            </copilot.Step>
+            </View>
+            {/* </copilot.Step> */}
         </ScrollView>
     )
 

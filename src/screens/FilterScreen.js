@@ -123,7 +123,7 @@ export default function FilterScreen({type, ...props}) {
 
     return (
         <View style={stylesheet.container}>
-            { articles && <ArticleList articles={articles} {...props} /> }
+            { articles?.length > 0 && <ArticleList articles={articles} {...props} /> }
         </View>
     )
 }

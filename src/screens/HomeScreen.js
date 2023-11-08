@@ -10,10 +10,10 @@ import time from '../utils/time'
 import { firebase } from '../firebase/config'
 import { StickedBg } from '../components/decorative'
 import { HomeShortcutItem, ShortcutEditModal } from '../components/shortcutItem'
-import * as copilot from '../components/guide'
+// import * as copilot from '../components/guide'
 import { checkAuthStatus } from '../utils/auth';
 import { concat } from '../utils/array';
-import { interpolateNode } from 'react-native-reanimated';
+import { interpolateNode, set } from 'react-native-reanimated';
 
 export function HomeScreen(props) {
     
@@ -42,33 +42,31 @@ export function HomeScreen(props) {
             // props.start()
         }
         let images = {}
-        let communityData
-        // console.log(communityData)
         snapshot = await firebase.firestore().doc('config/text').get()
         let data = await snapshot.data()
         setText(data.home)
         if(user.id != "anonymous") user.identity.communities.push('all')
+        if (user.shortcuts) setMyShortcuts(user.shortcuts)
+        let hasShortcut = user.shortcuts?.length > 0
         for(let i = 0; i < user.identity.communities.length; i++) {
             let comm = user.identity.communities[i]
             firebase.firestore().doc('communities/' + comm).onSnapshot(async snapshot => {
                 let data = await snapshot.data()
-                if(i == 0) {
-                    communityData = data
+                
+                if(data.featuredImages) images[comm] = data.featuredImages
+                setfeaturedImages(concat(images))
+                
+                if (!hasShortcut && data.shortcuts && data.shortcuts.length > 0) {
                     if (user.id == "anonymous") {
-                        setMyShortcuts(communityData.shortcuts.map(shortcut => { return {
+                        data.shortcuts = data.shortcuts.map(shortcut => { return {
                             ...shortcut, 
                             action: () => checkAuthStatus(user, props, "馬上完成註冊，解鎖快捷功能。\n 一鍵直達每日常用連結！"),
                             onLongPress: () => checkAuthStatus(user, props, "馬上完成註冊，解鎖快捷功能。\n 一鍵直達每日常用連結！"),
-                        }}))
-                    } else if (!user.shortcuts) {
-                        setMyShortcuts(communityData.shortcuts)
-                    } else {
-                        setMyShortcuts(user.shortcuts)
+                        }})
                     }
+                    setMyShortcuts(data.shortcuts)
+                    hasShortcut = true
                 }
-                // console.log(communityData)
-                if(data.featuredImages) images[comm] = data.featuredImages
-                setfeaturedImages(concat(images))
             })
         }
     }
@@ -91,14 +89,14 @@ export function HomeScreen(props) {
 
     useEffect(() => {
         loadShortcuts()
-        props.copilotEvents.on("stop", () => {
-            firebase.firestore().doc('users/' + user.id).update({
-                guide: {
-                    intro: true,
-                    home: true
-                }
-            })
-          });
+        // props.copilotEvents.on("stop", () => {
+        //     firebase.firestore().doc('users/' + user.id).update({
+        //         guide: {
+        //             intro: true,
+        //             home: true
+        //         }
+        //     })
+        //   });
     }, [])
     
     const homeCardStyle = StyleSheet.create({
@@ -156,13 +154,13 @@ export function HomeScreen(props) {
             <View style={homeCardStyle.container}>
                 <View style={stylesheet.row}>
                     <View style={{flex:1}}>
-                        <copilot.Step
+                        {/* <copilot.Step
                             text="這裡會顯示小攸想對你說的話唷～"
                             order={0}
                             name="greet"
-                            >
-                            <copilot.Text style={homeCardStyle.greeting}>{ nickname}{text.greeting}</copilot.Text>
-                        </copilot.Step>
+                            > */}
+                            <Text style={homeCardStyle.greeting}>{ nickname}{text.greeting}</Text>
+                        {/* </copilot.Step> */}
                         <Text style={homeCardStyle.time}>{time().format('LLLL')}</Text>
                     </View>
                     <View>
@@ -175,20 +173,22 @@ export function HomeScreen(props) {
                             <Image style={homeCardStyle.icon}  source={Asset('bookmark')} />
                         </copilot.TouchableOpacity>
                         </copilot.Step> */}
-                        <copilot.TouchableOpacity onPress={() => props.navigation.navigate('Intro', {user: props.user})}>
+                        <TouchableOpacity onPress={() => props.navigation.navigate('Intro', {user: props.user})}>
                             <Image style={homeCardStyle.icon}  source={Asset('guide')} />
-                        </copilot.TouchableOpacity>
+                        </TouchableOpacity>
                     </View>
                 </View>
-                <copilot.Step
+                {/* <copilot.Step
                     text="這裡一鍵就能直達你的常用網站了，很方便對吧？"
                     order={2}
                     name="shortcut"
-                    >
-                <copilot.View style={stylesheet.row}>
+                    > */}
+                {/* <copilot.View style={stylesheet.row}> */}
+                <View style={stylesheet.row}>
                     {myShortcuts && myShortcuts.map((item, index)=><HomeShortcutItem item={item} key={index} onLongPress={() => changeIcon(index)} />)}
-                </copilot.View>
-                </copilot.Step>
+                </View>
+                {/* </copilot.View> */}
+                {/* </copilot.Step> */}
 
             </View>
             <Carousel
@@ -215,13 +215,14 @@ export function HomeScreen(props) {
     )
 }
 
-export default copilot.guide({
-    overlay: "svg", // or 'view'
-    animated: true, // or false
-    labels: {
-        previous: "上一步",
-        next: "下一步",
-        skip: "跳過導覽",
-        finish: "完成",
-      }
-})(HomeScreen)
+// export default copilot.guide({
+//     overlay: "svg", // or 'view'
+//     animated: true, // or false
+//     labels: {
+//         previous: "上一步",
+//         next: "下一步",
+//         skip: "跳過導覽",
+//         finish: "完成",
+//       }
+// })(HomeScreen)
+export default HomeScreen;
