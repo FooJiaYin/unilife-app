@@ -3,6 +3,10 @@ import 'firebase/compat/auth'
 import "firebase/compat/firestore";
 import "firebase/compat/storage";
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {initializeAuth} from 'firebase/auth';
+import {getReactNativePersistence} from 'firebase/auth/react-native';
+
 const firebaseConfig = {
   apiKey: 'AIzaSyDP3xjeH4nMBWQB4Mtf9HmnYM1d8cWrDY8',
   authDomain: 'gleaming-bot-319115.firebaseapp.com',
@@ -13,7 +17,10 @@ const firebaseConfig = {
 }
 
 if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig)
+    const app = firebase.initializeApp(firebaseConfig)
+    initializeAuth(app, {
+      persistence: getReactNativePersistence(AsyncStorage),
+    });
 }
 
 export { firebase }
