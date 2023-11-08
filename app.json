@@ -3,14 +3,15 @@
     "name": "UniLife",
     "slug": "unilife",
     "scheme": "unilife",
-    "version": "2.2.0",
+    "version": "2.3.0",
     "orientation": "portrait",
     "primaryColor": "#00AEBB",
     "icon": "./assets/logo.png",
+    // "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover",
-      "backgroundColor": "#00000000"
+      "backgroundColor": "#ffffff"
     },
     "updates": {
       "fallbackToCacheTimeout": 0,
@@ -23,7 +24,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "cc.UniLife.UniLife",
-      "buildNumber": "2.2.0",
+      "buildNumber": "2.3.0",
       "usesAppleSignIn": true,
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "我們需要取用您的相片，讓您在撰寫貼文時可以選取照片",
