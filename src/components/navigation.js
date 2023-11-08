@@ -23,6 +23,7 @@ export const setHeaderOptions = (navigation, options = {}) => {
             ...headerStyle,
             ...options.style,
             title: options.title,
+            headerTitleAlign: 'center',
             headerLeft: () => (<HeaderButton {...options.headerLeft} />),
             headerRight: () => (<HeaderButton {...options.headerRight} />),
         })
@@ -91,13 +92,13 @@ export function tabIcon(icon, focused) {
 // const insets = useSafeAreaInsets();
 
 export const tabBarOptions = {
-    style: {
+    tabBarStyle: {
         paddingBottom: 5,
         paddingTop: 5,
         height: 56,
     },
-    activeTintColor: Color.blue,
-    inactiveTintColor: Color.grey1,
+    tabBarActiveTintColor: Color.blue,
+    tabBarInactiveTintColor: Color.grey1,
 }
 
 export function tabBarObject(title, icon) {
