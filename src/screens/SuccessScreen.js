@@ -100,7 +100,10 @@ export default function SuccessScreen(props) {
     
     async function onStartPress() {
         await updateUserData()
-        props.navigation.navigate('Tabs')
+        props.navigation.reset({
+            index: 0,
+            routes: [{ name: 'Tabs' }],
+        })
     }
 
     async function onVerifyPress() {

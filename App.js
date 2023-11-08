@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import { Platform } from 'react-native';
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
+import { StatusBar } from 'expo-status-bar';
 import { firebase } from './src/firebase/config'
 import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { NavigationContainer } from '@react-navigation/native'
@@ -330,6 +331,7 @@ export default function App() {
 
 	return (
 		<SafeAreaProvider>
+			<StatusBar style="dark" backgroundColor="transparent" />
 			<NavigationContainer linking={linking}>
 				{ firebase.auth().currentUser ? (
 					<Stack.Navigator>	
