@@ -28,7 +28,7 @@ export function Chip({ label, type, focused = false, size = 'small', action, sty
             },
             text: {
                 ...styles.textS,
-                // lineHeight: 12,
+                lineHeight: 16,
             }
         }),
         large: StyleSheet.create({
