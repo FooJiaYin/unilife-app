@@ -46,6 +46,7 @@ export default function Asset(name) {
     if (name == 'search') return require('../../assets/icons/search.png')
     if (name == 'send') return require('../../assets/icons/send.png')
     if (name == 'share') return require('../../assets/icons/share.png')
+    if (name == 'trash') return require('../../assets/icons/trash.png')
     if (name == 'ic-announce') return require('../../assets/icons/ic-announce.png')
     if (name == 'ic-bus') return require('../../assets/icons/ic-bus.png')
     if (name == 'ic-book') return require('../../assets/icons/ic-book.png')

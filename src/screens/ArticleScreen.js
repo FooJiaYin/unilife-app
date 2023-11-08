@@ -31,17 +31,35 @@ export default function ArticleScreen(props) {
     const options = {
         title: source,
         headerLeft: 'back',
-        headerRight: source == '社群貼文'? 
-        {
-            icon: 'report',
-            size: 20,
-            onPress: () => {
-                setModalVisibility(true)
-                // firebase.firestore().doc('users/' + user.id).get().then(snapshot => {
-                //     user = snapshot.data()
-                // })
-            }
-        } :
+        headerRight: source == '社群貼文'?
+            article.publishedBy == user.id ?
+            {
+                icon: 'trash',
+                size: 20,
+                onPress: () => {
+                    {
+                        Alert.alert('', "您確定要刪除這篇文章嗎？",
+                            [{
+                                text: "確定",
+                                onPress: () => {
+                                    firebase.firestore().collection('articles').doc(article.id).update({
+                                        status: 'deleted'
+                                    }).then(() => {
+                                        props.navigation.goBack();
+                                    });
+                                }
+                            }, {
+                                text: "取消",
+                            }]
+                        );
+                    }
+                }
+            } :
+            {
+                icon: 'report',
+                size: 20,
+                onPress: () => setModalVisibility(true)
+            } :
         {
             icon: 'chat',
             size: 18,
