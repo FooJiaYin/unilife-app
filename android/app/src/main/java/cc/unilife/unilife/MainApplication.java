@@ -1,46 +1,27 @@
 package cc.unilife.unilife;
 
 import android.app.Application;
-import android.content.Context;
-// import android.net.Uri;
 import android.content.res.Configuration;
 import androidx.annotation.NonNull;
 
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
-import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
-// import com.facebook.react.shell.MainReactPackage;
+import com.facebook.react.config.ReactFeatureFlags;
+import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
+import com.facebook.react.defaults.DefaultReactNativeHost;
 import com.facebook.soloader.SoLoader;
-// import cc.unilife.unilife.generated.BasePackageList;
 
-// import org.unimodules.adapters.react.ReactAdapterPackage;
-// import org.unimodules.adapters.react.ModuleRegistryAdapter;
-// import org.unimodules.adapters.react.ReactModuleRegistryProvider;
-// import org.unimodules.core.interfaces.Package;
-// import org.unimodules.core.interfaces.SingletonModule;
-// import expo.modules.updates.UpdatesController;
 import expo.modules.ApplicationLifecycleDispatcher;
 import expo.modules.ReactNativeHostWrapper;
 
-import com.facebook.react.bridge.JSIModulePackage;
-import com.swmansion.reanimated.ReanimatedJSIModulePackage;
-
-import java.lang.reflect.InvocationTargetException;
-// import java.util.Arrays;
 import java.util.List;
-// import javax.annotation.Nullable;
 
 public class MainApplication extends Application implements ReactApplication {
-  // private final ReactModuleRegistryProvider mModuleRegistryProvider = new ReactModuleRegistryProvider(
-  //   new BasePackageList().getPackageList()
-  // );
 
-  // private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
-    private final ReactNativeHost mReactNativeHost = new ReactNativeHostWrapper(
-      this,
-      new ReactNativeHost(this) {
+  private final ReactNativeHost mReactNativeHost =
+    new ReactNativeHostWrapper(this, new DefaultReactNativeHost(this) {
       @Override
       public boolean getUseDeveloperSupport() {
         return BuildConfig.DEBUG;
@@ -50,37 +31,25 @@ public class MainApplication extends Application implements ReactApplication {
       protected List<ReactPackage> getPackages() {
         @SuppressWarnings("UnnecessaryLocalVariable")
         List<ReactPackage> packages = new PackageList(this).getPackages();
-        // packages.add(new ModuleRegistryAdapter(mModuleRegistryProvider));
+        // Packages that cannot be autolinked yet can be added manually here, for example:
+        // packages.add(new MyReactNativePackage());
         return packages;
       }
 
-    @Override
-    protected String getJSMainModuleName() {
-      return "index";
-    }
+      @Override
+      protected String getJSMainModuleName() {
+        return ".expo/.virtual-metro-entry";
+      }
 
-    @Override
-    protected JSIModulePackage getJSIModulePackage() {
-      return new ReanimatedJSIModulePackage();
-    }
+      @Override
+      protected boolean isNewArchEnabled() {
+        return BuildConfig.IS_NEW_ARCHITECTURE_ENABLED;
+      }
 
-    // @Override
-    // protected @Nullable String getJSBundleFile() {
-    //   if (BuildConfig.DEBUG) {
-    //     return super.getJSBundleFile();
-    //   } else {
-    //     return UpdatesController.getInstance().getLaunchAssetFile();
-    //   }
-    // }
-
-    // @Override
-    // protected @Nullable String getBundleAssetName() {
-    //   if (BuildConfig.DEBUG) {
-    //     return super.getBundleAssetName();
-    //   } else {
-    //     return UpdatesController.getInstance().getBundleAssetName();
-    //   }
-    // }
+      @Override
+      protected Boolean isHermesEnabled() {
+        return BuildConfig.IS_HERMES_ENABLED;
+      }
   });
 
   @Override
@@ -92,12 +61,14 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
-
-    // if (!BuildConfig.DEBUG) {
-    //   UpdatesController.initialize(this);
-    // }
-
-    initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
+    if (!BuildConfig.REACT_NATIVE_UNSTABLE_USE_RUNTIME_SCHEDULER_ALWAYS) {
+      ReactFeatureFlags.unstable_useRuntimeSchedulerAlways = false;
+    }
+    if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
+      // If you opted-in for the New Architecture, we load the native entry point for this app.
+      DefaultNewArchitectureEntryPoint.load();
+    }
+    ReactNativeFlipper.initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
     ApplicationLifecycleDispatcher.onApplicationCreate(this);
   }
 
@@ -105,36 +76,5 @@ public class MainApplication extends Application implements ReactApplication {
   public void onConfigurationChanged(@NonNull Configuration newConfig) {
     super.onConfigurationChanged(newConfig);
     ApplicationLifecycleDispatcher.onConfigurationChanged(this, newConfig);
-  }
-
-  /**
-   * Loads Flipper in React Native templates. Call this in the onCreate method with something like
-   * initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
-   *
-   * @param context
-   * @param reactInstanceManager
-   */
-  private static void initializeFlipper(
-      Context context, ReactInstanceManager reactInstanceManager) {
-    if (BuildConfig.DEBUG) {
-      try {
-        /*
-         We use reflection here to pick up the class that initializes Flipper,
-        since Flipper library is not available in release mode
-        */
-        Class<?> aClass = Class.forName("cc.unilife.unilife.ReactNativeFlipper");
-        aClass
-            .getMethod("initializeFlipper", Context.class, ReactInstanceManager.class)
-            .invoke(null, context, reactInstanceManager);
-      } catch (ClassNotFoundException e) {
-        e.printStackTrace();
-      } catch (NoSuchMethodException e) {
-        e.printStackTrace();
-      } catch (IllegalAccessException e) {
-        e.printStackTrace();
-      } catch (InvocationTargetException e) {
-        e.printStackTrace();
-      }
-    }
   }
 }
