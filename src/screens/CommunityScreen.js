@@ -95,7 +95,15 @@ export default function CommunityScreen(props) {
                     //     newArticles[article.community].push(article)
                     // }
                     if (! user.hiddenArticles?.includes(snapshot.id) && ! user.hiddenSources?.includes(article.publishedBy)) {
-                        newArticles['all'].push(article)
+                        newArticles['all'].push({
+                            ...article, 
+                            // NOTE: This is a workaround to avoid crash after creating articles
+                            // Cause:
+                            // The id field is updated after creating article
+                            // When this onSnapshot triggered (article created), 
+                            // the id field is not yet updated
+                            id: snapshot.id,
+                        })
                     }
                     // firebase.firestore().collection('behavior').where('user','==', props.user.id).where('article', '==', snapshot.id).get().then(querySnapshot => {
                     //     if(querySnapshot.docs.length == 0) {
