@@ -56,7 +56,7 @@ export default function ArticleScreen(props) {
                 }
             } :
             {
-                icon: 'report',
+                icon: 'flag',
                 size: 20,
                 onPress: () => setModalVisibility(true)
             } :
