@@ -147,10 +147,10 @@ export default function CommunityScreen(props) {
             icon: 'refresh',
             onPress: () => loadArticles()
         },
-        headerRight: {
-            icon: 'bookmark',
-            onPress: () => props.navigation.navigate('Filter', {type: 'saved'})
-        }
+        // headerRight: {
+        //     icon: 'bookmark',
+        //     onPress: () => props.navigation.navigate('Filter', {type: 'saved'})
+        // }
     }
 
     setHeaderOptions(props.navigation, options)

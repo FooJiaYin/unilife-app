@@ -225,10 +225,10 @@ export default function ArticleListScreen(props) {
             icon: 'refresh',
             onPress: () => recommendation()
         },
-        headerRight: {
-            icon: 'bookmark',
-            onPress: () => props.navigation.push('Filter', {type: 'saved'})
-        }
+        // headerRight: {
+        //     icon: 'bookmark',
+        //     onPress: () => props.navigation.push('Filter', {type: 'saved'})
+        // }
     }
 
     useEffect(() => {
