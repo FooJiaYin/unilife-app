@@ -55,6 +55,9 @@ class Time {
     }
     fromNow = (args) => this.from(new Time(), args)
     toNow = (args) => this.to(new Time(), args)
+    diff(...args)  {
+        return this.now.diff(args[0].now, args[1])
+    }
 } 
 
 export default function time(args) {
