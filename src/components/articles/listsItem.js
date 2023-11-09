@@ -181,13 +181,13 @@ export function ListItem({ item, onPress, style, onButtonPress, chipAction, ...p
                                 {time(data.publishedAt).fromNow('en')}
                             </Text>
                             {/* <Icon size={14} name="bookmark" style={style? style.bottomIcon : {}}/> */}
-                            {/* <TouchableOpacity onPress={() => {}} style={{...listItemStyle.bottomIcon, flexDirection: 'row'}}>
+                            <View style={{...listItemStyle.bottomIcon, flexDirection: 'row'}}>
                                 <Image source={Asset(isLiked? `love-active` : `love`)} style={[iconStyle]} />
                                 <Text style={[style? style.bottomText: null, listItemStyle.bottomText, {flex: 0, marginLeft: 4}]}>{stats && stats.like? stats.like : 0 }</Text>
-                            </TouchableOpacity>
+                            </View>
                             <TouchableOpacity onPress={() => handleButtonPress()} style={listItemStyle.bottomIcon}>
                                 <Image source={Asset(isSaved? `bookmark-active` : `bookmark`)} style={[iconStyle]} />
-                            </TouchableOpacity> */}
+                            </TouchableOpacity>
                             {/* <TouchableOpacity onPress={() => setShowOption(true)} style={listItemStyle.bottomIcon}>
                                 <Image source={Asset('option')} style={[iconStyle]} />
                             </TouchableOpacity> */}
