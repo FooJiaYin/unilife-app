@@ -15,5 +15,8 @@ export const ArticleList = React.memo(
         nestedScrollEnabled={true}
         contentContainerStyle={{ marginBottom: 0, paddingBottom: 150 }}
     />, 
-    (prevProps, nextProps) => nextProps.articles && (prevProps.articles && prevProps.articles[4]?.id) === nextProps.articles[4]?.id
+    (prevProps, nextProps) => nextProps.articles && 
+        (prevProps.articles && prevProps.articles[0]?.id) === nextProps.articles[0]?.id && 
+        (prevProps.articles[prevProps.articles.length-1]?.id === nextProps.articles[nextProps.articles.length-1]?.id && 
+        prevProps.articles.length === nextProps.articles.length)
 );
