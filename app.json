@@ -3,14 +3,15 @@
     "name": "UniLife",
     "slug": "unilife",
     "scheme": "unilife",
-    "version": "2.2.0",
+    "version": "2.3.3",
     "orientation": "portrait",
     "primaryColor": "#00AEBB",
     "icon": "./assets/logo.png",
+    // "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover",
-      "backgroundColor": "#00000000"
+      "backgroundColor": "#ffffff"
     },
     "updates": {
       "fallbackToCacheTimeout": 0,
@@ -23,7 +24,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "cc.UniLife.UniLife",
-      "buildNumber": "2.2.0",
+      "buildNumber": "2.3.3",
       "usesAppleSignIn": true,
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "我們需要取用您的相片，讓您在撰寫貼文時可以選取照片",
@@ -36,7 +37,7 @@
     },
     "android": {
       "package": "cc.unilife.unilife",
-      "versionCode": 26,
+      "versionCode": 28,
       "googleServicesFile": "./google-services.json",
       // TODO: Comment out the below line to run on expo go
       "runtimeVersion": "1.0.0"

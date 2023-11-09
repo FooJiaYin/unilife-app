@@ -17,10 +17,10 @@ import { ArticleListScreen, CommunityScreen, FilterScreen, ArticleScreen, Commen
 import { ChatroomScreen, MessageScreen } from './src/screens'
 import { SettingScreen, ProfileScreen } from './src/screens'
 import { tabBarObject, tabBarOptions } from './src/components/navigation'
-import {decode, encode} from 'base-64'
+// import {decode, encode} from 'base-64'
 // import Test from './src/screens/text'
-if (!global.btoa) {  global.btoa = encode }
-if (!global.atob) { global.atob = decode }
+// if (!global.btoa) {  global.btoa = encode }
+// if (!global.atob) { global.atob = decode }
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator();
@@ -98,7 +98,10 @@ async function registerForPushNotificationsAsync() {
 		}
 
 		let experienceId = '@foojiayin/unilife';
-		token = (await Notifications.getExpoPushTokenAsync({experienceId: '@foojiayin/unilife'})).data;
+		token = (await Notifications.getExpoPushTokenAsync({
+			experienceId: '@foojiayin/unilife',
+			projectId: '8056de9e-2c29-48ec-afd0-fe9f2e5ff125'
+		})).data;
 		// console.log(token);
 	} else {
 		alert('Must use physical device for Push Notifications');
@@ -299,13 +302,14 @@ export default function App() {
 		const insets = useSafeAreaInsets();
 		return (
 			props.user ? (
-			<Tab.Navigator lazy={true} tabBarOptions={{...tabBarOptions, 
-				keyboardHidesTabBar: Platform.OS === "android",
-				style: {
+			<Tab.Navigator lazy={true} screenOptions={{...tabBarOptions, 
+				tabBarHideOnKeyboard: Platform.OS === "android",
+				tabBarStyle: {
 					paddingBottom: insets.bottom,
 					paddingTop: 10,
-					height: 60 + insets.bottom
-				}
+					height: 60 + insets.bottom,
+				},
+				headerShown: false 
 			}} safeAreaInsets={{bottom: insets.bottom}}>
 				<Tab.Screen name="HomeStack" options={tabBarObject('主頁', 'home')}>
 					{props => <HomeStackScreen {...props} user={user} />}

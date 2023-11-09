@@ -57,7 +57,7 @@ export const styles = StyleSheet.create({
     },
     bg: {
         flex: 1,
-        height: 800,
+        height: '100%',
         top: 0,
         width: '100%',
         justifyContent: "center",

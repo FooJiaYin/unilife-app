@@ -130,10 +130,6 @@ export default function RegistrationScreen(props) {
             Alert.alert('', "請設定暱稱")
             return
         }
-        if (!info.gender || info.gender == '') {
-            Alert.alert('', "請設定性別")
-            return
-        }
         if (!identity.county || identity.county == '') {
             Alert.alert('', "請選擇縣市")
             return
@@ -236,6 +232,18 @@ export default function RegistrationScreen(props) {
                         underlineColorAndroid="transparent"
                         autoCapitalize="none"
                     />
+                    <PasswordInput
+                        placeholder='密碼（至少6字元）'
+                        onChangeText={(text) => setPassword(text)}
+                        value={password}
+                    />
+                    <PasswordInput
+                        placeholder='再次輸入密碼'
+                        onChangeText={(text) => setConfirmPassword(text)}
+                        value={confirmPassword}
+                    />
+                    <Text style={{...stylesheet.textCenter, ...stylesheet.textS, ...stylesheet.textGrey, margin: 8}}>為了提供你生活圈中的在地資訊，{"\n"}
+                    我們需要請你提供主要居住的縣市與行政區資訊。</Text>
                     <Select 
                         value={identity.county} 
                         items={options.counties}
@@ -247,35 +255,6 @@ export default function RegistrationScreen(props) {
                         items={options.districts}
                         onChange={(input) => setIdentity({ ...identity, district: input })}
                         placeholder='請選擇行政區（必填）...'
-                    />
-                    <Select 
-                        // value={info.gender} 
-                        items={options.gender}
-                        onChange={(input) => setInfo({ ...info, gender: input })}
-                        placeholder='請選擇您的性別（必填）...'
-                    />
-                    <TextInput
-                        style={stylesheet.input}
-                        value={info.birthday? time(info.birthday).format('YYYY-MM-DD') : ''}
-                        placeholder={Platform.OS === 'android'?`生日（點選日曆上方${new Date().getFullYear()}即可快速選取年份）`: '生日'}
-                        placeholderTextColor="#aaaaaa"
-                        underlineColorAndroid="transparent"
-                        autoCapitalize="none"
-                        showSoftInputOnFocus={false}
-                        onFocus={()=>{
-                            setDatePickerVisibility(true)
-                            Keyboard.dismiss()}
-                        }
-                    />
-                    <PasswordInput
-                        placeholder='密碼（至少6字元）'
-                        onChangeText={(text) => setPassword(text)}
-                        value={password}
-                    />
-                    <PasswordInput
-                        placeholder='再次輸入密碼'
-                        onChangeText={(text) => setConfirmPassword(text)}
-                        value={confirmPassword}
                     />
                     <View style={stylesheet.footerView}>
                         <Text style={stylesheet.footerText}>                            

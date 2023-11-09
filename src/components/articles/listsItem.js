@@ -8,10 +8,10 @@ import { firebase } from '../../firebase/config'
 import { NavigationContainer, CommonActions } from '@react-navigation/native';
 
 export function ListItem({ item, onPress, style, onButtonPress, chipAction, ...props }) {
-    const [ isSaved, setIsSaved ] = useState(item.isSaved)
+    const [ isSaved, setIsSaved ] = useState(item?.isSaved)
     const [ isLiked, setIsLiked ] = useState(false)
     const [ imageUrl, setImageUrl ] = useState(item.images && item.images.src ? item.images.src : '')
-    const [ stats, setStats ] = useState(item.stats)
+    const [ stats, setStats ] = useState(item?.stats)
     const [ data, setData ] = useState({
         meta: {},
         tags: [],
@@ -158,13 +158,15 @@ export function ListItem({ item, onPress, style, onButtonPress, chipAction, ...p
                             onTextLayout={(e) => onTextLayout(e)}
                             numberOfLines={2}
                             ellipsizeMode={"tail"}>
-                            {data.title}
+                            {data.title?.replace(/(\r\n|\n|\r)/gm, "")}
                         </Text>
                         <Text style={style? [listItemStyle.description, style.description] : listItemStyle.description}
                             numberOfLines={2}
                             // onLayout={(e) => setDescriptionLines(e.nativeEvent.layout.height > 34 ? 2 : 1)}
                             ellipsizeMode={"tail"}>
-                            {data.meta.abstract}
+                            {   // remove line breaks
+                                data.meta.abstract?.replace(/(\r\n|\n|\r)/gm, "")
+                            }
                         </Text>
                         <View style={[style? style.bottom : null, listItemStyle.bottom]}>
                             {/* (for tags of data.tags) */}
@@ -181,10 +183,10 @@ export function ListItem({ item, onPress, style, onButtonPress, chipAction, ...p
                                 {time(data.publishedAt).fromNow('en')}
                             </Text>
                             {/* <Icon size={14} name="bookmark" style={style? style.bottomIcon : {}}/> */}
-                            <TouchableOpacity onPress={() => {}} style={{...listItemStyle.bottomIcon, flexDirection: 'row'}}>
+                            <View style={{...listItemStyle.bottomIcon, flexDirection: 'row'}}>
                                 <Image source={Asset(isLiked? `love-active` : `love`)} style={[iconStyle]} />
                                 <Text style={[style? style.bottomText: null, listItemStyle.bottomText, {flex: 0, marginLeft: 4}]}>{stats && stats.like? stats.like : 0 }</Text>
-                            </TouchableOpacity>
+                            </View>
                             <TouchableOpacity onPress={() => handleButtonPress()} style={listItemStyle.bottomIcon}>
                                 <Image source={Asset(isSaved? `bookmark-active` : `bookmark`)} style={[iconStyle]} />
                             </TouchableOpacity>
@@ -200,6 +202,9 @@ export function ListItem({ item, onPress, style, onButtonPress, chipAction, ...p
 }
 
 export function ArticleListItem(props) {
+    useEffect(() => {
+        // console.log(props.item.id)
+    }, [props.item])
         
     async function setBehavior(article, action) {
         let behaviorRef
@@ -258,7 +263,7 @@ export function ArticleListItem(props) {
 
     function toggleSaveArticle(article) {
     // console.log(article)
-        if (article.isSaved) {
+        if (article?.isSaved) {
             setBehavior(article, 'unsave')
             props.user.ref.update({
                 bookmarks: firebase.firestore.FieldValue.arrayRemove(article.id)

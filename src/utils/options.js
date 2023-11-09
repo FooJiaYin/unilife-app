@@ -1,7 +1,7 @@
 export const defaultOptions = {
     counties: [
         // { label: '基隆市', value: 'keelung' },
-        { label: '臺北市', value: 'taipei' },
+        // { label: '臺北市', value: 'taipei' },
         // { label: '新北市', value: 'newtaipei' },
         // { label: '桃園市', value: 'taoyuan' },
         // { label: '新竹市', value: 'hsinchuCity' },

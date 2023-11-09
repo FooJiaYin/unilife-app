@@ -335,19 +335,9 @@ export default function NewArticleScreen(props) {
                                 style={stylesheet.footerLink}>發文規範</Text>
                         </Text>
                     </View>
-                    <Text style={{...stylesheet.textS, ...stylesheet.textGrey, margin: 12}}>
-                        請注意，您在網路上的發言須負法律上的責任。請在發布訊息前進行查證，假消息可能會危及他人的健康。
-                    </Text>
-                    <Text style={{...stylesheet.textS, ...stylesheet.textGrey, marginHorizontal: 12, marginBottom: 28}}>
-                        若是您在UniLife看見不實資訊，請聯繫我們的
-                        <Text onPress={()=>WebBrowser.openBrowserAsync('https://supr.link/HjULp')} style={{...stylesheet.footerLink, ...stylesheet.textS, opacity: 1}}>
-                            檢舉受理單位
-                        </Text>
-                        ，或是點選
-                        <Text onPress={()=>WebBrowser.openBrowserAsync('https://supr.link/xltJy')} style={{...stylesheet.footerLink, ...stylesheet.textS, opacity: 1}}>
-                            聯絡客服
-                        </Text>
-                        洽客服人員尋求協助。UniLife團隊目前的人力無法審核所有的言論，懇請大家跟我們一起維護良好的社群風氣。
+                    <Text style={{...stylesheet.textS, ...stylesheet.textGrey, margin: 12, marginBottom: 28}}>
+                        一個好的地方社群，需要大家一起打造。{"\n\n"}
+                        歡迎你分享各種與在地社群相關的內容，但請務必遵守我們的發文規範讓我們一起維護良好的社群風氣。違反發文規範的文章將會被移除。
                     </Text>
                     {/* <Text style={{...stylesheet.textS, ...stylesheet.textGrey, margin: 12}}>
                         發文後，請按文章列表左上角的重新整理按鈕，這樣您的文章才會出現在您的列表。

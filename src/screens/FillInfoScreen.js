@@ -122,10 +122,6 @@ export default function FillInfoScreen(props) {
             Alert.alert('', "請設定暱稱")
             return
         }
-        if (!info.gender || info.gender == '') {
-            Alert.alert('', "請設定性別")
-            return
-        }
         if (!identity.county || identity.county == '') {
             Alert.alert('', "請選擇縣市")
             return
@@ -210,6 +206,8 @@ export default function FillInfoScreen(props) {
                         autoCapitalize="none"
                         editable={false}
                     />
+                    <Text style={{...stylesheet.textCenter, ...stylesheet.textS, ...stylesheet.textGrey, margin: 8}}>為了提供你生活圈中的在地資訊，{"\n"}
+                    我們需要請你提供主要居住的縣市與行政區資訊。</Text>
                     <Select 
                         value={identity.county} 
                         items={options.counties}
@@ -221,25 +219,6 @@ export default function FillInfoScreen(props) {
                         items={options.districts}
                         onChange={(input) => setIdentity({ ...identity, district: input })}
                         placeholder='請選擇行政區（必填）...'
-                    />
-                    <Select 
-                        // value={info.gender} 
-                        items={options.gender}
-                        onChange={(input) => setInfo({ ...info, gender: input })}
-                        placeholder='請選擇您的性別（必填）...'
-                    />
-                    <TextInput
-                        style={stylesheet.input}
-                        value={info.birthday? time(info.birthday).format('YYYY-MM-DD') : ''}
-                        placeholder={Platform.OS === 'android'?`生日（點選日曆上方${new Date().getFullYear()}即可快速選取年份）`: '生日'}
-                        placeholderTextColor="#aaaaaa"
-                        underlineColorAndroid="transparent"
-                        autoCapitalize="none"
-                        showSoftInputOnFocus={false}
-                        onFocus={()=>{
-                            setDatePickerVisibility(true)
-                            Keyboard.dismiss()}
-                        }
                     />
                     <View style={stylesheet.footerView}>
                         <Text style={stylesheet.footerText}>                            

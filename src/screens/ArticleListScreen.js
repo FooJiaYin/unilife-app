@@ -214,6 +214,9 @@ export default function ArticleListScreen(props) {
                         })
                     }
                 }
+                
+                user.recommendation = recommendations.all
+                loadArticles();
             })
         }
     }
@@ -223,7 +226,7 @@ export default function ArticleListScreen(props) {
         title: 'Uni資訊',
         headerLeft: {
             icon: 'refresh',
-            onPress: () => recommendation()
+            onPress: () => recommendation(user)
         },
         headerRight: {
             icon: 'bookmark',
@@ -244,7 +247,7 @@ export default function ArticleListScreen(props) {
         React.useCallback(() => {
             // console.log("focus", user)
             checkAuthStatus(user, props, "馬上完成註冊，解鎖資訊列表。\n取得專屬於你的在地新聞與活動！")
-            if (user) recommendation()
+            if (user) recommendation(user)
         }, [user?.id])
     )
 
@@ -252,7 +255,7 @@ export default function ArticleListScreen(props) {
 
     return (
         <View style={stylesheet.container}>
-            <ArticleTabs key={'news'} titles={['所有文章', '公佈欄', '在地生活', '精選内容']} articles={articles} {...props} />
+            <ArticleTabs key={'news'} titles={['所有文章', '公佈欄', '在地生活', '在地新聞']} articles={articles} {...props} />
         </View>
     )
 }

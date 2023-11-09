@@ -3,7 +3,7 @@ import { StyleSheet, View, Image, TouchableOpacity, Text, TextInput, useWindowDi
 // import { InputToolbar } from 'react-native-gifted-chat'
 import * as GiftedChat from 'react-native-gifted-chat'
 import { styles, stylesheet } from '../styles'
-import Asset from './assets'
+import { Icon } from './assets'
 import { Button } from './forms'
 import { ProfileImage } from './profileImage'
 import time from '../utils/time'
@@ -199,7 +199,7 @@ export function InputBar({sendMessage, like, setLike}, ...props) {
     // </View>
         <View style={[stylesheet.borderTop, stylesheet.inputBar]}>
             <TouchableOpacity onPress={() => setLike(!like)}>
-                <Image source={like? Asset('like-active') : Asset('like')} style={[stylesheet.iconColor, {width: 36, height: 36, marginRight: 14}]} />
+                <Icon name={like? 'love-active' : 'love'} size={24} style={{marginLeft: 4}} />
             </TouchableOpacity>
             <TextInput
                 style={{...stylesheet.input, flex: 1}}
@@ -218,7 +218,7 @@ export function InputBar({sendMessage, like, setLike}, ...props) {
 export function SendButton ({input, onSend}) {
     return(
         <TouchableOpacity onPress={() => onSend(input)}>
-            <Image source={Asset('send')} style={[stylesheet.icon, {width: 20, height: 20}]} />
+            <Icon name={'send'} size={20} />
         </TouchableOpacity>
     )
 }
