@@ -139,7 +139,7 @@ export default function RegistrationScreen(props) {
             return
         }
         if (!identity.county || identity.county == '') {
-            Alert.alert('', "請選擇縣市")
+            Alert.alert('', "請選擇地區")
             return
         }
         if (!identity.district || identity.district == '') {
@@ -251,12 +251,12 @@ export default function RegistrationScreen(props) {
                         value={confirmPassword}
                     />
                     <Text style={{...stylesheet.textCenter, ...stylesheet.textS, ...stylesheet.textGrey, margin: 8}}>為了提供你生活圈中的在地資訊，{"\n"}
-                    我們需要請你提供主要居住的縣市與行政區資訊。</Text>
+                    我們需要請你提供主要居住的地區與行政區資訊。</Text>
                     <Select 
                         value={identity.county} 
                         items={options.counties}
                         onChange={(input) => setCounty(input)}
-                        placeholder='請選擇縣市（必填）...'
+                        placeholder='請選擇地區（必填）...'
                     />
                     <Select 
                         value={identity.district} 

@@ -105,7 +105,7 @@ export default function ProfileScreen(props) {
             return
         }
         if (!identity.county || identity.county == '') {
-            Alert.alert('', "請選擇縣市")
+            Alert.alert('', "請選擇地區")
             return
         }
         if (!identity.district || identity.district == '') {
@@ -208,7 +208,7 @@ export default function ProfileScreen(props) {
                         value={identity.county} 
                         items={options.counties}
                         onChange={(input) => setCounty(input)}
-                        placeholder='請選擇縣市...'
+                        placeholder='請選擇地區...'
                     />
                     <Select 
                         value={identity.district} 
