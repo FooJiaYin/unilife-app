@@ -56,7 +56,7 @@ export const styles = {
     footerView: {
         // flex: 1,
         alignItems: "center",
-        marginTop: 20,
+        marginTop: 60,
         marginBottom: 60,
     },
     footerText: {

@@ -127,8 +127,8 @@ export default function LoginScreen({navigation, ...props}) {
                 source={Asset('logo_with_text.png')}
             />
             <View style={{flex: 1}} />
-            <Button onPress={startTrial} style={[stylesheet.bgGreen, {marginHorizontal: 50, marginBottom: 10, height: 80}]} title="點擊試用，認識UniLife" />
-            <Button onPress={lineLogin} style={[stylesheet.bgBlue, {marginHorizontal: 50, marginBottom: 10}]} title="LINE 註冊/登入" />
+            {/* <Button onPress={startTrial} style={[stylesheet.bgGreen, {marginHorizontal: 50, marginBottom: 10, height: 80}]} title="點擊試用，認識UniLife" /> */}
+            <Button onPress={lineLogin} style={[stylesheet.bgGreen, {marginHorizontal: 50, marginBottom: 10}]} title="LINE 註冊/登入" />
             <Button onPress={emailLogin} style={[stylesheet.bgBlue, {marginHorizontal: 50, marginBottom: 10}]} title="Email 註冊/登入" />
             {Platform.OS === 'ios' &&
                 <AppleAuthentication.AppleAuthenticationButton
