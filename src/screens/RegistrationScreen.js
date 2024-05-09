@@ -37,6 +37,14 @@ export default function RegistrationScreen(props) {
         setCurrentHTML(termsData.terms)
     }
 
+    async function loadOverseasOptions() {
+        // doc list with type: 'overseas'
+        let snapshot = await firebase.firestore().collection('communities').where('type', '==', 'overseas').get()
+        let data = await snapshot.docs.map(doc => doc.data())
+        let options = data.map(doc => ({value: doc.id, label: doc.name}))
+        return options
+    }
+
     async function setCounty(county) {
         if (county != identity.county) {
             setIdentity({ 
@@ -47,7 +55,7 @@ export default function RegistrationScreen(props) {
         }
         let snapshot = await firebase.firestore().doc('communities/' + county).get()
         let data = await snapshot.data()
-        let districts = data && data.districts? data.districts.map(district => ({value: (data.name + district), label: district})) : [];
+        let districts = data && data.districts? data.districts.map(district => ({value: (data.name + district), label: district})) : await loadOverseasOptions()
         setOptions({...options, districts: districts})
     }
 

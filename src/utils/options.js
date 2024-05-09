@@ -22,6 +22,7 @@ export const defaultOptions = {
         // { label: '澎湖縣', value: 'penghu' },
         // { label: '金門縣', value: 'kinmen' },
         // { label: '連江縣', value: 'matsu' },
+        { label: '海外', value: 'overseas' },
     ],
     // grade: [
     //     {label: '一年級', value: 1},
