@@ -105,7 +105,8 @@ export default function IntroScreen(props) {
                     <Text style={guideStyles.buttonText}>下一步</Text>
                 </TouchableOpacity> 
                 :
-                <TouchableOpacity style={{ flexShrink: 0 }} onPress={ () => props.route.params.anonymous ? props.navigation.goBack() : props.navigation.replace('Tabs', {user: props.user, screen: 'CommunityStack'}) }>
+                // <TouchableOpacity style={{ flexShrink: 0 }} onPress={ () => props.navigation.replace('Tabs', {user: props.user, screen: 'CommunityStack'}) }>
+                <TouchableOpacity style={{ flexShrink: 0 }} onPress={ () => props.navigation.goBack() }>
                     <Text style={guideStyles.buttonText}>結束</Text>
                 </TouchableOpacity>
                 }

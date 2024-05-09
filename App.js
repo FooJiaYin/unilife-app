@@ -302,15 +302,21 @@ export default function App() {
 		const insets = useSafeAreaInsets();
 		return (
 			props.user ? (
-			<Tab.Navigator lazy={true} screenOptions={{...tabBarOptions, 
-				tabBarHideOnKeyboard: Platform.OS === "android",
-				tabBarStyle: {
-					paddingBottom: insets.bottom,
-					paddingTop: 10,
-					height: 60 + insets.bottom,
-				},
-				headerShown: false 
-			}} safeAreaInsets={{bottom: insets.bottom}}>
+			<Tab.Navigator 
+				lazy={true} 
+				screenOptions={{
+					...tabBarOptions, 
+					tabBarHideOnKeyboard: Platform.OS === "android",
+					tabBarStyle: {
+						paddingBottom: insets.bottom,
+						paddingTop: 10,
+						height: 60 + insets.bottom,
+					},
+					headerShown: false,
+				}} 
+				initialRouteName="CommunityStack"
+				safeAreaInsets={{bottom: insets.bottom}}
+			>
 				<Tab.Screen name="HomeStack" options={tabBarObject('主頁', 'home')}>
 					{props => <HomeStackScreen {...props} user={user} />}
 				</Tab.Screen>
