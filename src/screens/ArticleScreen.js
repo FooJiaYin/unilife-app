@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { FlatList, Alert, Text, SafeAreaView, TouchableOpacity, ScrollView, View, KeyboardAvoidingView, TextInput, useWindowDimensions } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { setHeaderOptions } from '../components/navigation'
+import { HeaderButton, setHeaderOptions } from '../components/navigation'
 import { stylesheet, htmlStyles } from '../styles/styles'
 import { firebase } from '../firebase/config'
 import RenderHtml from 'react-native-render-html'
@@ -16,82 +16,111 @@ import time from '../utils/time'
 import { tagNames } from '../firebase/functions'
 
 export default function ArticleScreen(props) {
+    let articleId = props.route.params.article?.id ?? props.route.params.id;
+    let user = props.user.data();
+    const storageRef = firebase.storage().ref();
+    const commentsRef = firebase.firestore().collection('articles').doc(articleId).collection('comments');
 
-    let article = props.route.params.article
-    let user = props.user.data()
-    const storageRef = firebase.storage().ref()
-    const commentsRef = firebase.firestore().collection('articles').doc(article.id).collection('comments')
-
-    const [content, setContent] = useState(article.content)
+    const [article, setArticle] = useState(props.route.params.article)
+    const [content, setContent] = useState(props.route.params.article?.content ?? "")
     const [liked, setLiked] = useState(false)
     const [messages, setMessages] = useState([])
-    const [source, setSource] = useState(article.meta.source)
+    const [source, setSource] = useState(props.route.params.article?.meta.source ?? "")
     const [isModalVisible, setModalVisibility] = useState(false)
 
-    const options = {
-        title: source,
-        headerLeft: 'back',
-        headerRight: source == '社群貼文'?
-            article.publishedBy == user.id ?
-            {
-                icon: 'trash',
-                size: 20,
-                onPress: () => {
-                    {
-                        Alert.alert('', "您確定要刪除這篇文章嗎？",
-                            [{
-                                text: "確定",
-                                onPress: () => {
-                                    firebase.firestore().collection('articles').doc(article.id).update({
-                                        status: 'deleted'
-                                    }).then(() => {
-                                        props.navigation.goBack();
-                                    });
-                                }
-                            }, {
-                                text: "取消",
-                            }]
-                        );
-                    }
-                }
-            } :
-            {
-                icon: 'flag',
-                size: 20,
-                onPress: () => setModalVisibility(true)
-            } :
-        {
-            icon: 'chat',
-            size: 18,
-            onPress: () => {
-                firebase.firestore().doc('users/' + user.id).get().then(snapshot => {
-                    user = snapshot.data()
-                    const verification = snapshot.data().verification
-                    if (verification && verification.status == true) {
-                        props.navigation.navigate('Comment', {article: article, commentsRef: commentsRef})
-                    } else {
-                        Alert.alert('', "您尚未完成身分驗證，請先完成學生身分驗證。",
-                            [{
-                                text: "前往驗證",
-                                onPress: () =>props.navigation.navigate('Verification', {user: props.user})
-                            }, {
-                                text: "取消",
-                                // onPress: () => console.log("Cancel Pressed"),
-                                style: "cancel"
-                            }]
-                        )
-                    }
-                })
-            }
+    useEffect(() => {
+        console.log('loading article', props.route.params.id)
+        if (props.route.params.id) {
+            firebase.firestore().collection('articles').doc(articleId).get().then(snapshot => {
+                setArticle(snapshot.data());
+            });
+        } else {
+            setHeader(props.route.params.article);
+            loadSource(props.route.params.article);
+            setImages(props.route.params.article);
         }
+        loadMessages()
+    }, []);
+
+    useEffect(() => {
+        if (!article) return;
+        setSource(article?.meta.source);
+        setHeader(article)
+        loadSource(article);
+        setImages(article);
+    }, [article]);
+
+    setHeaderOptions(props.navigation, {
+        title: source,
+        headerLeft: 'back'
+    });
+
+    function setHeader(article) {
+        const headerRight = source == '社群貼文' ?
+            article?.publishedBy == user.id ?
+                {
+                    icon: 'trash',
+                    size: 20,
+                    onPress: () => {
+                        {
+                            Alert.alert('', "您確定要刪除這篇文章嗎？",
+                                [{
+                                    text: "確定",
+                                    onPress: () => {
+                                        firebase.firestore().collection('articles').doc(articleId).update({
+                                            status: 'deleted'
+                                        }).then(() => {
+                                            props.navigation.goBack();
+                                        });
+                                    }
+                                }, {
+                                    text: "取消",
+                                }]
+                            );
+                        }
+                    }
+                } :
+                {
+                    icon: 'flag',
+                    size: 20,
+                    onPress: () => setModalVisibility(true)
+                } :
+            {
+                icon: 'chat',
+                size: 18,
+                onPress: () => {
+                    firebase.firestore().doc('users/' + user.id).get().then(snapshot => {
+                        user = snapshot.data();
+                        const verification = snapshot.data().verification;
+                        if (verification && verification.status == true) {
+                            props.navigation.navigate('Comment', { article: article, commentsRef: commentsRef });
+                        } else {
+                            Alert.alert('', "您尚未完成身分驗證，請先完成學生身分驗證。",
+                                [{
+                                    text: "前往驗證",
+                                    onPress: () => props.navigation.navigate('Verification', { user: props.user })
+                                }, {
+                                    text: "取消",
+                                    // onPress: () => console.log("Cancel Pressed"),
+                                    style: "cancel"
+                                }]
+                            );
+                        }
+                    });
+                }
+            };
+        props.navigation.setOptions({
+            headerRight: () => (<HeaderButton {...headerRight} />),
+        });
     }
     setHeaderOptions(props.navigation, options)
  // console.log('title', article.meta.source)
 
-    /* Get Images */
-    let newContent = content;
-    storageRef.child('articles/' + article.id + '/images/').listAll()
-    // storageRef.child('articles/9qAFUBpb7n0U1bzylreO/images/').listAll()
+    function setImages(article) {
+        /* Get Images */
+        let newContent = article.content;
+        storageRef.child('articles/' + article.id + '/images/').listAll()
+        // storageRef.child('articles/9qAFUBpb7n0U1bzylreO/images/').listAll()
         .then(async res => {
             for (const imageRef of res.items) {
                 // console.log('<img src="'+imageRef.name+'"')
@@ -102,26 +131,27 @@ export default function ArticleScreen(props) {
             }
             setContent(newContent)
         })
-    
-    function loadSource() {
-        if (source == '社群貼文') {
+    }
+
+    function loadSource(article) {
+        if (article.meta.source == '社群貼文') {
             firebase.firestore().doc('users/' + article.publishedBy).get().then(snapshot => {
                 setSource(snapshot.data().info.nickname)
             })
             firebase.firestore().doc('communities/' + article.community).get().then(snapshot => {
-                setHeaderOptions(props.navigation, {...options, title: snapshot.name})
+                props.navigation.setOptions({ title: snapshot.data().name })
             })
         }
     }
 
     function loadMessages() {
-        firebase.firestore().collection('behavior').where('user','==', user.id).where('article', '==', article.id).get().then(querySnapshot => {
+        firebase.firestore().collection('behavior').where('user','==', user.id).where('article', '==', articleId).get().then(querySnapshot => {
             let data = querySnapshot.docs[0].data()
             // console.log(data.stats.like)
             setLiked(data.stats.like)
         })
         commentsRef.orderBy('timestamp').onSnapshot(querySnapshot => {
-        // commentsRef.orderBy('timestamp').get().then(querySnapshot => {
+            // commentsRef.orderBy('timestamp').get().then(querySnapshot => {
             const messageList = []
             let promises = []
             querySnapshot.forEach(async doc => {
@@ -198,7 +228,7 @@ export default function ArticleScreen(props) {
                 //         avatar: user.info.profileImage
                 //     }
                 // })
-                firebase.firestore().collection('behavior').where('user','==', user.id).where('article', '==', article.id).get().then(querySnapshot => {
+                firebase.firestore().collection('behavior').where('user', '==', user.id).where('article', '==', articleId).get().then(querySnapshot => {
                     let behaviorRef = querySnapshot.docs[0].ref
                     let data = querySnapshot.docs[0].data()
                     behaviorRef.update({
@@ -212,7 +242,7 @@ export default function ArticleScreen(props) {
                         })
                     })
                 })
-                firebase.firestore().collection('articles').doc(article.id).update({
+                firebase.firestore().collection('articles').doc(articleId).update({
                     stats: {
                         ...article.stats,
                         comment: article.stats.comment + 1,
@@ -236,7 +266,7 @@ export default function ArticleScreen(props) {
 
     function like(_liked) {
         setLiked(_liked)
-        firebase.firestore().collection('behavior').where('user','==', user.id).where('article', '==', article.id).get().then(querySnapshot => {
+        firebase.firestore().collection('behavior').where('user', '==', user.id).where('article', '==', articleId).get().then(querySnapshot => {
             let behaviorRef = querySnapshot.docs[0].ref
             // console.log(behaviorRef.id)
             let data = querySnapshot.docs[0].data()
@@ -253,7 +283,7 @@ export default function ArticleScreen(props) {
         })
         article.stats.like = article.stats.like || 0
         article.stats.like = _liked ? article.stats.like + 1 : article.stats.like - 1
-        firebase.firestore().collection('articles').doc(article.id).update({
+        firebase.firestore().collection('articles').doc(articleId).update({
             stats: {
                 ...article.stats,
                 like: article.stats.like
@@ -261,21 +291,12 @@ export default function ArticleScreen(props) {
         })
     }
 
-    useEffect(() => {
-        loadMessages()
-        loadSource()
-    }, [])
-
-    const Chips = []
-    for (const tag of (article.tags || [])) {
-        Chips.push(<Chip label={tagNames[tag] || tag} type={'tag'} action={()=>props.navigation.push('Filter', {type: 'tag', data: tag}) } />)
-    }
-
-    const Wrapper = (props) => Platform.OS === "ios" ? <KeyboardAwareScrollView>{props.children}</KeyboardAwareScrollView> : <View>{props.children}</View>
+    const Wrapper = (props) => Platform.OS === "ios" ? <KeyboardAwareScrollView>{props.children}</KeyboardAwareScrollView> : <View>{props.children}</View>;
 
     return (
         <SafeAreaView style={stylesheet.container}>
             <ReportModal visible={isModalVisible} onClose={()=>setModalVisibility(false)} article={{...article, source}} user={user} />
+            {article &&
             <View style={{ flex: 1, }}>{(article.meta.url && article.meta.url != '') ? 
                 <WebView source={{ uri: article.meta.url }} />
                 :
@@ -289,12 +310,12 @@ export default function ArticleScreen(props) {
                                 {source + ' @ '}
                                 {time(article.publishedAt).format('YYYY/M/D h:mm a')}
                             </Text>
-                            { Chips }
+                            {article.tags && article.tags.map((tag) => <Chip label={tagNames[tag] || tag} type={'tag'} action={() => props.navigation.push('Filter', { type: 'tag', data: tag })} />)}
                         </View>
                         <RenderHtml
                             source={{html: content}}
                             tagsStyles={htmlStyles}
-                            contentWidth={useWindowDimensions().width - 40}
+                            // contentWidth={useWindowDimensions().width - 40}
                         />
                     </View>
                     {user.verification && user.verification.status == true &&
@@ -321,6 +342,7 @@ export default function ArticleScreen(props) {
             }
        
             </View>
+            }
             <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={90} enabled={Platform.OS === "ios"}>
       
             <InputBar sendMessage={sendMessage} like={liked} setLike={like} />
