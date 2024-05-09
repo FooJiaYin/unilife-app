@@ -69,6 +69,23 @@ export function HomeScreen(props) {
                 }
             })
         }
+        if (user.id != "anonymous") {   
+            const timestamp = firebase.firestore.Timestamp.now()
+            firebase.firestore().collection('userActivity').add({
+                user: user.id,
+                action: 'home',
+                time: timestamp
+            }).then(() => {
+                // see if there is a duplicate user activity wuth same action and time
+                firebase.firestore().collection('userActivity').where('time', '>', Date.now() - 60000).where('user', '==', user.id).where('action', '==', 'home').get().then(snapshot => {
+                    if (snapshot.size > 1) {
+                        snapshot.docs.slice(1).forEach(doc => {
+                            doc.ref.delete()
+                        })
+                    }
+                })
+            }) 
+        }
     }
 
     function changeIcon(index) {

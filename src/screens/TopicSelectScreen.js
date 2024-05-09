@@ -241,6 +241,11 @@ export default function TopicSelectScreen(props) {
                         recommendation: recommendations.slice(0,500),
                         lastActive: firebase.firestore.FieldValue.serverTimestamp()
                     })
+                    firebase.firestore().collection('userActivity').add({
+                        user: props.route.params.user.id,
+                        action: 'recommendation',
+                        time: firebase.firestore.Timestamp.now()
+                    })
                     Alert.alert('完成！', "感謝您耐心等候！",
                         [{
                             text: "OK",
