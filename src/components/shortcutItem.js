@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, View, TouchableOpacity, Text, TextInput, Image, Share, Modal, FlatList } from 'react-native'
+import { Linking, StyleSheet, View, TouchableOpacity, Text, TextInput, Image, Share, Modal, FlatList } from 'react-native'
 import { stylesheet, Color } from '../styles'
 import { Button } from '../components/forms'
 import Asset from './assets'
@@ -55,9 +55,12 @@ export function HomeShortcutItem ({item, onLongPress}){
             share(item)
         } else {
             // open url in browser
-            if (item.url && item.url != '') {
-                WebBrowser.openBrowserAsync(item.url);
-                // Linking.openURL(item.url)
+            if (item.url) {
+                if (item.url.startsWith("unilife://") || item.url.startsWith("exp://")) {
+                    Linking.openURL(item.url)
+                } else if (item.url != '') {
+                    WebBrowser.openBrowserAsync(item.url);
+                }
             }
         }
     }

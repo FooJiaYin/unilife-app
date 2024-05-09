@@ -38,17 +38,13 @@ const linking = {
 					ArticleStack: {
 						screens: {
 							Articles: "articles",
-							Article: "article/:id",
 							Filter: "articles/filter/:type/:data?",
-							// Article: {
-							// 	path: 'article/:id',
-							// 	parse: {
-							// 	  article: (id) => ({id: id}),
-							// 	},
-							// 	stringify: {
-							// 	  id: (id) => id.replace(/^user-/, ''),
-							// 	},
-							// }
+							Article: {
+								path: 'article/:id',
+								parse: {
+								  	article: (id) => ({id: id}),
+								},
+							}
 						}
 					},
 					CommunityStack: {
