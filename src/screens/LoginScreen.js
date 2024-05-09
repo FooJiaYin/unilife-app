@@ -105,7 +105,7 @@ export default function LoginScreen({navigation, ...props}) {
 
     const startTrial = () => {
         navigation.replace('Tabs')
-        navigation.navigate('Intro')
+        navigation.navigate('Intro', { anonymous: true })
     }
 
     React.useLayoutEffect(() => {
