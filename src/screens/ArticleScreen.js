@@ -113,7 +113,7 @@ export default function ArticleScreen(props) {
             headerRight: () => (<HeaderButton {...headerRight} />),
         });
     }
-    setHeaderOptions(props.navigation, options)
+    // setHeaderOptions(props.navigation, options)
  // console.log('title', article.meta.source)
 
     function setImages(article) {
