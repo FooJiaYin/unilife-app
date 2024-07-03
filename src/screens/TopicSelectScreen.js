@@ -24,16 +24,11 @@ export default function TopicSelectScreen(props) {
     setHeaderOptions(props.navigation, options)
 
     const topics = [
-        '影集戲劇', '國際政經', '時事評論',
-        '娛樂八卦', '行銷/管理', '科技趨勢',
-        '創新創業', '職場關係', '情感關係',
-        '生活/人文', '表演展覽', '美妝穿搭',
-        '手工藝', '神秘占卜', '法律',
-        '寵物', '球類運動', '健身健康',
-        '教育', '心靈成長', '音樂',
-        '美食', '旅遊遊記', '電子遊戲',
-        '桌上/實境遊戲', '日式動漫', '歐美動漫',
-        '好書推薦', '理財投資', '電影',
+        '在地美食', '店家優惠', '新店開幕',
+        '地方新聞', '交通路況', '鄰居推薦',
+        '親子活動', '假日市集', '表演活動',
+        '藝文講座', '在地景點', '贈送二手',
+        '毛小孩', '與鄰揪團', '慈善公益',
     ]
 
     const topicStyle = StyleSheet.create({
@@ -122,91 +117,43 @@ export default function TopicSelectScreen(props) {
     }
 
     function getScore(interests) {
-        var dictIntestMap = {
-            0: '影集戲劇', 
-            1: '國際政經', 
-            2: '時事評論', 
-            3: '娛樂八卦', 
-            4: '行銷/管理', 
-            5: '科技趨勢', 
-            6: '創新創業', 
-            7: '職場關係', 
-            8: '情感關係', 
-            9: '生活/人文', 
-            10: '表演展覽', 
-            11: '美妝穿搭', 
-            12: '手工藝', 
-            13: '神秘占卜', 
-            14: '法律', 
-            15: '寵物', 
-            16: '球類運動', 
-            17: '健身健康', 
-            18: '教育', 
-            19: '心靈成長', 
-            20: '音樂', 
-            21: '美食', 
-            22: '旅遊遊記', 
-            23: '電子遊戲', 
-            24: '桌上/實境遊戲', 
-            25: '動畫/漫畫/cosplay/二次元相關', 
-            26: 'Youtuber/網紅/實況主/Vtuber', 
-            27: '好書推薦', 
-            28: '理財投資', 
-            29: '電影'
-        }
         var dictInterestCate = {
-            "寵物" : ["娛樂", "生活"],
-            "球類運動" : ["體育"],
-            "健身健康" : ["體育", "生活"],
-            "教育" : ["教育"],
-            "心靈成長" : ["教育", "情感"],
-            "音樂" : ["藝文", "娛樂"],
-            "美食" : ["生活"],
-            "旅遊遊記" : ["生活"],
-            "電子遊戲" : ["ACG"],
-            "桌上/實境遊戲" : ["ACG"],
-            "動畫/漫畫/cosplay/二次元相關" : ["ACG"],
-            "Youtuber/網紅/實況主/Vtuber" : ["娛樂"],
-            "好書推薦" : ["生活", "藝文"],
-            "理財投資" : ["財經"],
-            "電影" : ["娛樂"],
-            "影集戲劇" : ["娛樂"],
-            "國際政經" : ["財經", "時事"],
-            "時事評論" : ["議題", "時事"],
-            "娛樂八卦" : ["娛樂"],
-            "行銷/管理" : ["科技", "教育"],
-            "科技趨勢" : ["科技"],
-            "創新創業" : ["教育", "職場"],
-            "職場關係" : ["職場"],
-            "情感關係" : ["情感"],
-            "生活/人文" : ["生活", "藝文"],
-            "表演展覽" : ["生活", "藝文"],
-            "美妝穿搭" : ["娛樂"],
-            "手工藝" : ["藝文", "娛樂"],
-            "神秘占卜" : ["藝文"],
-            "法律" : ["時事"]
+            "在地美食" : ["生活"],
+            "店家優惠" : ["生活"],
+            "新店開幕" : ["時事", "生活"],
+            "地方新聞" : ["時事", "議題", "生活"],
+            "交通路況" : ["時事", "議題"],
+            "鄰居推薦" : ["生活"],
+            "親子活動" : ["教育", "生活"],
+            "假日市集" : ["藝文"],
+            "表演活動" : ["藝文", "娛樂"],
+            "藝文講座" : ["藝文", "娛樂"],
+            "在地景點" : ["生活", "藝文"],
+            "贈送二手" : ["生活"],
+            "毛小孩" : ["生活", "議題"],
+            "與鄰揪團" : ["生活"],
+            "慈善公益" : ["議題", "生活"],
         }
-        var dictTtlCateCount = {}
+        var dictTtlCateCount = {'娛樂': 0, '生活': 0, '體育': 0, '教育': 0, '情感': 0, '藝文': 0, 'ACG': 0, '財經': 0, '時事': 0, '議題': 0, '科技': 0, '職場': 0}
         for(var interest in dictInterestCate) {
             for (var cate of dictInterestCate[interest]) {
-                dictTtlCateCount[cate] = (cate in dictTtlCateCount)? dictTtlCateCount[cate]+1 : 1
+                dictTtlCateCount[cate] += 1
             }
         }
         // console.log(dictTtlCateCount)
         let score = {'娛樂': 0, '生活': 0, '體育': 0, '教育': 0, '情感': 0, '藝文': 0, 'ACG': 0, '財經': 0, '時事': 0, '議題': 0, '科技': 0, '職場': 0}
         for(var interest of interests) {
-            // console.log(interest)
-            let relatedTopic = dictInterestCate[dictIntestMap[interest]]
-            // console.log(relatedTopic)
+            let relatedTopic = dictInterestCate[topics[interest]]
             for(var topic of relatedTopic) {
-                // console.log(topic)
                 score[topic] += 1
             }
         }
+        console.log(score)
+        console.log(dictTtlCateCount)
         for(var topic in score) {
-            score[topic] = score[topic]/dictTtlCateCount[topic]*7
+            score[topic] = score[topic]/(dictTtlCateCount[topic]*7) || 0
         }
-        // console.log(score)
+        console.log(score)
         return score;
     }
 
