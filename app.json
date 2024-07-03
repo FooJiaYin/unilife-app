@@ -3,7 +3,7 @@
     "name": "UniLife",
     "slug": "unilife",
     "scheme": "unilife",
-    "version": "2.4.1", // TODO: Remember to change ios and android version before build
+    "version": "2.4.3", // TODO: Remember to change ios and android version before build
     "orientation": "portrait",
     "primaryColor": "#00AEBB",
     "icon": "./assets/logo.png",
@@ -24,7 +24,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "cc.UniLife.UniLife",
-      "buildNumber": "2.4.1",
+      "buildNumber": "2.4.3",
       "usesAppleSignIn": true,
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "我們需要取用您的相片，讓您在撰寫貼文時可以選取照片",
