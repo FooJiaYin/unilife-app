@@ -1,13 +1,14 @@
 {
   "name": "unilife-app",
-  "version": "2.4.3",
+  "version": "2.5.0",
   "main": "index.js",
   "scripts": {
     "start": "expo start",
     "android": "expo run:android",
+    "ios": "expo run:ios",
     "rn": "react-native run-android",
-    "ios": "eas submit -p ios",
     "web": "expo start --web",
+    "submit": "eas submit -p ios",
     "preview": "expo prebuild && eas build -p android --profile preview",
     "build": "expo prebuild && eas build -p android"
   },
