@@ -36,6 +36,7 @@ const linking = {
 			Tabs: {
 				screens: {
 					ArticleStack: {
+						initialRouteName: 'Articles',
 						screens: {
 							Articles: "articles",
 							Filter: "articles/filter/:type/:data?",
@@ -48,8 +49,15 @@ const linking = {
 						}
 					},
 					CommunityStack: {
+						initialRouteName: 'Community',
 						screens: {
 							Community: "community",
+							Article: {
+								path: 'post/:id',
+								parse: {
+									  article: (id) => ({id: id}),
+								},
+							}
 						}
 					},
 					ChatStack: {
@@ -108,13 +116,14 @@ const linking = {
 	},
 }
 
-// Notifications.setNotificationHandler({
-// 	handleNotification: async () => ({
-// 		shouldShowAlert: true,
-// 		shouldPlaySound: true,
-// 		shouldSetBadge: true,
-// 	}),
-// });
+// Notification behavior when app is opened
+Notifications.setNotificationHandler({
+	handleNotification: async () => ({
+		shouldShowAlert: true,
+		shouldPlaySound: true,
+		shouldSetBadge: true,
+	}),
+});
 
 async function registerForPushNotificationsAsync() {
 	let token;
