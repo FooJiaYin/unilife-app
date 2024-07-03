@@ -26,7 +26,7 @@ function PostBar (props) {
                 paddingHorizontal: 12,
             }]}>
                 <TouchableHighlight 
-                    onPress={() => props.navigation.push('Filter', {type: 'history'})}
+                    onPress={() => props.navigation.push('Filter', {type: 'user', data: props.user.id})}
                     onShowUnderlay={() => setHistoryIconColor(Color.blue)}
                     onHideUnderlay={() => setHistoryIconColor(Color.grey1)}
                     underlayColor={'#0000'}

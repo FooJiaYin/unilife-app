@@ -16,11 +16,22 @@ export default function FilterScreen({type, ...props}) {
     const [articles, setArticles] = useState([])
     // console.log("Ref", firebase.firestore().doc('articles/9qAFUBpb7n0U1bzylreO'))
 
-    const options = {
+    let options = {
         title: (filter.type == 'saved')? '收藏' : 
-                (filter.type == 'history')? '我的貼文' : 
+                (filter.type == 'user')? '@' : 
                 '#' + (tagNames[filter.data] || filter.data),
         headerLeft: 'back'
+    }
+
+    async function loadUserName() {
+        const userId = filter.type == 'user'? filter.data : props.user.id
+        const snapshot = await firebase.firestore().collection('users').doc(userId).get()
+        const data = await snapshot.data()
+        console.log("data", data.info)
+        props.navigation.setOptions({
+            title: '@' + data.info.nickname
+        });
+        // setHeaderOptions(props.navigation, {...options, title: '@' + data.info.nickname})
     }
 
     async function loadSavedArticles() {
@@ -69,9 +80,9 @@ export default function FilterScreen({type, ...props}) {
             let snapshot = await props.user.ref.get()
             user = await snapshot.data()
             const savedArticles = user.bookmarks || []
-            if (filter.type == 'history') {
+            if (filter.type == 'user') {
                 // console.loglog("history", user.id)
-                articlesRef = articlesRef.where("publishedBy", "==", user.id)
+                articlesRef = articlesRef.where("publishedBy", "==", filter.data)
                                 .where("status", "==", "published")
                                 // .orderBy('publishedAt', 'desc')
             } else {
@@ -122,6 +133,7 @@ export default function FilterScreen({type, ...props}) {
 
     useEffect(() => {
         loadArticles(filter)
+        if (filter.type == 'user') loadUserName()
     }, [])
 
     return (

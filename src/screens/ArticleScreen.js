@@ -306,9 +306,11 @@ export default function ArticleScreen(props) {
                             {article.title}
                         </Text>
                         <View style={{flexDirection: 'row'}}>
+                            <Text style={[stylesheet.textS, {marginRight: 6}]} onPress={() => props.navigation.push('Filter', { type: 'user', data: article.publishedBy })}>
+                                {source}
+                            </Text>
                             <Text style={[stylesheet.textS, {marginRight: 6}]}>
-                                {source + ' @ '}
-                                {time(article.publishedAt).format('YYYY/M/D h:mm a')}
+                                {' @ ' + time(article.publishedAt).format('YYYY/M/D h:mm a')}
                             </Text>
                             {article.tags && article.tags.map((tag) => <Chip label={tagNames[tag] || tag} type={'tag'} action={() => props.navigation.push('Filter', { type: 'tag', data: tag })} />)}
                         </View>
