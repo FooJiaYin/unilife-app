@@ -6,7 +6,7 @@ import { TabView, SceneMap, TabBar } from 'react-native-tab-view'
 import { ScrollTags } from './tags'
 import { ArticleList } from "./articleList";
 
-export function ArticleTabs({titles, articles, ...props}) {
+export function ArticleTabs({titles, articles, county, ...props}) {
     const layout = useWindowDimensions();
     const [featuredTags, setFeaturedTags] = useState({})
     const [index, setIndex] = React.useState(0);
@@ -24,10 +24,10 @@ export function ArticleTabs({titles, articles, ...props}) {
     }, [])
 
     function loadTags() {
-        // load tags from firestore 'config/tags['featuredTags']
-        firebase.firestore().doc('config/tags').get().then(snapshot => {
+        // load tags from firestore community
+        firebase.firestore().doc(`communities/${county}`).get().then(snapshot => {
             let data = snapshot.data()
-            setFeaturedTags(data.featuredTags)
+            setFeaturedTags(data.tags.featuredTags)
         })  
     }
 

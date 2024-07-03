@@ -147,11 +147,11 @@ export default function CommunityScreen(props) {
     }
     // console.log("Ref", firebase.firestore().doc('articles/9qAFUBpb7n0U1bzylreO'))
     
-    function loadTags() {
-        // load tags from firestore 'config/tags['featuredTags']
-        firebase.firestore().doc('config/tags').get().then(snapshot => {
+    function loadTags(community) {
+        // load tags from firestore community
+        firebase.firestore().doc(`communities/${community}`).get().then(snapshot => {
             let data = snapshot.data()
-            setFeaturedTags(data.featuredTags)
+            setFeaturedTags(data.tags.featuredTags)
         })  
     }
 
@@ -178,11 +178,13 @@ export default function CommunityScreen(props) {
 
     useEffect(() => {
         loadUserData()
-        loadTags()
     }, [])
 
     useEffect(() => {
-        if (user) loadArticles()
+        if (user) {
+            loadArticles()
+            loadTags(user.identity.county)
+        }
         checkAuthStatus(user, props, "馬上完成註冊，解鎖社群功能。\n看看你的鄰居都在討論那些在地大小事！")
     }, [user])
 

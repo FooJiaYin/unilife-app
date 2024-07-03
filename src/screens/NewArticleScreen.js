@@ -93,10 +93,10 @@ export default function NewArticleScreen(props) {
 
     // TODO: Refactor loadTags()
     function loadTags() {
-        // load tags from firestore 'config/tags['userTags']
-        firebase.firestore().doc('config/tags').get().then(snapshot => {
+        // load tags from firestore community
+        firebase.firestore().doc(`communities/${userData.identity.county}`).get().then(snapshot => {
             let data = snapshot.data()
-            setUserTags(data.userTags)
+            setUserTags(data.tags.userTags)
         })  
     }
 

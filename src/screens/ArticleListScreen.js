@@ -271,7 +271,7 @@ export default function ArticleListScreen(props) {
 
     return (
         <View style={stylesheet.container}>
-            <ArticleTabs key={'news'} titles={['所有文章', '公佈欄', '在地生活', '在地新聞']} articles={articles} {...props} />
+            {user?.identity?.county && <ArticleTabs key={'news'} titles={['所有文章', '公佈欄', '在地生活', '在地新聞']} articles={articles} county={user.identity.county} {...props} /> }
         </View>
     )
 }
