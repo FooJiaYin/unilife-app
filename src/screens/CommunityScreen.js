@@ -1,53 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { useFocusEffect } from "@react-navigation/native";
-import { TextInput, Alert, View, Image, TouchableHighlight } from 'react-native'
+import { View } from 'react-native'
 import { setHeaderOptions } from '../components/navigation'
-import { stylesheet, Color } from '../styles'
+import { stylesheet } from '../styles'
 import { ScrollTags } from '../components/articles/tags'
 import { firebase } from '../firebase/config'
-import Asset from '../components/assets'
 import { checkAuthStatus } from '../utils/auth'
 import { ArticleList } from "../components/articles/articleList";
-
-function PostBar (props) {
-    const [editIconColor, setEditIconColor] = useState(Color.grey1);
-    const [historyIconColor, setHistoryIconColor] = useState(Color.grey1);
-    return (
-        <TouchableHighlight 
-            onPress={() => props.navigation.navigate('NewArticle')}
-            onShowUnderlay={() => setEditIconColor(Color.blue)}
-            onHideUnderlay={() => setEditIconColor(Color.grey1)}
-            underlayColor={'#0000'}
-        >
-            <View style={[stylesheet.inputBar, {
-                paddingTop: 0,
-                paddingBottom: 4,
-                marginBottom: 0,
-                paddingHorizontal: 12,
-            }]}>
-                <TouchableHighlight 
-                    onPress={() => props.navigation.push('Filter', {type: 'user', data: props.user.id})}
-                    onShowUnderlay={() => setHistoryIconColor(Color.blue)}
-                    onHideUnderlay={() => setHistoryIconColor(Color.grey1)}
-                    underlayColor={'#0000'}
-                >
-                    <Image source={Asset('history')} style={[stylesheet.iconColor, {tintColor: historyIconColor, width: 32, height: 32}]} />
-                </TouchableHighlight>
-                <TextInput
-                    style={{...stylesheet.input, flex: 1, marginHorizontal: 12}}
-                    editable={false}
-                    placeholder='發布貼文；提出問題...'
-                    placeholderTextColor="#aaaaaa"
-                    underlineColorAndroid="transparent"
-                    autoCapitalize="none"
-                    />
-                {/* <Button  style={{...stylesheet.bgLight, flex: 1}} title="分享您的想法..."  /> */}
-                <Image source={Asset('edit')} style={[stylesheet.iconColor, {tintColor: editIconColor, width: 28, height: 28}]} />
-            </View>
-        </TouchableHighlight>
-    )
-}
-
+import PostBar from "../components/PostBar";
 
 export default function CommunityScreen(props) {
     
