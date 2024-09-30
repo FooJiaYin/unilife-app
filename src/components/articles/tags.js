@@ -5,7 +5,7 @@ import { tagNames } from '../../firebase/functions'
 import { Chip } from '../chip'
 
 export const ScrollTags = ({tags, ...props}) => <ScrollView horizontal showsHorizontalScrollIndicator={false} 
-    style={{flexDirection: 'row', paddingHorizontal: 10, paddingVertical: 5, height: 56, flexGrow: 0}}>
+    style={{flexDirection: 'row', paddingHorizontal: 10, marginBottom: 10, height: 42, flexGrow: 0}}>
     {tags && tags.map(tag => <Chip 
         key={tag}
         label={'#' + (tagNames[tag] || tag)} 

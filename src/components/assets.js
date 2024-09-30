@@ -15,6 +15,7 @@ export default function Asset(name) {
     if (name == 'profile-image-1.png') return require('../../assets/profile-image-1.png')
     if (name == 'profile-image-2.png') return require('../../assets/profile-image-2.png')
     if (name == 'tick-large.png') return require('../../assets/tick-large.png')
+    if (name == 'Uni') return require('../../assets/Uni.png')
 
     /* Icons */
     if (name == 'add') return require('../../assets/icons/add.png')
@@ -66,6 +67,8 @@ export default function Asset(name) {
     if (name == 'love-active') return require('../../assets/icons/love-active.png')
     if (name == 'edit') return require('../../assets/icons/edit.png')
     if (name == 'history') return require('../../assets/icons/history.png')
+    if (name == 'save-list') return require('../../assets/icons/save-list.png')
+    if (name == 'notification-list') return require('../../assets/icons/notification-list.png')
 
     /* Topics */
     if (name == 'topic-1') return require('../../assets/topics/cover_1.jpg')

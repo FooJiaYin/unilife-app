@@ -156,15 +156,7 @@ export default function CommunityScreen(props) {
     }
 
     const options = {
-        title: '在地社群',
-        headerLeft: {
-            icon: 'refresh',
-            onPress: () => loadArticles()
-        },
-        headerRight: {
-            icon: 'bookmark',
-            onPress: () => props.navigation.navigate('Filter', {type: 'saved'})
-        }
+        titleLeft: '社群',
     }
 
     setHeaderOptions(props.navigation, options)

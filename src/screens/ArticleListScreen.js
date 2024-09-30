@@ -239,15 +239,7 @@ export default function ArticleListScreen(props) {
     // console.log("Ref", firebase.firestore().doc('articles/9qAFUBpb7n0U1bzylreO'))
 
     const options = {
-        title: 'Uni資訊',
-        headerLeft: {
-            icon: 'refresh',
-            onPress: () => recommendation(user)
-        },
-        headerRight: {
-            icon: 'bookmark',
-            onPress: () => props.navigation.push('Filter', {type: 'saved'})
-        }
+        titleLeft: '資訊',
     }
 
     useEffect(() => {
