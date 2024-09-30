@@ -4,7 +4,8 @@ import { useFocusEffect } from "@react-navigation/native";
 import { setHeaderOptions } from '../components/navigation'
 import { stylesheet, Color } from '../styles'
 import { firebase } from '../firebase/config'
-import { ArticleTabs } from '../components/articles/articleTabs'
+import { ScrollTags } from '../components/articles/tags'
+import { ArticleList } from "../components/articles/articleList";
 import { getUnique } from '../utils/array'
 import { checkAuthStatus } from '../utils/auth'
 import time from '../utils/time'
@@ -13,6 +14,7 @@ export default function ArticleListScreen(props) {
     
     const articlesRef = firebase.firestore().collection('articles')
     const [user, setUser] = useState()
+    const [featuredTags, setFeaturedTags] = useState({})
     const [articles, setArticles] = useState({
         all: [],
         announcement: [],
@@ -49,17 +51,11 @@ export default function ArticleListScreen(props) {
                 news: []
             }
             const savedArticles = user.bookmarks || []
-            // console.log("recommendation", user.recommendation)
-            // console.log(savedArticles)
-            // newArticles.all = user.recommendation.map(articleId => {id: articleId}) || []
-            // setArticles(newArticles)
-            // console.log("articles received")
-            // let promises = []
             querySnapshot.forEach(async snapshot => {
                 const article = snapshot.data()
                 if (article.category && ['announcement', 'local', 'news'].includes(article.category)) {
                     article.isSaved = savedArticles != undefined && savedArticles.includes(snapshot.id)
-                    newArticles[article.category].push(article)
+                    // newArticles[article.category].push(article)
                     newArticles.all.push(article)
                 }
                 firebase.firestore().collection('behavior').where('user','==', props.user.id).where('article', '==', snapshot.id).get().then(querySnapshot => {
@@ -93,19 +89,27 @@ export default function ArticleListScreen(props) {
                 }
             }
             
-            for (const [i, articleId] of user.recommendation.entries()) {
-                firebase.firestore().doc('articles/' + articleId).get().then((snapshot) => {
-                    // const snapshot = await firebase.firestore().doc('articles/' + articleId).get()
-                    const article = snapshot.data()
-                    article.isSaved = (savedArticles != undefined) && savedArticles.includes(articleId)
-                    // newArticles['all'][i] = article
-                    if (article && article.category && ['announcement', 'local', 'news'].includes(article.category) && !article.pinned) {
-                        newArticles[article.category].push(article)
-                    }
-                })
-            }
+            // for (const [i, articleId] of user.recommendation.entries()) {
+            //     firebase.firestore().doc('articles/' + articleId).get().then((snapshot) => {
+            //         // const snapshot = await firebase.firestore().doc('articles/' + articleId).get()
+            //         const article = snapshot.data()
+            //         article.isSaved = (savedArticles != undefined) && savedArticles.includes(articleId)
+            //         // newArticles['all'][i] = article
+            //         if (article && article.category && ['announcement', 'local', 'news'].includes(article.category) && !article.pinned) {
+            //             newArticles[article.category].push(article)
+            //         }
+            //     })
+            // }
             setArticles(newArticles)
         })
+    }
+    
+    function loadTags(community) {
+        // load tags from firestore community
+        firebase.firestore().doc(`communities/${community}`).get().then(snapshot => {
+            let data = snapshot.data()
+            setFeaturedTags(data.tags.featuredTags)
+        })  
     }
 
     async function recommendation(user) {
@@ -248,7 +252,10 @@ export default function ArticleListScreen(props) {
 
     useEffect(() => {
         checkAuthStatus(user, props, "馬上完成註冊，解鎖資訊列表。\n取得專屬於你的在地新聞與活動！")
-        if (user) loadArticles()
+        if (user) {
+            loadArticles()
+            loadTags(user.identity.county)
+        }
     }, [user?.id])
 
     useFocusEffect(
@@ -263,7 +270,8 @@ export default function ArticleListScreen(props) {
 
     return (
         <View style={stylesheet.container}>
-            {user?.identity?.county && <ArticleTabs key={'news'} titles={['所有文章', '公佈欄', '在地生活', '在地新聞']} articles={articles} county={user.identity.county} {...props} /> }
+            <ScrollTags {...props} tags={featuredTags['news']} category="news" />
+            <ArticleList articles={articles['all']} maxToRenderPerBatch {...props} />
         </View>
     )
 }
