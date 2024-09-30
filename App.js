@@ -13,7 +13,7 @@ import * as Linking from 'expo-linking'
 import { LoginScreen, LineLoginScreen, EmailLoginScreen, ResetPasswordScreen } from './src/screens'
 import { RegistrationScreen, FillInfoScreen, TopicSelectScreen, SuccessScreen, VerificationScreen } from './src/screens'
 import { HomeScreen, IntroScreen } from './src/screens'
-import { ArticleListScreen, CommunityScreen, FilterScreen, ArticleScreen, CommentScreen, NewArticleScreen } from './src/screens'
+import { ArticleListScreen, CommunityScreen, FilterScreen, ArticleScreen, CommentScreen, NewArticleScreen, ShopScreen } from './src/screens'
 import { ChatroomScreen, MessageScreen } from './src/screens'
 import { SettingScreen, ProfileScreen } from './src/screens'
 import { tabBarObject, tabBarOptions } from './src/components/navigation'
@@ -58,6 +58,12 @@ const linking = {
 									  article: (id) => ({id: id}),
 								},
 							}
+						}
+					},
+					ShopStack: {
+						initialRouteName: 'Shop',
+						screens: {
+							Shop: "shop",
 						}
 					},
 					ChatStack: {
@@ -320,6 +326,26 @@ export default function App() {
 			</Stack.Navigator>
 		)
 	}
+
+	function ShopStackScreen(props) {
+		return (
+			<Stack.Navigator>	
+				<Stack.Screen name="Shop">
+					{props => <ShopScreen {...props} user={user} />}
+				</Stack.Screen>
+				<Stack.Screen name="Filter">
+					{props => <FilterScreen {...props} user={user} />}
+				</Stack.Screen>
+				<Stack.Screen name="Article">
+					{props => <ArticleScreen {...props} user={user} />}
+				</Stack.Screen>
+				<Stack.Screen name="NewArticle">
+					{props => <NewArticleScreen {...props} user={user} />}
+				</Stack.Screen>
+			</Stack.Navigator>
+		)
+	}
+
 	
 	/* Setting Stack */
 	function SettingStackScreen(props) {
@@ -368,8 +394,8 @@ export default function App() {
 				<Tab.Screen name="CommunityStack" options={tabBarObject('社群', 'community')}>
 					{props => <CommunityStackScreen {...props} user={user} />}
 				</Tab.Screen>
-				<Tab.Screen name="ChatStack" options={tabBarObject('聊天', 'chat')}>
-					{props => <ChatStackScreen {...props} user={user} />}
+				<Tab.Screen name="ShopStack" options={tabBarObject('店家', 'shop')}>
+					{props => <ShopStackScreen {...props} user={user} />}
 				</Tab.Screen>
 				<Tab.Screen name="SettingStack" options={tabBarObject('設定', 'profile')}>
 					{props => <SettingStackScreen {...props} user={user} />}

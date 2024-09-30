@@ -69,6 +69,7 @@ export default function Asset(name) {
     if (name == 'history') return require('../../assets/icons/history.png')
     if (name == 'save-list') return require('../../assets/icons/save-list.png')
     if (name == 'notification-list') return require('../../assets/icons/notification-list.png')
+    if (name == 'shop') return require('../../assets/icons/shop.png')
 
     /* Topics */
     if (name == 'topic-1') return require('../../assets/topics/cover_1.jpg')
