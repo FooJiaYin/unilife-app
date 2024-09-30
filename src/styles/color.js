@@ -30,6 +30,9 @@ export const color = {
         // color: Color.grey0,
         // opacity: 0.5
     },
+    textGrey1: {
+        color: Color.grey0,
+    },
     textGrey2: {
         color: Color.grey0,
         opacity: 0.8

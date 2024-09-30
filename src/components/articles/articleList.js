@@ -1,11 +1,11 @@
 import React from 'react';
 import { FlatList } from 'react-native';
-import { ArticleListItem } from './listsItem';
+import { ArticleCard } from './card';
 
 export const ArticleList = React.memo(
-    ({articles, maxToRenderPerBatch, ...props}) => <FlatList
+    ({articles, maxToRenderPerBatch, renderItem, ...props}) => <FlatList
         data={articles}
-        renderItem={({ item }) => <ArticleListItem item={item} {...props} />}
+        renderItem={renderItem ?? (({ item }) => <ArticleCard item={item} {...props} />)}
         keyExtractor={(item) => item.id}
         removeClippedSubviews={true}
         initialNumToRender={7}

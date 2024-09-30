@@ -6,7 +6,7 @@ import { stylesheet, Color } from '../styles'
 export function ProfileImage({source, ...props}) {
     return (
     <Image 
-        style={props.style} 
+        {...props}
         source={source? 
             source.startsWith("https://")? 
                 {uri: source} : 

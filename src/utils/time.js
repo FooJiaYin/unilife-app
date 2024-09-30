@@ -15,6 +15,17 @@ class Time {
     toFirestore = () => {
         return firebase.firestore.Timestamp.fromDate(this.now.toDate())
     }
+    toText = () => {
+        // if < 1 day => 今天 hh:mm or 昨天 hh:mm
+        return this.now.calendar(null, {
+            sameDay: '[今天] HH:mm',
+            lastDay: '[昨天] HH:mm',
+            lastWeek: 'YYYY/M/D',
+            sameElse: 'YYYY/M/D'
+        })
+
+        // else calendar
+    }
     calendar = (args) => this.now.calendar(args)
     format = (args) => this.now.format(args)
     getNextDayofWeek = (dayofWeek, hours) => {
