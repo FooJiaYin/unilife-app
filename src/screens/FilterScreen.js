@@ -44,28 +44,20 @@ export default function FilterScreen({type, category, ...props}) {
         let promises = []
         // console.log("bookmarks", savedArticles)
         for (var id of savedArticles) {
-            const snapshot = await articlesRef.doc(id).get()
-            const article = snapshot.data()
-            article.id = snapshot.id
-            /* Get Images */
-            article.isSaved = savedArticles.includes(article.id) && ! user.hiddenArticles?.includes(article.id) && ! user.hiddenSources?.includes(article.publishedBy)
-            // promises.push(
-            //     // storageRef.child('articles/' + article.id + '/images/' + article.meta.coverImage).getDownloadURL()
-            //     storageRef.child('articles/9qAFUBpb7n0U1bzylreO/images/' + article.meta.coverImage).getDownloadURL()
-            //         .then((url) => {
-            //             article.imageUrl = url
-            //         })
-            //         .catch((e) => {
-            //             // console.log('Errors while downloading => ', e)
-            //         })
-            //         .finally(() => {
-                        newArticles.push(article)
-            //         })
-            // )
+            try {
+                const snapshot = await articlesRef.doc(id).get()
+                const article = snapshot.data()
+                article.id = snapshot.id
+                /* Get Images */
+                article.isSaved = savedArticles.includes(article.id) && ! user.hiddenArticles?.includes(article.id) && ! user.hiddenSources?.includes(article.publishedBy)
+                newArticles.push(article)
+                setArticles(newArticles)
+            } catch (e) {
+            }
         }
         Promise.all(promises).finally(() => {
             // console.log("End promises", newArticles)
-            setArticles(newArticles)
+            // setArticles(newArticles)
         })
     }
 
