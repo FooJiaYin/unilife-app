@@ -15,11 +15,11 @@ import * as WebBrowser from 'expo-web-browser';
 import { marked } from 'marked';
 import time from '../utils/time'
 
-export default function NewArticleScreen(props) {
-    let user = props.user
+export default function NewArticleScreen({user, ...props}) {
     let userData = user.data()
+    const { category } = props.route.params
     const [article, setArticle] = useState({
-        category: 'posts',
+        category: category,
         community: userData.identity.county || userData.identity.community,
         title: '',
         content: '',
@@ -57,7 +57,7 @@ export default function NewArticleScreen(props) {
     const [isTagSelectModalVisible, setTagSelectModalVisibility] = useState(false)
     const [isUploading, setUploading] = useState(false)
     const [currentHTML, setCurrentHTML] = useState("")
-    const [userTags, setUserTags] = useState()
+    const [tagOptions, setTagOptions] = useState({})
     const [options, setOptions] = useState({
         type: [
             {label: '文章', value: 'article'},
@@ -96,7 +96,17 @@ export default function NewArticleScreen(props) {
         // load tags from firestore community
         firebase.firestore().doc(`communities/${userData.identity.county}`).get().then(snapshot => {
             let data = snapshot.data()
-            setUserTags(data.tags.userTags)
+            if (category === 'shop') {
+                setTagOptions({
+                    "店家標籤": data.tags.vendorTags,
+                })
+            } else {
+                setTagOptions({
+                    "鄰里互助": data.tags.userTags.helpTags,
+                    "在地生活": data.tags.userTags.localTags,
+                    "三餐日常": data.tags.userTags.foodTags
+                })
+            }
         })  
     }
 
@@ -117,7 +127,8 @@ export default function NewArticleScreen(props) {
                 content: content,
                 meta: {
                     abstract: article.rawContent,
-                    source: '社群貼文',
+                    // source: '社群貼文',
+                    // source: category == "posts"? '社群貼文' : '店家貼文',
                 },
                 publishedAt: firebase.firestore.Timestamp.now(),
             })
@@ -305,7 +316,7 @@ export default function NewArticleScreen(props) {
                             contentContainerStyle={{alignItems: 'center'}} >
                             {article?.tags && article.tags.map(tag => <Chip 
                                 label={tagNames[tag] || tag} 
-                                color={userTags.foodTags.includes(tag) ? Color.red : userTags.helpTags.includes(tag) ? Color.blue : Color.green} 
+                                color={tagOptions['鄰里互助'].includes(tag) ? Color.blue : tagOptions['三餐日常'].includes(tag) ? Color.red : Color.green}
                                 size={'large'} focused 
                                 action={() => setTagSelectModalVisibility(true)}
                             />)}
@@ -347,7 +358,7 @@ export default function NewArticleScreen(props) {
                         onPress={() => onRegisterPress()} 
                         title='發布貼文'
                     />
-                    <TagSelectModal visible={isTagSelectModalVisible} onClose={updateTags} tags={article.tags} userTags={userTags} />
+                    <TagSelectModal visible={isTagSelectModalVisible} onClose={updateTags} tags={article.tags} tagOptions={tagOptions} />
                     <LoadingModal visible={isUploading} />
                 </ScrollView>
             </KeyboardAwareScrollView>
@@ -370,7 +381,7 @@ export function LoadingModal({visible}) {
     )
 }
 
-export function TagSelectModal ({visible, onClose, tags, userTags}) {
+export function TagSelectModal ({visible, onClose, tags, tagOptions}) {
     const [selectedTags, setSelectedTags] = useState(tags)
     const storageRef = firebase.storage().ref()
 
@@ -390,67 +401,31 @@ export function TagSelectModal ({visible, onClose, tags, userTags}) {
         visible={visible}
         onRequestClose={() => onClose()}
     >
-        {!userTags ? <div></div> :
+        {!tagOptions ? <div></div> :
         <View style={[stylesheet.modal, stylesheet.centerSelf]}>
             <View style={{paddingHorizontal: 30}}>
-                <Text style={stylesheet.headerText}>
-                        {/* <Button
-                            onPress={()=>setAgree(true)}
-                            color={agree?'#00aebb':'#e2e3e4'}>
-                                    v
-                            </Button> */}
-                            
-                        </Text>
-            <Text style={{flex: 0, ...stylesheet.textDark}}>鄰里互助</Text>
-            <FlatList
-                data={userTags.helpTags}
-                style={{ marginVertical: 10 }}
-                contentContainerStyle={{flexDirection : "row", flexWrap : "wrap", justifyContent : 'space-between'}} 
-                renderItem={({item}) => 
-                    <Chip 
-                        style={{marginVertical: 6}}
-                        label={tagNames[item] || item} 
-                        color={Color.blue}
-                        type={'tag'} size={'large'} 
-                        focused={selectedTags.includes(item)}
-                        action={()=>updateTags(item)} /> 
-                }
-                // horizontal={true}
-                keyExtractor={(item, index) => item}
-            />
-            <Text style={{flex: 0, ...stylesheet.textDark}}>在地生活</Text>
-            <FlatList
-                data={userTags.localTags}
-                style={{ marginVertical: 10 }}
-                contentContainerStyle={{flexDirection : "row", flexWrap : "wrap", justifyContent : 'space-between'}} 
-                renderItem={({item}) => 
-                    <Chip 
-                        style={{marginVertical: 6}}
-                        label={tagNames[item] || item} 
-                        type={'tag'} size={'large'} 
-                        focused={selectedTags.includes(item)}
-                        action={()=>updateTags(item)} /> 
-                }
-                // horizontal={true}
-                keyExtractor={(item, index) => item}
-            />
-            <Text style={{flex: 0, ...stylesheet.textDark}}>三餐日常</Text>
-            <FlatList
-                data={userTags.foodTags}
-                style={{ marginVertical: 10 }}
-                contentContainerStyle={{flexDirection : "row", flexWrap : "wrap", justifyContent : 'space-between'}} 
-                renderItem={({item}) => 
-                    <Chip 
-                        style={{marginVertical: 6}}
-                        label={tagNames[item] || item} 
-                        color={Color.red}
-                        size={'large'} 
-                        focused={selectedTags.includes(item)}
-                        action={()=>updateTags(item)} /> 
-                }
-                // horizontal={true}
-                keyExtractor={(item, index) => item}
-            />
+                <Text style={stylesheet.headerText}></Text>
+                {Object.keys(tagOptions).map((category) => (
+                    <View key={category}>
+                        <Text style={{ flex: 0, ...stylesheet.textDark }}>{category}</Text>
+                        <FlatList
+                            data={tagOptions[category]}
+                            style={{ marginVertical: 10 }}
+                            contentContainerStyle={{ flexDirection: "row", flexWrap: "wrap", justifyContent: 'space-between' }}
+                            renderItem={({ item }) =>
+                                <Chip
+                                    style={{ marginVertical: 6 }}
+                                    label={tagNames[item] || item}
+                                    color={category === "鄰里互助" ? Color.blue : category === "在地生活" ? Color.green : Color.red}
+                                    type={'tag'} size={'large'}
+                                    focused={selectedTags.includes(item)}
+                                    action={() => updateTags(item)} />
+                            }
+                            // horizontal={true}
+                            keyExtractor={(item, index) => item}
+                        />
+                    </View>
+                ))}
             <Button
                 style={[stylesheet.bgBlue, {height: 40, wid: '100%'}]}
                 onPress={() => onClose(selectedTags)} 

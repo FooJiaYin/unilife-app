@@ -147,7 +147,7 @@ export default function CommunityScreen(props) {
                 <ArticleList articles={articles['all']} maxToRenderPerBatch {...props} />
             </View>
             {/* <ArticleTabs titles={['所有貼文', ...communitiesName, '我的貼文']} articles={articles} {...props} /> */}
-            <PostBar {...props} />
+            <PostBar {...props} category="posts" />
         </View>
     )
 }

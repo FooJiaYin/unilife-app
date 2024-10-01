@@ -143,6 +143,7 @@ export default function ShopScreen(props) {
             <View style={{flex: 1}}>
                 <ArticleList articles={articles['all']} maxToRenderPerBatch {...props} />
             </View>
+            { user?.role == "vendor" && <PostBar {...props} category="shop" />}
         </View>
     )
 }

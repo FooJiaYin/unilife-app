@@ -3,12 +3,12 @@ import { TextInput, View, Image, TouchableHighlight } from 'react-native'
 import { stylesheet, Color } from '../styles'
 import Asset from '../components/assets'
 
-export default function PostBar (props) {
+export default function PostBar ({category, ...props}) {
     const [editIconColor, setEditIconColor] = useState(Color.grey1);
     const [historyIconColor, setHistoryIconColor] = useState(Color.blue);
     return (
         <TouchableHighlight 
-            onPress={() => props.navigation.navigate('NewArticle')}
+            onPress={() => props.navigation.navigate('NewArticle', {category: category})}
             onShowUnderlay={() => setEditIconColor(Color.blue)}
             onHideUnderlay={() => setEditIconColor(Color.grey1)}
             underlayColor={'#0000'}
