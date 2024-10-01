@@ -139,7 +139,7 @@ export default function ShopScreen(props) {
 
     return (
         <View style={[stylesheet.container, {}]}>
-            <ScrollTags {...props} tags={featuredTags['shop']} />
+            <ScrollTags {...props} tags={featuredTags['shop']} category="shop" />
             <View style={{flex: 1}}>
                 <ArticleList articles={articles['all']} maxToRenderPerBatch {...props} />
             </View>

@@ -136,21 +136,21 @@ export function Card({ item, onPress, style, onButtonPress, chipAction, ...props
         <TouchableOpacity onPress={() => onPress(data)} >
             <View style={style ? [cardStyle.container, style.container] : cardStyle.container}>
                 <View style={cardStyle.row}>
-                    <TouchableOpacity onPress={() => props.navigation.push('Filter', { type: 'user', data: data.publishedBy })} >
+                    <TouchableOpacity onPress={() => (data.category != "posts") && props.navigation.push('Filter', { type: 'user', data: data.publishedBy, category: data.category })} >
                         <ProfileImage
                             style={cardStyle.coverImage}
                             source={author?.info?.profileImage}
                         />
                     </TouchableOpacity>
                     <View>
-                        <Text style={cardStyle.user} onPress={() => props.navigation.push('Filter', { type: 'user', data: data.publishedBy })} >
+                        <Text style={cardStyle.user} onPress={() => (data.category != "posts") && props.navigation.push('Filter', { type: 'user', data: data.publishedBy, category: data.category })} >
                             {author?.info?.nickname ?? ""}
                         </Text>
                         <View style={cardStyle.row}>
                             <Text style={style ? [cardStyle.smallText, style.smallText] : cardStyle.smallText}>
                                 {time(data.publishedAt).toText('en')}
                             </Text>
-                            {data.tags && <SmallTags tags={data.tags} {...props} />}
+                            {data.tags && <SmallTags tags={data.tags} category={data.category} {...props} />}
                         </View>
                     </View>
                 </View>

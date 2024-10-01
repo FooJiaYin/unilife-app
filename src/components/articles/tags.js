@@ -11,7 +11,7 @@ export const ScrollTags = ({tags, ...props}) => <ScrollView horizontal showsHori
         label={'#' + (tagNames[tag] || tag)} 
         color={Color.green} 
         size={'large'} focused 
-        action={()=>props.navigation.push('Filter', {type: 'tag', data: tag}) }
+        action={()=>props.navigation.push('Filter', {type: 'tag', data: tag, category: props.category}) }
     />)}
 </ScrollView>
 
@@ -21,6 +21,6 @@ export const SmallTags = ({tags, action, ...props}) => <View
         key={tag}
         label={tagNames[tag] || tag} 
         type={'tag'} 
-        action={action? ()=> action('tag', tag) : ()=>props.navigation.push('Filter', {type: 'tag', data: tag}) }
+        action={action? ()=> action('tag', tag) : ()=>props.navigation.push('Filter', {type: 'tag', data: tag, category: props.category}) }
     />)}
 </View>

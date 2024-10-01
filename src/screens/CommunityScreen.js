@@ -142,7 +142,7 @@ export default function CommunityScreen(props) {
 
     return (
         <View style={[stylesheet.container, {}]}>
-            <ScrollTags {...props} tags={featuredTags['community']} />
+            <ScrollTags {...props} tags={featuredTags['community']} category="posts" />
             <View style={{flex: 1}}>
                 <ArticleList articles={articles['all']} maxToRenderPerBatch {...props} />
             </View>

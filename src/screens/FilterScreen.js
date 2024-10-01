@@ -6,7 +6,7 @@ import { firebase } from '../firebase/config'
 import { tagNames } from '../firebase/functions'
 import { ArticleList } from "../components/articles/articleList";
 
-export default function FilterScreen({type, ...props}) {
+export default function FilterScreen({type, category, ...props}) {
     // console.log(props)
     
     let user
@@ -93,6 +93,9 @@ export default function FilterScreen({type, ...props}) {
                                 .where("tags", "array-contains", filter.data)
                                 .orderBy('pinned', 'desc')
                                 .orderBy('publishedAt', 'desc')
+            }
+            if (filter.category) {
+                articlesRef = articlesRef.where("category", "==", filter.category)
             }
             const newArticles = []
             articlesRef.get().then(querySnapshot => {
