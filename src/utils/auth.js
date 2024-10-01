@@ -3,6 +3,7 @@ import { Alert } from 'react-native'
 import { useFocusEffect } from "@react-navigation/native";
 
 export function checkAuthStatus(user, props, message) {
+    return true
     // useFocusEffect(
     //     React.useCallback(() => {
             if (user && user.verification && user.verification.type == "anonymous") {
