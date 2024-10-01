@@ -25,12 +25,12 @@ export default function PostBar ({category, ...props}) {
                     // onHideUnderlay={() => setHistoryIconColor(Color.grey1)}
                     underlayColor={'#0000'}
                 >
-                    <Image source={Asset('history')} style={[stylesheet.iconColor, {tintColor: historyIconColor, width: 42, height: 46}]} />
+                    <Image source={Asset(`${category}-history`)} style={[stylesheet.iconColor, {tintColor: historyIconColor, width: 42, height: 46}]} />
                 </TouchableHighlight>
                 <TextInput
                     style={{...stylesheet.input, flex: 1, marginHorizontal: 12}}
                     editable={false}
-                    placeholder='發布貼文；提出問題...'
+                    placeholder='前往發佈貼文...'
                     placeholderTextColor="#aaaaaa"
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"

@@ -300,7 +300,7 @@ export default function NewArticleScreen({user, ...props}) {
                         <TextInput
                             style={{...stylesheet.inputText, flexGrow: 0}}
                             defaultValue={article.rawContent}
-                            placeholder="發布貼文，跟大家分享你的在地生活日常！或是提出問題？讓大家一起幫你解決！"
+                            placeholder={category === 'shop' ? '跟民眾分享你的最新動態，公告優惠、新品、臨時公休、開店故事等內容！' : '向在地鄰居提出問題，跟大家一起討論。也歡迎分享你的三餐、生活點滴！'}
                             multiline={true}
                             // textAlignVertical='top'
                             placeholderTextColor="#aaaaaa"
@@ -347,8 +347,8 @@ export default function NewArticleScreen({user, ...props}) {
                         </Text>
                     </View>
                     <Text style={{...stylesheet.textS, ...stylesheet.textGrey, margin: 12, marginBottom: 28}}>
-                        一個好的地方社群，需要大家一起打造。{"\n\n"}
-                        歡迎你分享各種與在地社群相關的內容，但請務必遵守我們的發文規範讓我們一起維護良好的社群風氣。違反發文規範的文章將會被移除。
+                        一個好的在地社群，需要大家共同維護。{"\n\n"}
+                        歡迎分享你的在地生活大小事，但請務必遵守發文規範，一起打造良好的社群風氣。違反發文規範的文章將會被移除。
                     </Text>
                     {/* <Text style={{...stylesheet.textS, ...stylesheet.textGrey, margin: 12}}>
                         發文後，請按文章列表左上角的重新整理按鈕，這樣您的文章才會出現在您的列表。

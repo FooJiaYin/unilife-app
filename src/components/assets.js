@@ -66,10 +66,11 @@ export default function Asset(name) {
     if (name == 'love') return require('../../assets/icons/love.png')
     if (name == 'love-active') return require('../../assets/icons/love-active.png')
     if (name == 'edit') return require('../../assets/icons/edit.png')
-    if (name == 'history') return require('../../assets/icons/history.png')
     if (name == 'save-list') return require('../../assets/icons/save-list.png')
     if (name == 'notification-list') return require('../../assets/icons/notification-list.png')
     if (name == 'shop') return require('../../assets/icons/shop.png')
+    if (name == 'posts-history') return require('../../assets/icons/posts-history.png')
+    if (name == 'shop-history') return require('../../assets/icons/shop-history.png')
 
     /* Topics */
     if (name == 'topic-1') return require('../../assets/topics/cover_1.jpg')

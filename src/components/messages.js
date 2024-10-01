@@ -203,7 +203,7 @@ export function InputBar({sendMessage, like, setLike}, ...props) {
             </TouchableOpacity>
             <TextInput
                 style={{...stylesheet.input, flex: 1}}
-                placeholder='留言...'
+                placeholder='留下你的想法，分享在地經驗…'
                 placeholderTextColor="#aaaaaa"
                 onChangeText={(text) => setInputText(text)}
                 value={inputText}

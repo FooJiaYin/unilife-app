@@ -397,7 +397,7 @@ export default function App() {
 				<Tab.Screen name="ShopStack" options={tabBarObject('店家', 'shop')}>
 					{props => <ShopStackScreen {...props} user={user} />}
 				</Tab.Screen>
-				<Tab.Screen name="SettingStack" options={tabBarObject('設定', 'profile')}>
+				<Tab.Screen name="SettingStack" options={tabBarObject('帳號', 'profile')}>
 					{props => <SettingStackScreen {...props} user={user} />}
 				</Tab.Screen>
 			</Tab.Navigator>

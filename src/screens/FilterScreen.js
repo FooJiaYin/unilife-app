@@ -18,8 +18,8 @@ export default function FilterScreen({type, category, ...props}) {
 
     let options = {
         title: (filter.type == 'saved')? '收藏' : 
-                (filter.type == 'user')? '@' : 
-                '#' + (tagNames[filter.data] || filter.data),
+                (filter.type == 'user')? '' : 
+                `#${tagNames[filter.data] || filter.data}`,
         headerLeft: 'back'
     }
 
@@ -27,9 +27,8 @@ export default function FilterScreen({type, category, ...props}) {
         const userId = filter.type == 'user'? filter.data : props.user.id
         const snapshot = await firebase.firestore().collection('users').doc(userId).get()
         const data = await snapshot.data()
-        console.log("data", data.info)
         props.navigation.setOptions({
-            title: '@' + data.info.nickname
+            title: data.info.nickname + '的貼文'
         });
         // setHeaderOptions(props.navigation, {...options, title: '@' + data.info.nickname})
     }
