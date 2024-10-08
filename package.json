@@ -1,6 +1,6 @@
 {
   "name": "unilife-app",
-  "version": "2.5.0",
+  "version": "3.0.0",
   "main": "index.js",
   "scripts": {
     "start": "expo start",
@@ -8,9 +8,11 @@
     "ios": "expo run:ios",
     "rn": "react-native run-android",
     "web": "expo start --web",
-    "submit": "eas submit -p ios",
+    "submit": "eas build -p ios && eas submit -p ios",
+    "prebuild": "expo prebuild",
     "preview": "expo prebuild && eas build -p android --profile preview",
-    "build": "expo prebuild && eas build -p android"
+    "build": "expo prebuild && eas build -p android",
+    "upgrade": "yarn add expo@latest && expo install --fix"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.19.3",
