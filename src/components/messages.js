@@ -199,7 +199,7 @@ export function InputBar({sendMessage, like, setLike}, ...props) {
     // </View>
         <View style={[stylesheet.borderTop, stylesheet.inputBar]}>
             <TouchableOpacity onPress={() => setLike(!like)}>
-                <Icon name={like? 'love-active' : 'love'} size={24} style={{marginLeft: 4}} />
+                <Icon name={like? 'knock-active' : 'knock'} size={24} style={{marginLeft: 4}} />
             </TouchableOpacity>
             <TextInput
                 style={{...stylesheet.input, flex: 1}}

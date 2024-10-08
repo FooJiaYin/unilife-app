@@ -71,7 +71,7 @@ export function Card({ item, onPress, style, onButtonPress, chipAction, ...props
         user: {
             fontSize: 16,
             fontWeight: 'bold',
-            ...styles.textGrey1,
+            ...styles.textDark,
         },
         image: {
             width: '100%',
@@ -93,12 +93,13 @@ export function Card({ item, onPress, style, onButtonPress, chipAction, ...props
             // height: 42,
             flexWrap: 'wrap',
             overflow: 'hidden',
-            marginVertical: 2,
+            marginVertical: 4,
         },
         description: {
-            ...styles.textGrey2,
-            fontSize: 14,
-            lineHeight: 22,
+            ...styles.textDark,
+            opacity: 0.6,
+            fontSize: 13,
+            lineHeight: 20,
             // height: 42,
             flexWrap: 'wrap',
             overflow: 'hidden',
@@ -110,13 +111,18 @@ export function Card({ item, onPress, style, onButtonPress, chipAction, ...props
             flex: 1,
             gap: 8,
             marginVertical: 2,
+            alignItems: 'center',
         },
         smallText: {
             ...styles.textS,
-            ...styles.textGrey1,
+            ...styles.textDark,
+            lineHeight: 14,
         },
         bottomIcon: {
             paddingHorizontal: 5,
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 4,
         }
     });
 
@@ -177,17 +183,17 @@ export function Card({ item, onPress, style, onButtonPress, chipAction, ...props
 
                 <View style={[cardStyle.row]}>
                     {/* <Icon size={14} name="bookmark" style={style? style.bottomIcon : {}}/> */}
-                    <TouchableOpacity style={{ ...cardStyle.bottomIcon, flexDirection: 'row' }}>
-                        <Image source={Asset(isLiked ? `love-active` : `love`)} style={[iconStyle]} />
-                        <Text style={[style ? style.smallText : null, cardStyle.smallText, { flex: 0, marginLeft: 4 }]}>{stats && stats.like ? stats.like : 0} 拜訪</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ ...cardStyle.bottomIcon, flexDirection: 'row' }}>
+                    <View style={cardStyle.bottomIcon}>
+                        <Image source={Asset(isLiked ? `knock-active` : `knock`)} style={[iconStyle]} />
+                        <Text style={[style ? style.smallText : null, cardStyle.smallText]}>{stats && stats.like ? stats.like : 0} 拜訪</Text>
+                    </View>
+                    <View style={cardStyle.bottomIcon}>
                         <Image source={Asset(`chat`)} style={[iconStyle]} />
-                        <Text style={[style ? style.smallText : null, cardStyle.smallText, { flex: 0, marginLeft: 4 }]}>{stats && stats.comment ? stats.comment : 0} 留言</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleButtonPress()} style={{ ...cardStyle.bottomIcon, flexDirection: 'row', marginLeft: "auto" }}>
+                        <Text style={[style ? style.smallText : null, cardStyle.smallText]}>{stats && stats.comment ? stats.comment : 0} 留言</Text>
+                    </View>
+                    <TouchableOpacity onPress={() => handleButtonPress()} style={{ ...cardStyle.bottomIcon, marginLeft: "auto" }}>
                         <Image source={Asset(isSaved ? `bookmark-active` : `bookmark`)} style={[iconStyle]} />
-                        <Text style={[style ? style.smallText : null, cardStyle.smallText, { flex: 0, marginLeft: 4 }]}>收藏</Text>
+                        <Text style={[style ? style.smallText : null, cardStyle.smallText]}>收藏</Text>
                     </TouchableOpacity>
                 </View>
             </View>
