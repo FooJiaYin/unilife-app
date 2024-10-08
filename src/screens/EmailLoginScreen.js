@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Dimension, ImageBackground, Image, Text, TextInput, Linking, Alert, View, KeyboardAvoidingView } from 'react-native'
+import { Platform, Dimension, ImageBackground, Image, Text, TextInput, Linking, Alert, View, KeyboardAvoidingView } from 'react-native'
 import { setHeaderOptions } from '../components/navigation'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Asset from '../components/assets'
