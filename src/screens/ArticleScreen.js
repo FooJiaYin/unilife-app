@@ -56,7 +56,7 @@ export default function ArticleScreen(props) {
     });
 
     function setHeader(article) {
-        const headerRight = source == '社群貼文' ?
+        const headerRight = article.category == 'posts' || article.category == 'shop' ?
             article?.publishedBy == user.id ?
                 {
                     icon: 'trash',
@@ -134,7 +134,7 @@ export default function ArticleScreen(props) {
     }
 
     function loadSource(article) {
-        if (article.meta.source == '社群貼文') {
+        if (article.category == 'posts' || article.category == 'shop') {
             firebase.firestore().doc('users/' + article.publishedBy).get().then(snapshot => {
                 setSource(snapshot.data().info.nickname)
             })
