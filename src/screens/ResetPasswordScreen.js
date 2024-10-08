@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { ImageBackground, Image, Text, TextInput, Linking, Alert, View, KeyboardAvoidingView} from 'react-native'
+import { Platform, ImageBackground, Image, Text, TextInput, Linking, Alert, View, KeyboardAvoidingView} from 'react-native'
 import { setHeaderOptions } from '../components/navigation'
 import Asset from '../components/assets'
 import { Button } from '../components/forms'

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { Image, Text, TextInput, Modal, View, Keyboard, Alert, ScrollView, TouchableOpacity, FlatList, useWindowDimensions } from 'react-native'
+import { Platform, Image, Text, TextInput, Modal, View, Keyboard, Alert, ScrollView, TouchableOpacity, FlatList, useWindowDimensions } from 'react-native'
 import { setHeaderOptions } from '../components/navigation'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { stylesheet, htmlStyles, Color } from '../styles'

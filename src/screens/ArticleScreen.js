@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList, Alert, Text, SafeAreaView, TouchableOpacity, ScrollView, View, KeyboardAvoidingView, TextInput, useWindowDimensions } from 'react-native'
+import { Platform, FlatList, Alert, Text, SafeAreaView, TouchableOpacity, ScrollView, View, KeyboardAvoidingView, TextInput, useWindowDimensions } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { HeaderButton, setHeaderOptions } from '../components/navigation'
 import { stylesheet, htmlStyles } from '../styles/styles'
