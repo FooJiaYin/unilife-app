@@ -25,10 +25,8 @@ import { tabBarObject, tabBarOptions } from './src/components/navigation'
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator();
 
-const prefix = Linking.makeUrl('/');
-
 const linking = {
-	prefixes: [prefix],
+	prefixes: [Linking.createURL('/'), 'https://app.unilife.cc'],
 	config: {
 		screens: {
 			Login: "login",
