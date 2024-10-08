@@ -1,6 +1,6 @@
 {
   "name": "unilife-app",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "main": "index.js",
   "scripts": {
     "postinstall": "patch-package",
@@ -12,7 +12,7 @@
     "submit": "eas build -p ios && eas submit -p ios",
     "prebuild": "expo prebuild",
     "preview": "expo prebuild && eas build -p android --profile preview",
-    "build": "expo prebuild && eas build -p android",
+    "build": "eas build -p android",
     "upgrade": "yarn add expo@latest && expo install --fix"
   },
   "dependencies": {
