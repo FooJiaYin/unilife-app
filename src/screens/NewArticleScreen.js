@@ -177,20 +177,20 @@ export default function NewArticleScreen({user, ...props}) {
             quality: 1,
         });
     
-        if (result.cancelled) return;
+        if (result.cancelled || !result.assets) return;
+        
+        const img = result.assets[0];
 
-        // console.log(result);
-
-        if (result.width > 800) {
+        if (img.width > 800) {
             const compressedResult = await ImageManipulator.manipulateAsync(
-                result.localUri || result.uri,
+                img.localUri || img.uri,
                 [{resize: {width: 800}}],
                 { compress: 0.8, format: ImageManipulator.SaveFormat.PNG }
             );      
             setImages([...images, compressedResult.uri])
         }
         else {
-            setImages([...images, result.uri])
+            setImages([...images, img.uri])
         }
     }
 
@@ -324,7 +324,7 @@ export default function NewArticleScreen({user, ...props}) {
                         </ScrollView>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => pickImage()}>
-                    <Text style={{...stylesheet.textDark, marginTop: 8}}>添加圖片（長按圖片即可移除）</Text>
+                        <Text style={{...stylesheet.textDark, marginTop: 8}}>添加圖片（長按圖片即可移除）</Text>
                         <ScrollView horizontal showsHorizontalScrollIndicator={false} 
                             style={{flexDirection: 'row', paddingTop: 14, paddingBottom: 5, flexGrow: 0}}
                             contentContainerStyle={{alignItems: 'center'}} >
