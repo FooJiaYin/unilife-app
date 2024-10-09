@@ -9,10 +9,9 @@
     "ios": "expo run:ios",
     "rn": "react-native run-android",
     "web": "expo start --web",
-    "submit": "eas build -p ios && eas submit -p ios",
-    "prebuild": "expo prebuild",
-    "preview": "expo prebuild && eas build -p android --profile preview",
-    "build": "eas build -p android",
+    "preview": "eas build -p android --profile preview",
+    "build": "eas build -p",
+    "submit": "eas submit -p ios",
     "upgrade": "yarn add expo@latest && expo install --fix"
   },
   "dependencies": {
